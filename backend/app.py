@@ -8,14 +8,13 @@ app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')  
 CORS(app)
 
-
-# LinkedIn App Credentials
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 LINKEDIN_AUTH_URL = 'https://www.linkedin.com/oauth/v2/authorization'
 LINKEDIN_TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
 LINKEDIN_API_URL = 'https://api.linkedin.com/v2/me'
+LINKEDIN_USERINFO_URL = 'https://api.linkedin.com/v2/userinfo'
 
 @app.route('/')
 def home():
@@ -23,22 +22,21 @@ def home():
 
 @app.route('/login')
 def login():
-    # Redirect user to LinkedIn for authorization
     params = {
         'response_type': 'code',
         'client_id': CLIENT_ID,
         'redirect_uri': REDIRECT_URI,
-        'scope': 'profile email'  # Correct permissions for LinkedIn OAuth
+        'scope': 'openid profile email' 
     }
     auth_url = f"{LINKEDIN_AUTH_URL}?{requests.compat.urlencode(params)}"
     return redirect(auth_url)
 
-@app.route('/auth/callback')
-def auth_callback():
-    # Get the authorization code from LinkedIn
+@app.route('/callback')
+def callback():
+    # Retrieve the authorization code
     code = request.args.get('code')
     if not code:
-        return 'Authorization failed.'
+        return {"error": "No authorization code provided."}, 400
 
     # Exchange the authorization code for an access token
     token_data = {
@@ -46,30 +44,31 @@ def auth_callback():
         'code': code,
         'redirect_uri': REDIRECT_URI,
         'client_id': CLIENT_ID,
-        'client_secret': CLIENT_SECRET,
+        'client_secret': CLIENT_SECRET
     }
     token_response = requests.post(LINKEDIN_TOKEN_URL, data=token_data)
-    token_json = token_response.json()
-    access_token = token_json.get('access_token')
+    token_response_data = token_response.json()
 
-    if not access_token:
-        return 'Failed to get access token.'
+    if token_response.status_code != 200 or 'access_token' not in token_response_data:
+        return {"error": "Could not retrieve access token."}, 500
 
-    session['access_token'] = access_token  # Save token in session
-    return redirect(url_for('profile'))
+    access_token = token_response_data['access_token']
 
-@app.route('/profile')
-def profile():
-    # Fetch user profile data
-    access_token = session.get('access_token')
-    if not access_token:
-        return redirect(url_for('login'))
+    # Fetch user info from the /userinfo endpoint
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+    userinfo_response = requests.get(LINKEDIN_USERINFO_URL, headers=headers)
+    userinfo_data = userinfo_response.json()
 
-    headers = {'Authorization': f'Bearer {access_token}'}
-    profile_response = requests.get(LINKEDIN_API_URL, headers=headers)
-    profile_data = profile_response.json()
+    if userinfo_response.status_code != 200:
+        return {"error": "Could not retrieve user information."}, 500
 
-    return f"<h1>Welcome {profile_data.get('localizedFirstName')} {profile_data.get('localizedLastName')}</h1>"
+    # Extract the user's name
+    first_name = userinfo_data.get('given_name', 'No first name found')
+    last_name = userinfo_data.get('family_name', 'No last name found')
+
+    return redirect(f"http://localhost:5173?first_name={first_name}&last_name={last_name}")
 
 if __name__ == '__main__':
     app.run(debug=True)
