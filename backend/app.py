@@ -5,8 +5,9 @@ import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')  
+app.secret_key = 'secret' 
 CORS(app)
+load_dotenv()
 
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
@@ -15,6 +16,10 @@ LINKEDIN_AUTH_URL = 'https://www.linkedin.com/oauth/v2/authorization'
 LINKEDIN_TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
 LINKEDIN_API_URL = 'https://api.linkedin.com/v2/me'
 LINKEDIN_USERINFO_URL = 'https://api.linkedin.com/v2/userinfo'
+app.config.update(
+    SESSION_COOKIE_SAMESITE='None',  # Allow cross-origin cookies
+    SESSION_COOKIE_SECURE=False  # Set to True if you're using HTTPS
+)
 
 @app.route('/')
 def home():
@@ -37,7 +42,7 @@ def callback():
     code = request.args.get('code')
     if not code:
         return {"error": "No authorization code provided."}, 400
-
+    session['Hello'] = 'Ivan'
     # Exchange the authorization code for an access token
     token_data = {
         'grant_type': 'authorization_code',
@@ -70,5 +75,13 @@ def callback():
 
     return redirect(f"http://localhost:5173?first_name={first_name}&last_name={last_name}")
 
+@app.route('/get_user')
+def get_user():
+    # Print the session variable
+    hello_value = session.get('Hello', 'No session data found')
+    print(f"Session data: {hello_value}")  # This will print to the console
+    
+    # You can also return it as a JSON response
+    return {"message": f"Session data: {hello_value}"}
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5173)

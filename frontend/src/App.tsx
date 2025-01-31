@@ -11,22 +11,34 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null); // State to store user info
 
   const handleLogin = () => {
-    window.location.href = "http://127.0.0.1:5000/login";
+    window.location.href = "http://127.0.0.1:5173/login";
   };
 
   useEffect(() => {
-    // Check if query parameters are present
-    const params = new URLSearchParams(window.location.search);
-    const firstName = params.get("first_name");
-    const lastName = params.get("last_name");
-
-    if (firstName && lastName) {
-      setUser({
-        first_name: firstName,
-        last_name: lastName,
+    // Fetch the user data from the Flask server after login
+    const fetchUserData = async () => {
+      const response = await fetch("http://127.0.0.1:5173/get_user", {
+        method: 'GET',
+    credentials: 'include'
       });
-    }
-  }, []); // Runs on component mount to extract query parameters
+      const data = await response.json();
+      console.log(data); // Logs the response from Flask, e.g., the session data
+
+      // Check if user data is available from the query parameters
+      const params = new URLSearchParams(window.location.search);
+      const firstName = params.get("first_name");
+      const lastName = params.get("last_name");
+
+      if (firstName && lastName) {
+        setUser({
+          first_name: firstName,
+          last_name: lastName,
+        });
+      }
+    };
+
+    fetchUserData();
+  }, []); // Runs on component mount to fetch user data
 
   return (
     <Fragment>
@@ -51,5 +63,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
