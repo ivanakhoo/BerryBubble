@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Form, Button, Card, CardBody, FormLabel, FormGroup, FormControl } from 'react-bootstrap';
+import { Form, Button, Card, CardBody, FormLabel, FormGroup, FormControl, Alert } from 'react-bootstrap';
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 
@@ -20,20 +20,23 @@ export default function Signup() {
         
         try {
             setError('')
+            setLoading(true)
             await signup(emailRef.current?.value, passwordRef.current?.value)
         } catch {
             setError('Failed to create an account.')
         }
-        if (emailRef.current && passwordRef.current) {
-            signup(emailRef.current.value, passwordRef.current.value);
-        }
+
+        setLoading(false)
     }
 
     return (
-        <>
+        <><div>
+            <h1 className="display-2 text-center text-primary mb-4">Berry Bubble</h1>
+        </div>
             <Card>
                 <CardBody>
                     <h2 className="text-center mb-4">Sign Up</h2>
+                    {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <FormGroup id="email">
                             <FormLabel>Email</FormLabel>
@@ -50,7 +53,7 @@ export default function Signup() {
                             <FormControl type="password" ref={passwordConfirmRef} required />
                         </FormGroup>
 
-                        <Button className="w-100 mt-2" type="submit">Sign Up</Button>
+                        <Button disabled={loading} className="w-100 mt-2" type="submit">Sign Up</Button>
                     </Form>
                 </CardBody>
             </Card>
