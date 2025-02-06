@@ -30,7 +30,7 @@ export default function Dashboard() {
                 Email:
             </strong>
             {currentUser.email}
-            <Link to="update-profile" className="btn btn-primary w-100 mt-3">
+            <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
             Update Profile
             </Link>
             </CardBody>

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../firebase"; // Adjust if necessary
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, updateEmail, verifyBeforeUpdateEmail } from "firebase/auth";
 
 // Create Context with initial value
 const AuthContext = createContext(null);
@@ -28,7 +28,16 @@ export function AuthProvider({ children }) {
   }
 
   function resetPassword(email) {
-    sendPasswordResetEmail(auth, email)
+    return sendPasswordResetEmail(auth, email)
+  }
+
+  function upEmail(email) {
+    return update
+  }
+  
+
+  function upPassword(password) {
+    return updatePassword(currentUser, password)
   }
 
   useEffect(() => {
@@ -45,7 +54,9 @@ export function AuthProvider({ children }) {
     login,
     signup,
     logout,
-    resetPassword
+    resetPassword,
+    upEmail,
+    upPassword
   };
 
   return <AuthContext.Provider value={value}>
