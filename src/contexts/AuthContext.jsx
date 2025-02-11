@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../firebase"; // Adjust if necessary
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, updateEmail, verifyBeforeUpdateEmail } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, verifyBeforeUpdateEmail, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 
 // Create Context with initial value
 const AuthContext = createContext(null);
@@ -31,8 +31,30 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email)
   }
 
-  function upEmail(email) {
-    return update
+  function upEmail(newEmail) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const user = auth.currentUser;
+    const email = user.email;
+    const password = prompt("Please enter your password to confirm email update:"); 
+    
+    if (!password) {
+      return Promise.reject(new Error("Password is required for re-authentication"));
+    }
+  
+    const credential = EmailAuthProvider.credential(email, password);
+  
+    return reauthenticateWithCredential(user, credential)
+      .then(() => {
+        console.log("Verified!")
+        return verifyBeforeUpdateEmail(user, newEmail);
+      })
+      .catch((error) => {
+        console.error("Failed to update email:", error);
+        throw error;
+      });
   }
   
 

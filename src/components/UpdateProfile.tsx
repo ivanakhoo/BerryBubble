@@ -5,6 +5,16 @@ import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from 'react-router-dom';
 
 // updateEmail is deprecated and is not working.
+// You must re-authenticate the user with their previous credentials and use verifyBeforeUpdateEmail
+//  for verification in order to update an email in Firebase.
+/**
+ * 
+ * final cred = EmailAuthProvider.credential(email: user.email, password: password);
+
+  try {
+    await user.reauthenticateWithCredential(cred);
+    await user.verifyBeforeUpdateEmail(newEmail);
+ */
 export default function UpdateProfile() {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -14,33 +24,69 @@ export default function UpdateProfile() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
+    // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    //     e.preventDefault();
+
+    //     if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
+    //         return setError('Passwords do not match.');
+    //     }
+
+    //     const promises = []
+    //     setLoading(true)
+    //     setError('')
+    //     if (emailRef.current?.value !== currentUser.email) {
+    //         promises.push(upEmail(emailRef.current?.value))
+    //     }
+
+    //     if (passwordRef.current?.value) {
+    //         promises.push(upPassword(passwordRef.current?.value))
+    //     }
+
+    //     Promise.all(promises).then(() => {
+    //         navigate('/')
+    //     }).catch(() => {
+    //         setError('Failed to update account.')
+    //     }).finally(() => {
+    //         setLoading(false)
+    //     })
+        
+    // }
+
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
+    
         if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
             return setError('Passwords do not match.');
         }
-
-        const promises = []
-        setLoading(true)
-        setError('')
+    
+        const promises = [];
+        setLoading(true);
+        setError('');
+    
         if (emailRef.current?.value !== currentUser.email) {
-            promises.push(upEmail(emailRef.current?.value))
+            promises.push(
+                upEmail(emailRef.current?.value).then(() => {
+                    alert("Check your new email for a verification link.");
+                })
+            );
         }
-
+    
         if (passwordRef.current?.value) {
-            promises.push(upPassword(passwordRef.current?.value))
+            promises.push(upPassword(passwordRef.current?.value));
         }
-
-        Promise.all(promises).then(() => {
-            navigate('/')
-        }).catch(() => {
-            setError('Failed to update account.')
-        }).finally(() => {
-            setLoading(false)
-        })
-        
+    
+        Promise.all(promises)
+            .then(() => {
+                navigate('/');
+            })
+            .catch(() => {
+                setError('Failed to update account.');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
+    
 
     return (
         <><div>
