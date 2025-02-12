@@ -9,6 +9,7 @@ import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import AddDetails from "./AddDetails";
 const App: React.FC = () => {
   return (
       <Container
@@ -23,6 +24,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/update-profile" element={<PrivateRoute />}>
                   <Route index element={<UpdateProfile />} />
+                </Route>
+                <Route path="/add-details" element={<PrivateRoute />}>
+                  <Route index element={<AddDetails />} />
                 </Route>
                 <Route path="/signup" element={<Signup />}/>
                 <Route path="/login" element={<Login />}/>

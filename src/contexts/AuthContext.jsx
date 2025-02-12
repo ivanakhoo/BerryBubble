@@ -62,6 +62,10 @@ export function AuthProvider({ children }) {
     return updatePassword(currentUser, password)
   }
 
+  function addDetails() {
+    return Database.collection()
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
@@ -78,7 +82,8 @@ export function AuthProvider({ children }) {
     logout,
     resetPassword,
     upEmail,
-    upPassword
+    upPassword,
+    addDetails
   };
 
   return <AuthContext.Provider value={value}>
