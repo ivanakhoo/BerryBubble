@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../firebase"; // Adjust if necessary
+// @ts-ignore
+import { db } from "../firebase"; // Import Firestore instance
+import { doc, setDoc, updateDoc, collection } from "firebase/firestore";
 import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, verifyBeforeUpdateEmail, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 
 // Create Context with initial value
@@ -15,9 +18,25 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true)
 
-  function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signup(email, password) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const newUserRef = doc(db, "users", user.uid);
+
+      await setDoc(newUserRef, {
+        email: user.email,
+        createdAt: new Date().toISOString(),
+      });
+  
+      return user; 
+    } catch (error) {
+      console.error("Error signing up:", error);
+      throw error; 
+    }
   }
+  
 
   function login(email, password) {
     return signInWithEmailAndPassword(auth, email, password);

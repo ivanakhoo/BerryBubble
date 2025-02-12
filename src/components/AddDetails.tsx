@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // @ts-ignore
 import { db } from "../firebase"; // Import Firestore instance
 import { collection, getDocs } from "firebase/firestore";
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function AddDetails() {
   // State to store fetched Firestore documents
@@ -18,8 +19,8 @@ export default function AddDetails() {
 
   return (
     <div>
-      <h1>Showing Data</h1>
-      <button onClick={fetchAll}>Fetch All Docs</button>
+      <h1 className="text-center">Showing Data</h1>
+      <button className="btn btn-primary w-100 mt-3" onClick={fetchAll}>Fetch All Docs</button>
 
       {/* Display Firestore Data */}
       <ul>
@@ -27,9 +28,13 @@ export default function AddDetails() {
           <li key={doc.id}>
             <strong>ID:</strong> {doc.id} <br />
             <strong>Data:</strong> {JSON.stringify(doc.data)}
+            <h1>{doc.data.Bio}</h1>
           </li>
         ))}
       </ul>
+      <Link to="/" className="btn btn-primary w-100 mt-3">
+            Back to Dashboard
+            </Link>
     </div>
   );
 }
