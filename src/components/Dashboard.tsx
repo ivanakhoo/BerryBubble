@@ -56,6 +56,12 @@ export default function Dashboard() {
                     <Link to="add-details" className="btn btn-primary w-100 mt-3">
                         Add Details
                     </Link>
+                    <Link to="profile-picture-upload" className="btn btn-primary w-100 mt-3">
+                        Profile Picture Upload
+                    </Link>
+                    <Link to="profile-picture-display" className="btn btn-primary w-100 mt-3">
+                        Profile Picture Display
+                    </Link>
                 </CardBody>
             </Card>
             <div className="w-100 text-center mt-2">
@@ -66,12 +72,14 @@ export default function Dashboard() {
             <h1 className="text-center mt-4">All other user data</h1>
             <ul>
                 {allDocs.map((doc) => (
-                    <div>
-                        <h2>Welcome, {doc.data.DisplayName}, Class of {doc.data.GradYear}!</h2> <br />
-                        <h3>{doc.data.FirstName}'s Bio: {doc.data.Bio}</h3>
-                    </div>
+                <li key={doc.id}> {/* Add a unique key here */}
+                <h2>Welcome, {doc.data.DisplayName}, Class of {doc.data.GradYear}!</h2>
+                <br />
+                <h3>{doc.data.FirstName}'s Bio: {doc.data.Bio}</h3>
+                </li>
                 ))}
             </ul>
+
         </>
     );
 }

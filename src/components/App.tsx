@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import AddDetails from "./AddDetails";
+import ProfilePictureUpload from "./ProfilePictureUpload";
+import ProfilePictureDisplay from "./ProfilePictureDisplay";
 const App: React.FC = () => {
   return (
       <Container
@@ -27,6 +29,12 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/add-details" element={<PrivateRoute />}>
                   <Route index element={<AddDetails />} />
+                </Route>
+                <Route path="/profile-picture-upload" element={<PrivateRoute />}>
+                  <Route index element={<ProfilePictureUpload />} />
+                </Route>
+                <Route path="/profile-picture-display" element={<PrivateRoute />}>
+                  <Route index element={<ProfilePictureDisplay />} />
                 </Route>
                 <Route path="/signup" element={<Signup />}/>
                 <Route path="/login" element={<Login />}/>
