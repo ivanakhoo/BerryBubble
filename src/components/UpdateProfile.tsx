@@ -8,7 +8,12 @@ export default function UpdateProfile() {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
-    const { currentUser, upEmail, upPassword } = useAuth();
+    const bioRef = useRef<HTMLInputElement>(null); 
+    const gradYearRef = useRef<HTMLInputElement>(null); 
+    const firstRef = useRef<HTMLInputElement>(null); 
+    const lastRef = useRef<HTMLInputElement>(null); 
+    const displayRef = useRef<HTMLInputElement>(null); 
+    const { currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
@@ -34,6 +39,26 @@ export default function UpdateProfile() {
     
         if (passwordRef.current?.value) {
             promises.push(upPassword(passwordRef.current?.value));
+        }
+
+        if (bioRef.current?.value) {
+            promises.push(upBio(bioRef.current?.value)); 
+        }
+
+        if (gradYearRef.current?.value) {
+            promises.push(upGradYear(gradYearRef.current?.value)); 
+        }
+
+        if (firstRef.current?.value) {
+            promises.push(upFirstName(firstRef.current?.value)); 
+        }
+
+        if (lastRef.current?.value) {
+            promises.push(upLastName(lastRef.current?.value)); 
+        }
+
+        if (displayRef.current?.value) {
+            promises.push(upDisplayName(displayRef.current?.value)); 
         }
     
         Promise.all(promises)
@@ -71,6 +96,31 @@ export default function UpdateProfile() {
                         <FormGroup id="password-confirm">
                             <FormLabel>Password Confirmation</FormLabel>
                             <FormControl type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same."/>
+                        </FormGroup>
+
+                        <FormGroup id="bio">
+                            <FormLabel>Bio</FormLabel>
+                            <FormControl type="text" ref={bioRef} placeholder="Enter your new bio." />
+                        </FormGroup>
+
+                        <FormGroup id="gradYear">
+                            <FormLabel>Graduation Year</FormLabel>
+                            <FormControl type="text" ref={gradYearRef} placeholder="Enter your graduation year." />
+                        </FormGroup>
+
+                        <FormGroup id="firstName">
+                            <FormLabel>First Name</FormLabel>
+                            <FormControl type="text" ref={firstRef} placeholder="Enter your first name." />
+                        </FormGroup>
+
+                        <FormGroup id="lastName">
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl type="text" ref={lastRef} placeholder="Enter your last name." />
+                        </FormGroup>
+
+                        <FormGroup id="displayName">
+                            <FormLabel>Display Name</FormLabel>
+                            <FormControl type="text" ref={displayRef} placeholder="Enter your preferred display name." />
                         </FormGroup>
 
                         <Button disabled={loading} className="w-100 mt-2" type="submit">Update</Button>

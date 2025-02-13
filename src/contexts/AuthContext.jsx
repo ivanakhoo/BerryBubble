@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email)
   }
 
-  function upEmail(newEmail) {
+  async function upEmail(newEmail) {
     if (!currentUser) {
       return Promise.reject(new Error("No authenticated user"));
     }
@@ -81,9 +81,102 @@ export function AuthProvider({ children }) {
     return updatePassword(currentUser, password)
   }
 
-  function addDetails() {
-    return Database.collection()
+  async function upBio(bio) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); // Get reference to the user's Firestore document
+  
+    return updateDoc(userRef, {
+      Bio: bio, // Update the Bio field
+    })
+      .then(() => {
+        console.log("Bio updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating bio:", error);
+        throw error;
+      });
   }
+  
+  async function upGradYear(gradYear) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); // Get reference to the user's Firestore document
+  
+    return updateDoc(userRef, {
+      GradYear: gradYear, // Update the GradYear field
+    })
+      .then(() => {
+        console.log("Graduation year updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating graduation year:", error);
+        throw error;
+      });
+  }
+
+  async function upFirstName(firstName) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); 
+  
+    return updateDoc(userRef, {
+      FirstName: firstName,
+    })
+      .then(() => {
+        console.log("First name updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating first name:", error);
+        throw error;
+      });
+  }
+
+
+  async function upLastName(lastName) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); 
+  
+    return updateDoc(userRef, {
+      LastName: lastName,
+    })
+      .then(() => {
+        console.log("Last name updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating last name:", error);
+        throw error;
+      });
+  }
+
+  async function upDisplayName(displayName) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); 
+  
+    return updateDoc(userRef, {
+      DisplayName: displayName,
+    })
+      .then(() => {
+        console.log("Display name updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating display name:", error);
+        throw error;
+      });
+  }
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -102,7 +195,11 @@ export function AuthProvider({ children }) {
     resetPassword,
     upEmail,
     upPassword,
-    addDetails
+    upBio,
+    upGradYear,
+    upFirstName,
+    upLastName,
+    upDisplayName
   };
 
   return <AuthContext.Provider value={value}>
