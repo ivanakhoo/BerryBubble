@@ -41,26 +41,11 @@ const ProfilePictureUpload: React.FC = () => {
     }
   };
 
-  // Fetch User Profile Picture
-  const fetchProfilePic = async () => {
-    if (user) {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data() as { profilePic?: string };
-        if (data.profilePic) setImageUrl(data.profilePic);
-      }
-    }
-  };
 
   return (
     <div>
-      <h2>Upload Profile Picture</h2>
+      <p className="text-center mt-3">Upload Profile Picture</p>
       <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {imageUrl && (
-        <img src={imageUrl} alt="Profile" width="150" style={{ borderRadius: "50%" }} />
-      )}
-      <button onClick={fetchProfilePic}>Load My Profile Picture</button>
     </div>
   );
 };
