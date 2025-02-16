@@ -177,6 +177,44 @@ export function AuthProvider({ children }) {
       });
   }
 
+  async function upLinkedIn(linkedIn) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); 
+  
+    return updateDoc(userRef, {
+      LinkedIn: linkedIn,
+    })
+      .then(() => {
+        console.log("LinkedIn URL updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating LinkedIn URL:", error);
+        throw error;
+      });
+  }
+
+  async function upGitHub(gitHub) {
+    if (!currentUser) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", currentUser.uid); 
+  
+    return updateDoc(userRef, {
+      GitHub: gitHub,
+    })
+      .then(() => {
+        console.log("GitHub URL updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating GitHub URL:", error);
+        throw error;
+      });
+  }
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -199,7 +237,9 @@ export function AuthProvider({ children }) {
     upGradYear,
     upFirstName,
     upLastName,
-    upDisplayName
+    upDisplayName,
+    upLinkedIn,
+    upGitHub
   };
 
   return <AuthContext.Provider value={value}>

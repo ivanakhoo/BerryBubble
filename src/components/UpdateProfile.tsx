@@ -17,7 +17,9 @@ export default function UpdateProfile() {
     const firstRef = useRef<HTMLInputElement>(null); 
     const lastRef = useRef<HTMLInputElement>(null); 
     const displayRef = useRef<HTMLInputElement>(null); 
-    const { currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName } = useAuth();
+    const gitHubRef = useRef<HTMLInputElement>(null); 
+    const linkedInRef = useRef<HTMLInputElement>(null); 
+    const { currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -80,6 +82,14 @@ export default function UpdateProfile() {
 
         if (displayRef.current?.value) {
             promises.push(upDisplayName(displayRef.current?.value)); 
+        }
+
+        if (gitHubRef.current?.value) {
+            promises.push(upGitHub(gitHubRef.current?.value)); 
+        }
+
+        if (linkedInRef.current?.value) {
+            promises.push(upLinkedIn(linkedInRef.current?.value)); 
         }
     
         Promise.all(promises)
@@ -163,6 +173,16 @@ export default function UpdateProfile() {
                         <FormGroup id="displayName">
                             <FormLabel>Display Name</FormLabel>
                             <FormControl type="text" ref={displayRef} placeholder="Enter your preferred display name." />
+                        </FormGroup>
+
+                        <FormGroup id="LinkedIn">
+                            <FormLabel>LinkedIn URL</FormLabel>
+                            <FormControl type="text" ref={linkedInRef} placeholder="Enter your LinkedIn URL." />
+                        </FormGroup>
+
+                        <FormGroup id="GitHub">
+                            <FormLabel>GitHub URL</FormLabel>
+                            <FormControl type="text" ref={gitHubRef} placeholder="Enter your GitHub URL." />
                         </FormGroup>
 
                         <Button disabled={loading} className="w-100 mt-2" type="submit">Update</Button>

@@ -129,7 +129,17 @@ export default function Dashboard() {
                           />
                         )}
                         <h5>Class of {doc.data.GradYear}</h5>
+                        <a href="https://www.linkedin.com/in/ivanakhoo/">LinkedIn</a>
                         <p>{doc.data.Bio}</p>
+                    <div>
+    <a href={doc.data.GitHub} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+        <img src="/githubwhite.png" alt="GitHub" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+    </a>
+    <a href={doc.data.LinkedIn} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+        <img src="/linkedinwhite.png" alt="LinkedIn" style={{ width: '30px', height: '30px' }} />
+    </a>
+</div>
+
                     </div>
                 ))}
             </div>
