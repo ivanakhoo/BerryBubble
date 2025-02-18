@@ -73,16 +73,16 @@ export default function Dashboard() {
                         <div className="mt-3">
                             <h3>Profile Picture</h3>
                             <img 
-                            src={profilePic} 
-                            alt="Profile" 
-                            style={{
-                              width: "150px", 
-                              height: "150px", 
-                              borderRadius: "50%", 
-                              objectFit: "cover",
-                              border: "3px solid #ddd" // Optional border for aesthetics
-                            }} 
-                          />
+                                src={profilePic} 
+                                alt="Profile" 
+                                style={{
+                                    width: "150px", 
+                                    height: "150px", 
+                                    borderRadius: "50%", 
+                                    objectFit: "cover",
+                                    border: "3px solid #ddd" // Optional border for aesthetics
+                                }} 
+                            />
                         </div>
                     ) : (
                         <p>No profile picture uploaded</p>
@@ -101,45 +101,55 @@ export default function Dashboard() {
             <div className="d-flex flex-wrap justify-content-center">
                 {allDocs.map((doc) => (
                     <div key={doc.id} className="text-center p-3">
-                        <h3>{doc.data.DisplayName}</h3>
-                        {/* Display Profile Picture for each user */}
-                        {doc.data.profilePic ? (
-                            <img 
-                            src={doc.data.profilePic} 
-                            alt="Profile" 
-                            style={{
-                              width: "150px", 
-                              height: "150px", 
-                              borderRadius: "50%", 
-                              objectFit: "cover",
-                              border: "3px solid #ddd" 
-                            }} 
-                          />
-                        ) : (
-                            <img 
-                            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" 
-                            alt="Profile" 
-                            style={{
-                              width: "150px", 
-                              height: "150px", 
-                              borderRadius: "50%", 
-                              objectFit: "cover",
-                              border: "3px solid #ddd"
-                            }} 
-                          />
-                        )}
-                        <h5>Class of {doc.data.GradYear}</h5>
-                        <a href="https://www.linkedin.com/in/ivanakhoo/">LinkedIn</a>
-                        <p>{doc.data.Bio}</p>
-                    <div>
-    <a href={doc.data.GitHub} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-        <img src="/githubwhite.png" alt="GitHub" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-    </a>
-    <a href={doc.data.LinkedIn} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-        <img src="/linkedinwhite.png" alt="LinkedIn" style={{ width: '30px', height: '30px' }} />
-    </a>
-</div>
-
+                        <Card style={{ width: '18rem' }} className="mb-4">
+                            <CardBody>
+                                <h3>{doc.data.DisplayName}</h3>
+                                {/* Display Profile Picture for each user */}
+                                {doc.data.profilePic ? (
+                                    <img 
+                                        src={doc.data.profilePic} 
+                                        alt="Profile" 
+                                        style={{
+                                            width: "150px", 
+                                            height: "150px", 
+                                            borderRadius: "50%", 
+                                            objectFit: "cover",
+                                            border: "3px solid #ddd" 
+                                        }} 
+                                    />
+                                ) : (
+                                    <img 
+                                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" 
+                                        alt="Profile" 
+                                        style={{
+                                            width: "150px", 
+                                            height: "150px", 
+                                            borderRadius: "50%", 
+                                            objectFit: "cover",
+                                            border: "3px solid #ddd"
+                                        }} 
+                                    />
+                                )}
+                                <h5>Class of {doc.data.GradYear}</h5>
+                                <p>{doc.data.Bio}</p>
+                                <div>
+                                    {(doc.data.GitHub || doc.data.LinkedIn) && (
+                                        <div>
+                                            {doc.data.GitHub && (
+                                                <a href={doc.data.GitHub} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                                                    <img src="/githubwhite.png" alt="GitHub" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+                                                </a>
+                                            )}
+                                            {doc.data.LinkedIn && (
+                                                <a href={doc.data.LinkedIn} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                                                    <img src="/linkedinwhite.png" alt="LinkedIn" style={{ width: '30px', height: '30px' }} />
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </CardBody>
+                        </Card>
                     </div>
                 ))}
             </div>
