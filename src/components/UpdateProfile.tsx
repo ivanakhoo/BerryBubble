@@ -27,6 +27,8 @@ export default function UpdateProfile() {
 
     const navigate = useNavigate();
 
+    const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
     useEffect(() => {
         const fetchProfilePic = async () => {
             if (currentUser) {
@@ -116,9 +118,8 @@ export default function UpdateProfile() {
 
                     {/* Profile Picture Upload Section */}
                     <div className="text-center mb-3">
-                        {profilePic ? (
                             <img 
-                            src={profilePic} 
+                            src={profilePic || defaultProfilePic} 
                             alt="Profile" 
                             style={{
                               width: "150px", 
@@ -128,9 +129,6 @@ export default function UpdateProfile() {
                               border: "3px solid #ddd" // Optional border for aesthetics
                             }} 
                           />
-                        ) : (
-                            <p>No profile picture set.</p>
-                        )}
                     </div>
                     <ProfilePictureUpload />
 

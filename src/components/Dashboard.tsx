@@ -99,7 +99,7 @@ export default function Dashboard() {
                                 <h5>Class of {doc.data.GradYear}</h5>
                                 <p>{doc.data.Bio}</p>
                                 <div>
-                                    {(doc.data.GitHub || doc.data.LinkedIn) && (
+                                    {(doc.data.GitHub || doc.data.LinkedIn || doc.data.email) && (
                                         <div>
                                             {doc.data.GitHub && (
                                                 <a href={doc.data.GitHub} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
@@ -108,7 +108,12 @@ export default function Dashboard() {
                                             )}
                                             {doc.data.LinkedIn && (
                                                 <a href={doc.data.LinkedIn} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-                                                    <img src="/linkedinwhite.png" alt="LinkedIn" style={{ width: '30px', height: '30px' }} />
+                                                    <img src="/linkedinwhite.png" alt="LinkedIn" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+                                                </a>
+                                            )}
+                                            {doc.data.email && (
+                                                <a href={`mailto:${doc.data.email}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                                                    <img src="/email.png" alt="Email" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
                                                 </a>
                                             )}
                                         </div>

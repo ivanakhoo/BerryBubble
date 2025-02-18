@@ -12,6 +12,7 @@ const NavBarComponent: React.FC = () => {
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+  const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   useEffect(() => {
     if (!currentUser) {
@@ -75,12 +76,9 @@ const NavBarComponent: React.FC = () => {
               Logout
             </NavDropdown.Item>
           </NavDropdown>
-
-          {/* Display Profile Picture */}
-          {profilePic && (
             <Nav.Link>
               <img
-                src={profilePic}
+                src={profilePic || defaultProfilePic}
                 alt="Profile"
                 style={{
                   width: "40px",
@@ -91,7 +89,6 @@ const NavBarComponent: React.FC = () => {
                 }}
               />
             </Nav.Link>
-          )}
         </Nav>
       </Container>
     </Navbar>
