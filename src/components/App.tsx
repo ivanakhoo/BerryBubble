@@ -7,7 +7,7 @@ import PrivateRoute from "./PrivateRoute";
 import UpdateProfile from "./UpdateProfile";
 import NavBarComponent from "./NavBarComponent";
 import { Container } from "react-bootstrap";
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 
@@ -21,6 +21,10 @@ const App: React.FC = () => {
           style={{
             paddingTop: "70px", // Adjust this based on the height of your navbar
             minHeight: "100vh",
+            background: "linear-gradient(135deg, #1d3c6a, #3e6b8c, #000000)", // Lighter blue to black gradient
+            color: "white", // Text contrast color
+            backgroundSize: "400% 400%", // Creates the flowy effect
+            animation: "gradientFlow 10s ease infinite", // Smooth gradient animation
           }}
         >
           <Container className="d-flex align-items-center justify-content-center">
@@ -43,6 +47,5 @@ const App: React.FC = () => {
     </Router>
   );
 };
-
 
 export default App;
