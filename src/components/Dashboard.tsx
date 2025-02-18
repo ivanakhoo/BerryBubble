@@ -62,40 +62,6 @@ export default function Dashboard() {
 
     return (
         <>
-            <Card>
-                <CardBody>
-                    <h2 className="text-center mb-4">Profile</h2>
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    <strong>Email:</strong> {currentUser.email}
-                    <br />
-                    {/* Display Profile Picture for Current User */}
-                    {profilePic ? (
-                        <div className="mt-3">
-                            <h3>Profile Picture</h3>
-                            <img 
-                                src={profilePic} 
-                                alt="Profile" 
-                                style={{
-                                    width: "150px", 
-                                    height: "150px", 
-                                    borderRadius: "50%", 
-                                    objectFit: "cover",
-                                    border: "3px solid #ddd" // Optional border for aesthetics
-                                }} 
-                            />
-                        </div>
-                    ) : (
-                        <p>No profile picture uploaded</p>
-                    )}
-                    <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
-                        Update Profile
-                    </Link>
-                </CardBody>
-            </Card>
-            <div className="w-100 text-center mt-2">
-                <Button variant="link" onClick={handleLogout}>Log Out</Button>
-            </div>
-
             {/* Display All Users with their Profile Pictures */}
             <h1 className="text-center mt-4">All Users</h1>
             <div className="d-flex flex-wrap justify-content-center">

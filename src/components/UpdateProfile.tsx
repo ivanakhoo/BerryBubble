@@ -111,7 +111,7 @@ export default function UpdateProfile() {
             </div>
             <Card>
                 <CardBody>
-                    <h2 className="text-center mb-4">Update Profile</h2>
+                    <h2 className="text-center mb-4">My Profile</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
 
                     {/* Profile Picture Upload Section */}
@@ -184,8 +184,25 @@ export default function UpdateProfile() {
                             <FormLabel>GitHub URL</FormLabel>
                             <FormControl type="text" ref={gitHubRef} placeholder="Enter your GitHub URL." />
                         </FormGroup>
+                        <Button
+                        disabled={loading}
+                        className="w-100 mt-2"
+                        type="submit"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            const isConfirmed = window.confirm("Are you sure you want to save the changes?");
 
-                        <Button disabled={loading} className="w-100 mt-2" type="submit">Update</Button>
+                            if (isConfirmed) {
+
+                            handleSubmit({
+                                preventDefault: () => {},
+                                target: e.target, 
+                            } as React.FormEvent<HTMLFormElement>);
+                            }
+                        }}
+                        >
+                        Save
+                        </Button>
                     </Form>
                 </CardBody>
             </Card>
