@@ -58,10 +58,8 @@ const NavBarComponent: React.FC = () => {
         <Navbar.Brand href="/">Berry Bubble</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link href="/">Home</Nav.Link>
-          {/* TODO */}
-          <Nav.Link href="#current">Current Students</Nav.Link>
-          {/* TODO */}
-          <Nav.Link href="#alumni">Alumni</Nav.Link>
+          <Nav.Link href="/currentStudents">Current Students</Nav.Link>
+          <Nav.Link href="/alumni">Alumni</Nav.Link>
         </Nav>
         <Nav className="ms-auto d-flex align-items-center">
           {/* Profile Dropdown */}

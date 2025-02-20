@@ -11,6 +11,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import Details from "./Details";
+import CurrentStudentsDashboard from "./CurrentStudentsDashboard";
+import AlumniDashboard from "./AlumniDashboard";
 
 const App: React.FC = () => {
   return (
@@ -39,6 +41,12 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/details" element={<PrivateRoute />}>
                   <Route index element={<Details />} />
+                </Route>
+                <Route path="/currentStudents" element={<PrivateRoute />}>
+                  <Route index element={<CurrentStudentsDashboard />} />
+                </Route>
+                <Route path="/alumni" element={<PrivateRoute />}>
+                  <Route index element={<AlumniDashboard />} />
                 </Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
