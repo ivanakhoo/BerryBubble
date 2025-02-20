@@ -1,29 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Card, Button, Alert, CardBody } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Card, CardBody } from "react-bootstrap";
 // @ts-ignore
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; // Import Firestore instance
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 
 export default function Dashboard() {
-    const [error, setError] = useState("");
     const [profilePic, setProfilePic] = useState<string | null>(null);
     const [allDocs, setAllDocs] = useState<{ id: string; data: any }[]>([]);
-    const { currentUser, logout } = useAuth();
-    const navigate = useNavigate();
-
-    async function handleLogout() {
-        setError('');
-
-        try {
-            await logout();
-            navigate("/login");
-        } catch {
-            setError('Failed to log out.');
-        }
-    }
+    const { currentUser } = useAuth();
+    const [isAdmin, setIsAdmin] = useState<boolean>(false); // State to track if the current user is an admin
 
     // Fetch profile picture of current user from Firestore
     useEffect(() => {
@@ -33,8 +21,9 @@ export default function Dashboard() {
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    const data = docSnap.data() as { profilePic?: string };
+                    const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean };
                     setProfilePic(data.profilePic || ""); // Set profilePic state
+                    setIsAdmin(data.adminFlag || false); // Set isAdmin based on fetched data
                 }
             }
         };
@@ -119,6 +108,12 @@ export default function Dashboard() {
                                         </div>
                                     )}
                                 </div>
+                                {/* Show Update Profile link for all docs if the user is an admin */}
+                                {isAdmin && (
+                                    <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
+                                        Update Profile
+                                    </Link>
+                                )}
                             </CardBody>
                         </Card>
                     </div>

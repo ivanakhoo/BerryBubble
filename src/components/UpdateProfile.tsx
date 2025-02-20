@@ -3,6 +3,7 @@ import { Form, Button, Card, CardBody, FormLabel, FormGroup, FormControl, Alert 
 import { Link, useNavigate } from "react-router-dom";
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import { useLocation } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -19,20 +20,57 @@ export default function UpdateProfile() {
     const displayRef = useRef<HTMLInputElement>(null); 
     const gitHubRef = useRef<HTMLInputElement>(null); 
     const linkedInRef = useRef<HTMLInputElement>(null); 
-    const { currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
+    const { upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [profilePic, setProfilePic] = useState<string>("");
 
+    const location = useLocation();
+    const userUID = location.state?.userUID;
+
     const navigate = useNavigate();
 
     const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
+    interface User {
+        Bio?: string;
+        DisplayName?: string;
+        FirstName?: string;
+        LastName?: string;
+        GitHub?: string;
+        LinkedIn?: string;
+        GradYear?: string;
+        adminFlag?: boolean;
+        createdAt?: string;
+        email?: string;
+        profilePic?: string;
+        userUID?: string;
+      }
+
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+        if (!userUID) return;
+        const userRef = doc(db, "users", userUID); // Assuming "users" collection
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            setUser(userSnap.data()); // Cast to User type
+        } else {
+            console.log("No such user found!");
+        }
+        };
+
+    fetchUser();
+    }, [userUID]);
+
+
     useEffect(() => {
         const fetchProfilePic = async () => {
-            if (currentUser) {
-                const docRef = doc(db, "users", currentUser.uid);
+            if (user) {
+                const docRef = doc(db, "users", userUID);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string };
@@ -41,7 +79,7 @@ export default function UpdateProfile() {
             }
         };
         fetchProfilePic();
-    }, [currentUser]);
+    }, [user]);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -54,44 +92,44 @@ export default function UpdateProfile() {
         setLoading(true);
         setError("");
     
-        if (emailRef.current?.value !== currentUser.email) {
+        if (emailRef.current?.value !== user?.email) {
             promises.push(
-                upEmail(emailRef.current?.value).then(() => {
+                upEmail(emailRef.current?.value, user).then(() => {
                     alert("Check your new email for a verification link.");
                 })
             );
         }
     
         if (passwordRef.current?.value) {
-            promises.push(upPassword(passwordRef.current?.value));
+            promises.push(upPassword(passwordRef.current?.value, user));
         }
 
         if (bioRef.current?.value) {
-            promises.push(upBio(bioRef.current?.value)); 
+            promises.push(upBio(bioRef.current?.value, user)); 
         }
 
         if (gradYearRef.current?.value) {
-            promises.push(upGradYear(gradYearRef.current?.value)); 
+            promises.push(upGradYear(gradYearRef.current?.value, user)); 
         }
 
         if (firstRef.current?.value) {
-            promises.push(upFirstName(firstRef.current?.value)); 
+            promises.push(upFirstName(firstRef.current?.value, user)); 
         }
 
         if (lastRef.current?.value) {
-            promises.push(upLastName(lastRef.current?.value)); 
+            promises.push(upLastName(lastRef.current?.value, user)); 
         }
 
         if (displayRef.current?.value) {
-            promises.push(upDisplayName(displayRef.current?.value)); 
+            promises.push(upDisplayName(displayRef.current?.value, user)); 
         }
 
         if (gitHubRef.current?.value) {
-            promises.push(upGitHub(gitHubRef.current?.value)); 
+            promises.push(upGitHub(gitHubRef.current?.value, user)); 
         }
 
         if (linkedInRef.current?.value) {
-            promises.push(upLinkedIn(linkedInRef.current?.value)); 
+            promises.push(upLinkedIn(linkedInRef.current?.value, user)); 
         }
     
         Promise.all(promises)
@@ -135,7 +173,7 @@ export default function UpdateProfile() {
                     <Form onSubmit={handleSubmit}>
                         <FormGroup id="email">
                             <FormLabel>Email</FormLabel>
-                            <FormControl type="email" ref={emailRef} required defaultValue={currentUser.email} />
+                            <FormControl type="email" ref={emailRef} required defaultValue={user?.email} />
                         </FormGroup>
 
                         <FormGroup id="password">
@@ -150,37 +188,37 @@ export default function UpdateProfile() {
 
                         <FormGroup id="bio">
                             <FormLabel>Bio</FormLabel>
-                            <FormControl type="text" ref={bioRef} placeholder="Enter your new bio." />
+                            <FormControl type="text" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
                         </FormGroup>
 
                         <FormGroup id="gradYear">
                             <FormLabel>Graduation Year</FormLabel>
-                            <FormControl type="text" ref={gradYearRef} placeholder="Enter your graduation year." />
+                            <FormControl type="text" ref={gradYearRef} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
                         </FormGroup>
 
                         <FormGroup id="firstName">
                             <FormLabel>First Name</FormLabel>
-                            <FormControl type="text" ref={firstRef} placeholder="Enter your first name." />
+                            <FormControl type="text" ref={firstRef} required defaultValue={user?.FirstName} placeholder="Enter your first name." />
                         </FormGroup>
 
                         <FormGroup id="lastName">
                             <FormLabel>Last Name</FormLabel>
-                            <FormControl type="text" ref={lastRef} placeholder="Enter your last name." />
+                            <FormControl type="text" ref={lastRef} required defaultValue={user?.LastName} placeholder="Enter your last name." />
                         </FormGroup>
 
                         <FormGroup id="displayName">
                             <FormLabel>Display Name</FormLabel>
-                            <FormControl type="text" ref={displayRef} placeholder="Enter your preferred display name." />
+                            <FormControl type="text" ref={displayRef} required defaultValue={user?.DisplayName} placeholder="Enter your preferred display name." />
                         </FormGroup>
 
                         <FormGroup id="LinkedIn">
                             <FormLabel>LinkedIn URL</FormLabel>
-                            <FormControl type="text" ref={linkedInRef} placeholder="Enter your LinkedIn URL." />
+                            <FormControl type="text" ref={linkedInRef} required defaultValue={user?.LinkedIn} placeholder="Enter your LinkedIn URL." />
                         </FormGroup>
 
                         <FormGroup id="GitHub">
                             <FormLabel>GitHub URL</FormLabel>
-                            <FormControl type="text" ref={gitHubRef} placeholder="Enter your GitHub URL." />
+                            <FormControl type="text" ref={gitHubRef} required defaultValue={user?.GitHub} placeholder="Enter your GitHub URL." />
                         </FormGroup>
                         <Button
                         disabled={loading}

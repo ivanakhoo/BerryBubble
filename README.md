@@ -12,3 +12,16 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - `JavaScript`
 - `Firebase`
 - `Cloudinary`
+
+## TODO
+Implement light and dark mode switch?
+Make a report button for inappropriate users
+Administrator level account in firebase 
+When you register an account it wont be activated until an admin approves it for being globally visible
+Additional tab for accepting and denying for admin
+6 digit code verification? To the email
+What to do with zombie accounts? -> hidden clean up process that deletes any non verified users after 2 days
+Potential projects title, short description, link
+User profile with teaser project in card body
+
+Flags for admin and flags for verified

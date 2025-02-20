@@ -69,7 +69,7 @@ const NavBarComponent: React.FC = () => {
             title="My Profile"
             id="navbarScrollingDropdown"
           >
-            <NavDropdown.Item as={Link} to="/update-profile">
+            <NavDropdown.Item as={Link} to="/update-profile" state={{ userUID: currentUser.uid }}>
               Update Profile
             </NavDropdown.Item>
             <NavDropdown.Item onClick={handleLogout}>

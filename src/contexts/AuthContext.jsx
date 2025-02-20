@@ -27,6 +27,8 @@ export function AuthProvider({ children }) {
 
       await setDoc(newUserRef, {
         email: user.email,
+        userUID: user.uid,
+        adminFlag: false,
         createdAt: new Date().toISOString(),
       });
   
@@ -50,19 +52,18 @@ export function AuthProvider({ children }) {
     return sendPasswordResetEmail(auth, email)
   }
 
-  async function upEmail(newEmail) {
-    if (!currentUser) {
+  async function upEmail(newEmail, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const user = auth.currentUser;
     const email = user.email;
     const password = prompt("Please enter your password to confirm email update:"); 
     
     if (!password) {
       return Promise.reject(new Error("Password is required for re-authentication"));
     }
-  
+    
     const credential = EmailAuthProvider.credential(email, password);
   
     return reauthenticateWithCredential(user, credential)
@@ -77,16 +78,16 @@ export function AuthProvider({ children }) {
   }
   
 
-  function upPassword(password) {
-    return updatePassword(currentUser, password)
+  function upPassword(password, user) {
+    return updatePassword(user, password)
   }
 
-  async function upBio(bio) {
-    if (!currentUser) {
+  async function upBio(bio, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); // Get reference to the user's Firestore document
+    const userRef = doc(db, "users", user.userUID); // Get reference to the user's Firestore document
   
     return updateDoc(userRef, {
       Bio: bio, // Update the Bio field
@@ -100,12 +101,12 @@ export function AuthProvider({ children }) {
       });
   }
   
-  async function upGradYear(gradYear) {
-    if (!currentUser) {
+  async function upGradYear(gradYear, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); // Get reference to the user's Firestore document
+    const userRef = doc(db, "users", user.userUID); // Get reference to the user's Firestore document
   
     return updateDoc(userRef, {
       GradYear: gradYear, // Update the GradYear field
@@ -119,12 +120,12 @@ export function AuthProvider({ children }) {
       });
   }
 
-  async function upFirstName(firstName) {
-    if (!currentUser) {
+  async function upFirstName(firstName, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); 
+    const userRef = doc(db, "users", user.userUID); 
   
     return updateDoc(userRef, {
       FirstName: firstName,
@@ -139,12 +140,12 @@ export function AuthProvider({ children }) {
   }
 
 
-  async function upLastName(lastName) {
-    if (!currentUser) {
+  async function upLastName(lastName, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); 
+    const userRef = doc(db, "users", user.userUID); 
   
     return updateDoc(userRef, {
       LastName: lastName,
@@ -158,12 +159,12 @@ export function AuthProvider({ children }) {
       });
   }
 
-  async function upDisplayName(displayName) {
-    if (!currentUser) {
+  async function upDisplayName(displayName, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); 
+    const userRef = doc(db, "users", user.userUID); 
   
     return updateDoc(userRef, {
       DisplayName: displayName,
@@ -177,12 +178,12 @@ export function AuthProvider({ children }) {
       });
   }
 
-  async function upLinkedIn(linkedIn) {
-    if (!currentUser) {
+  async function upLinkedIn(linkedIn, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); 
+    const userRef = doc(db, "users", user.userUID); 
   
     return updateDoc(userRef, {
       LinkedIn: linkedIn,
@@ -196,12 +197,12 @@ export function AuthProvider({ children }) {
       });
   }
 
-  async function upGitHub(gitHub) {
-    if (!currentUser) {
+  async function upGitHub(gitHub, user) {
+    if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", currentUser.uid); 
+    const userRef = doc(db, "users", user.userUID); 
   
     return updateDoc(userRef, {
       GitHub: gitHub,
