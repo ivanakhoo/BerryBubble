@@ -53,6 +53,7 @@ export function AuthProvider({ children }) {
   }
 
   async function upEmail(newEmail, user) {
+    console.log(user)
     if (!user) {
       return Promise.reject(new Error("No authenticated user"));
     }

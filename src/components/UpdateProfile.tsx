@@ -20,7 +20,7 @@ export default function UpdateProfile() {
     const displayRef = useRef<HTMLInputElement>(null); 
     const gitHubRef = useRef<HTMLInputElement>(null); 
     const linkedInRef = useRef<HTMLInputElement>(null); 
-    const { upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
+    const { currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -55,8 +55,10 @@ export default function UpdateProfile() {
         if (!userUID) return;
         const userRef = doc(db, "users", userUID); // Assuming "users" collection
         const userSnap = await getDoc(userRef);
-
-        if (userSnap.exists()) {
+        if (userUID == currentUser.uid) {
+            setUser(currentUser)
+        }
+        else if (userSnap.exists()) {
             setUser(userSnap.data()); // Cast to User type
         } else {
             console.log("No such user found!");
