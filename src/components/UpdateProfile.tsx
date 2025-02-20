@@ -53,13 +53,13 @@ export default function UpdateProfile() {
     useEffect(() => {
         const fetchUser = async () => {
         if (!userUID) return;
-        const userRef = doc(db, "users", userUID); // Assuming "users" collection
+        const userRef = doc(db, "users", userUID); 
         const userSnap = await getDoc(userRef);
         if (userUID == currentUser.uid) {
             setUser(currentUser)
         }
         else if (userSnap.exists()) {
-            setUser(userSnap.data()); // Cast to User type
+            setUser(userSnap.data()); 
         } else {
             console.log("No such user found!");
         }

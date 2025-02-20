@@ -10,6 +10,7 @@ import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import Details from "./Details";
 
 const App: React.FC = () => {
   return (
@@ -35,6 +36,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/update-profile" element={<PrivateRoute />}>
                   <Route index element={<UpdateProfile />} />
+                </Route>
+                <Route path="/details" element={<PrivateRoute />}>
+                  <Route index element={<Details />} />
                 </Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />

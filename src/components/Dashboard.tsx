@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, CardBody } from "react-bootstrap";
+import { Button, Card, CardBody } from "react-bootstrap";
 // @ts-ignore
 import { useAuth } from '../contexts/AuthContext';
 import { Link } from "react-router-dom";
@@ -11,19 +11,18 @@ export default function Dashboard() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
     const [allDocs, setAllDocs] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
-    const [isAdmin, setIsAdmin] = useState<boolean>(false); // State to track if the current user is an admin
+    const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
-    // Fetch profile picture of current user from Firestore
     useEffect(() => {
         const fetchProfilePic = async () => {
-            const user = currentUser; // Get current user from context
+            const user = currentUser; 
             if (user) {
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean };
-                    setProfilePic(data.profilePic || ""); // Set profilePic state
-                    setIsAdmin(data.adminFlag || false); // Set isAdmin based on fetched data
+                    setProfilePic(data.profilePic || ""); 
+                    setIsAdmin(data.adminFlag || false); 
                 }
             }
         };
@@ -31,7 +30,6 @@ export default function Dashboard() {
         fetchProfilePic();
     }, [currentUser]);
 
-    // Fetch all user data from Firestore
     useEffect(() => {
         async function fetchAll() {
             try {
@@ -40,14 +38,14 @@ export default function Dashboard() {
                     id: doc.id,
                     data: doc.data(),
                 }));
-                setAllDocs(docsArray); // Update state with fetched documents
+                setAllDocs(docsArray); 
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
 
-        fetchAll(); // Call the fetchAll function when component mounts
-    }, []); // Empty dependency array means it only runs once on mount
+        fetchAll(); 
+    }, []); 
 
     return (
         <>
@@ -111,9 +109,13 @@ export default function Dashboard() {
                                 {/* Show Update Profile link for all docs if the user is an admin */}
                                 {isAdmin && (
                                     <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
-                                        Update Profile
+                                        <Button variant="dark" className="mt-2">Update Profile</Button>
                                     </Link>
                                 )}
+                                <br />
+                                <Link to="/details" state={{ userUID: doc.data.userUID }}>
+                                    <Button variant="dark" className="mt-2">See More Details</Button>
+                                </Link>
                             </CardBody>
                         </Card>
                     </div>
