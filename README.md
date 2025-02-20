@@ -14,14 +14,20 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - `Cloudinary`
 
 ## TODO
-Implement light and dark mode switch?
-Make a report button for inappropriate users
-Administrator level account in firebase 
-When you register an account it wont be activated until an admin approves it for being globally visible
-Additional tab for accepting and denying for admin
-6 digit code verification? To the email
-What to do with zombie accounts? -> hidden clean up process that deletes any non verified users after 2 days
-Potential projects title, short description, link
-User profile with teaser project in card body
 
-Flags for admin and flags for verified
+# UI/UX
+- Create projects url and picture upload
+    - Projects have url, picture, brief summary, and technologies
+- Expand the details page to show projects
+- Make details page more clean
+- Make dashboard user cards show project summary
+- Get main dashboards to show rows of users
+- Make a report user button for each card that sends notification to admin-only center
+- Light and dark mode switch
+
+# Verification:
+- Make verifiedFlag for firebase and initiate in signup as false
+- Make email code that sends verification for creating an account
+- Make admin-only page for accepting and denying new users
+- Only show verified and accepted users
+- Find a way to delete users who have not been verified for 3 days
