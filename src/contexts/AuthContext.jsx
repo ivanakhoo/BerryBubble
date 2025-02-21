@@ -30,6 +30,7 @@ export function AuthProvider({ children }) {
         userUID: user.uid,
         adminFlag: false,
         createdAt: new Date().toISOString(),
+        verified: false
       });
   
       return user; 

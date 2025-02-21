@@ -4,12 +4,12 @@ import { Button, Card, CardBody } from "react-bootstrap";
 import { useAuth } from '../contexts/AuthContext';
 import { Link } from "react-router-dom";
 // @ts-ignore
-import { db } from "../firebase"; // Import Firestore instance
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase"; 
+import { collection, getDocs, doc, getDoc, query, where, updateDoc } from "firebase/firestore";
 
-export default function AlumniDashboard() {
+export default function Alumni() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
-    const [allDocs, setAllDocs] = useState<{ id: string; data: any }[]>([]);
+    const [currentStudents, setCurrentStudents] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
@@ -31,32 +31,48 @@ export default function AlumniDashboard() {
     }, [currentUser]);
 
     useEffect(() => {
-        async function fetchAll() {
+        async function fetchCurrentStudents() {
             try {
-                const querySnapshot = await getDocs(collection(db, "users"));
+                const q = query(collection(db, "users"), where("verified", "==", true)); 
+                const querySnapshot = await getDocs(q);
                 const docsArray = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     data: doc.data(),
                 }));
-                // Filter out only current students with GradYear < 2026
+
                 const currentStudents = docsArray.filter(doc => {
-                    const gradYear = parseInt(doc.data.GradYear, 10); // Convert GradYear to number
-                    return gradYear <= 2024;
+                    const gradYear = parseInt(doc.data.GradYear, 10); 
+                    return gradYear <= 2024; 
                 });
-                setAllDocs(currentStudents); 
+
+                setCurrentStudents(currentStudents); 
             } catch (error) {
-                console.error("Error fetching data:", error);
+                console.error("Error fetching current students:", error);
             }
         }
 
-        fetchAll(); 
+        fetchCurrentStudents(); 
     }, []); 
+
+    const updateVerifiedStatus = async (userId: string, currentStatus: boolean) => {
+        try {
+            const userRef = doc(db, "users", userId);
+            await updateDoc(userRef, { verified: !currentStatus });
+
+            setCurrentStudents((prevStudents) =>
+                prevStudents.filter(student => student.id !== userId) 
+            );
+        } catch (error) {
+            console.error("Error updating verification status:", error);
+        }
+    };
 
     return (
         <>
-            <h1 className="text-center mt-4">Alumni</h1>
+            {/* Display Current Students with their Profile Pictures */}
+            <h1 className="text-center mt-4">Current Students</h1>
             <div className="d-flex flex-wrap justify-content-center">
-                {allDocs.map((doc) => (
+                {currentStudents.map((doc) => (
                     <div key={doc.id} className="text-center p-3">
                         <Card style={{ width: '18rem' }} className="mb-4">
                             <CardBody>
@@ -119,6 +135,16 @@ export default function AlumniDashboard() {
                                 <Link to="/details" state={{ userUID: doc.data.userUID }}>
                                     <Button variant="dark" className="mt-2">See More Details</Button>
                                 </Link>
+                                <br />
+                                {isAdmin && (
+                                    <Button 
+                                        variant="success" 
+                                        className="mt-2" 
+                                        onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
+                                    >
+                                        Activate/Deactivate User
+                                    </Button>
+                                )}
                             </CardBody>
                         </Card>
                     </div>

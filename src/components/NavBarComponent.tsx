@@ -60,6 +60,7 @@ const NavBarComponent: React.FC = () => {
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/currentStudents">Current Students</Nav.Link>
           <Nav.Link href="/alumni">Alumni</Nav.Link>
+          <Nav.Link href="/admin">Admin</Nav.Link>
         </Nav>
         <Nav className="ms-auto d-flex align-items-center">
           {/* Profile Dropdown */}

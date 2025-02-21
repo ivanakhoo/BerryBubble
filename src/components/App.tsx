@@ -13,6 +13,8 @@ import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import Details from "./Details";
 import CurrentStudentsDashboard from "./CurrentStudentsDashboard";
 import AlumniDashboard from "./AlumniDashboard";
+import Admin from "./Admin";
+import AdminRoute from "./AdminRoute";
 
 const App: React.FC = () => {
   return (
@@ -47,6 +49,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/alumni" element={<PrivateRoute />}>
                   <Route index element={<AlumniDashboard />} />
+                </Route>
+                <Route path="/admin" element={<AdminRoute />}>
+                  <Route index element={<Admin />} />
                 </Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />

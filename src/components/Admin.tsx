@@ -5,19 +5,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { Link } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
-import { collection, getDocs, doc, getDoc, query, where, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
-export default function CurrentStudentsDashboard() {
+export default function Admin() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
-    const [currentStudents, setCurrentStudents] = useState<{ id: string; data: any }[]>([]);
+    const [unverifiedUsers, setUnverifiedUsers] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
     useEffect(() => {
         const fetchProfilePic = async () => {
-            const user = currentUser; 
-            if (user) {
-                const docRef = doc(db, "users", user.uid);
+            if (currentUser) {
+                const docRef = doc(db, "users", currentUser.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean };
@@ -31,36 +30,34 @@ export default function CurrentStudentsDashboard() {
     }, [currentUser]);
 
     useEffect(() => {
-        async function fetchCurrentStudents() {
+        async function fetchUnverifiedUsers() {
             try {
-                const q = query(collection(db, "users"), where("verified", "==", true)); 
+                const q = query(collection(db, "users"), where("verified", "==", false));
                 const querySnapshot = await getDocs(q);
-                const docsArray = querySnapshot.docs.map((doc) => ({
+
+                const usersArray = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     data: doc.data(),
                 }));
 
-                const currentStudents = docsArray.filter(doc => {
-                    const gradYear = parseInt(doc.data.GradYear, 10); 
-                    return gradYear > 2024; 
-                });
-
-                setCurrentStudents(currentStudents); 
+                setUnverifiedUsers(usersArray); 
             } catch (error) {
-                console.error("Error fetching current students:", error);
+                console.error("Error fetching unverified users:", error);
             }
         }
 
-        fetchCurrentStudents(); 
+        fetchUnverifiedUsers(); 
     }, []); 
+
 
     const updateVerifiedStatus = async (userId: string, currentStatus: boolean) => {
         try {
             const userRef = doc(db, "users", userId);
             await updateDoc(userRef, { verified: !currentStatus });
 
-            setCurrentStudents((prevStudents) =>
-                prevStudents.filter(student => student.id !== userId) 
+            // Update state immediately to reflect the change
+            setUnverifiedUsers((prevUsers) =>
+                prevUsers.filter(user => user.id !== userId) // Remove user from list after verification
             );
         } catch (error) {
             console.error("Error updating verification status:", error);
@@ -69,10 +66,9 @@ export default function CurrentStudentsDashboard() {
 
     return (
         <>
-            {/* Display Current Students with their Profile Pictures */}
-            <h1 className="text-center mt-4">Current Students</h1>
+            <h1 className="text-center mt-4">Admin</h1>
             <div className="d-flex flex-wrap justify-content-center">
-                {currentStudents.map((doc) => (
+                {unverifiedUsers.map((doc) => (
                     <div key={doc.id} className="text-center p-3">
                         <Card style={{ width: '18rem' }} className="mb-4">
                             <CardBody>
@@ -105,34 +101,13 @@ export default function CurrentStudentsDashboard() {
                                 )}
                                 <h5>Class of {doc.data.GradYear}</h5>
                                 <p>{doc.data.Bio}</p>
-                                <div>
-                                    {(doc.data.GitHub || doc.data.LinkedIn || doc.data.email) && (
-                                        <div>
-                                            {doc.data.GitHub && (
-                                                <a href={doc.data.GitHub} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-                                                    <img src="/githubwhite.png" alt="GitHub" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-                                                </a>
-                                            )}
-                                            {doc.data.LinkedIn && (
-                                                <a href={doc.data.LinkedIn} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-                                                    <img src="/linkedinwhite.png" alt="LinkedIn" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-                                                </a>
-                                            )}
-                                            {doc.data.email && (
-                                                <a href={`mailto:${doc.data.email}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-                                                    <img src="/email.png" alt="Email" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-                                                </a>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
                                 {isAdmin && (
-                                    <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
+                                    <Link to="/update-profile" state={{ userUID: doc.id }}>
                                         <Button variant="dark" className="mt-2">Update Profile</Button>
                                     </Link>
                                 )}
                                 <br />
-                                <Link to="/details" state={{ userUID: doc.data.userUID }}>
+                                <Link to="/details" state={{ userUID: doc.id }}>
                                     <Button variant="dark" className="mt-2">See More Details</Button>
                                 </Link>
                                 <br />
@@ -142,7 +117,7 @@ export default function CurrentStudentsDashboard() {
                                         className="mt-2" 
                                         onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
                                     >
-                                        Activate/Deactivate User
+                                        Verify User
                                     </Button>
                                 )}
                             </CardBody>
