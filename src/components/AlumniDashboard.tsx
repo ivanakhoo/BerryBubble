@@ -54,7 +54,7 @@ export default function AlumniDashboard() {
 
     return (
         <>
-            <h1 className="text-center mt-4">Current Students</h1>
+            <h1 className="text-center mt-4">Alumni</h1>
             <div className="d-flex flex-wrap justify-content-center">
                 {allDocs.map((doc) => (
                     <div key={doc.id} className="text-center p-3">

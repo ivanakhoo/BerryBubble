@@ -15,7 +15,9 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 ## TODO
 
-# UI/UX
+### Bug Fixes
+
+### UI/UX
 - Create projects url and picture upload
     - Projects have url, picture, brief summary, and technologies
 - Expand the details page to show projects
@@ -25,7 +27,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Make a report user button for each card that sends notification to admin-only center
 - Light and dark mode switch
 
-# Verification:
+### Verification:
 - Make verifiedFlag for firebase and initiate in signup as false
 - Make email code that sends verification for creating an account
 - Make admin-only page for accepting and denying new users
