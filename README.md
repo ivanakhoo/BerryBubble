@@ -28,8 +28,6 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Light and dark mode switch
 
 ### Verification:
-- Make verifiedFlag for firebase and initiate in signup as false
 - Make email code that sends verification for creating an account
-- Make admin-only page for accepting and denying new users
 - Only show verified and accepted users
 - Find a way to delete users who have not been verified for 3 days
