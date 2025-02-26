@@ -11,6 +11,7 @@ const NavBarComponent: React.FC = () => {
   const [profilePic, setProfilePic] = useState<string>("");
   const { currentUser, logout } = useAuth();
   const [error, setError] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null); 
   const navigate = useNavigate();
   const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -36,6 +37,31 @@ const NavBarComponent: React.FC = () => {
     fetchProfilePic();
   }, [currentUser]);
 
+    useEffect(() => {
+        const fetchAdmin = async () => {
+            if (!currentUser?.uid) {
+                setIsAdmin(false);
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "users", currentUser.uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data() as { adminFlag?: boolean };
+                    setIsAdmin(data.adminFlag ?? false);
+                } else {
+                    setIsAdmin(false);
+                }
+            } catch (error) {
+                setIsAdmin(false);
+            }
+        };
+
+        fetchAdmin();
+    }, []);
+
   async function handleLogout() {
     setError('');
 
@@ -60,7 +86,7 @@ const NavBarComponent: React.FC = () => {
           <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/currentStudents">Current Students</Nav.Link>
           <Nav.Link href="/alumni">Alumni</Nav.Link>
-          <Nav.Link href="/admin">Admin</Nav.Link>
+          {isAdmin && <Nav.Link href="/admin">Admin</Nav.Link>}
         </Nav>
         <Nav className="ms-auto d-flex align-items-center">
           {/* Profile Dropdown */}

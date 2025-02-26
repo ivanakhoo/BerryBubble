@@ -70,7 +70,7 @@ export default function Alumni() {
     return (
         <>
             {/* Display Current Students with their Profile Pictures */}
-            <h1 className="text-center mt-4">Current Students</h1>
+            <h1 className="text-center mt-4">Alumni</h1>
             <div className="d-flex flex-wrap justify-content-center">
                 {currentStudents.map((doc) => (
                     <div key={doc.id} className="text-center p-3">
@@ -103,7 +103,7 @@ export default function Alumni() {
                                         }} 
                                     />
                                 )}
-                                <h5>Class of {doc.data.GradYear}</h5>
+                                <h5 className="mt-2">Class of {doc.data.GradYear}</h5>
                                 <p>{doc.data.Bio}</p>
                                 <div>
                                     {(doc.data.GitHub || doc.data.LinkedIn || doc.data.email) && (
@@ -187,7 +187,7 @@ export default function Alumni() {
                                         className="mt-2" 
                                         onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
                                     >
-                                        Activate/Deactivate User
+                                        Deactivate User
                                     </Button>
                                 )}
                             </CardBody>

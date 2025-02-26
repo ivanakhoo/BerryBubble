@@ -15,6 +15,7 @@ import CurrentStudentsDashboard from "./CurrentStudentsDashboard";
 import AlumniDashboard from "./AlumniDashboard";
 import Admin from "./Admin";
 import AdminRoute from "./AdminRoute";
+import Unauthorized from "./Unauthorized";
 
 const App: React.FC = () => {
   return (
@@ -52,6 +53,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/admin" element={<AdminRoute />}>
                   <Route index element={<Admin />} />
+                </Route>
+                <Route path="/unauthorized" element={<PrivateRoute />}>
+                  <Route index element={<Unauthorized />} />
                 </Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />

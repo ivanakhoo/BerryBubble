@@ -37,5 +37,5 @@ export default function AdminRoute() {
 
     if (isAdmin === null) return <p>Loading...</p>;
 
-    return isAdmin ? <Outlet /> : <Navigate to="/login" />;
+    return isAdmin ? <Outlet /> : <Navigate to="/unauthorized" />;
 }

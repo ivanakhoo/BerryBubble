@@ -97,7 +97,7 @@ export default function Dashboard() {
                                         }} 
                                     />
                                 )}
-                                <h5>Class of {doc.data.GradYear}</h5>
+                                <h5 className="mt-2">Class of {doc.data.GradYear}</h5>
                                 <p>{doc.data.Bio}</p>
                                 <div>
                                     {(doc.data.GitHub || doc.data.LinkedIn || doc.data.email) && (
@@ -182,7 +182,7 @@ export default function Dashboard() {
                                         className="mt-2" 
                                         onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
                                     >
-                                        Activate/Deactivate User
+                                        Deactivate User
                                     </Button>
                                 )}
                             </CardBody>
