@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import SearchBar from "./SearchBar";
 
 export default function Admin() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
     const [unverifiedUsers, setUnverifiedUsers] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
     useEffect(() => {
@@ -64,11 +66,21 @@ export default function Admin() {
         }
     };
 
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredUsers = unverifiedUsers.filter(user =>
+        user.data.DisplayName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <>
+            <SearchBar query={searchQuery} onSearch={handleSearch} />
+
             <h1 className="text-center mt-4">Admin</h1>
             <div className="d-flex flex-wrap justify-content-center">
-                {unverifiedUsers.map((doc) => (
+                {filteredUsers.map((doc) => (
                     <div key={doc.id} className="text-center p-3">
                         <Card style={{ width: '18rem' }} className="mb-4">
                             <CardBody>

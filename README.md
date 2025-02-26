@@ -16,6 +16,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 ## TODO
 
 ### Bug Fixes
+- Take away Admin rendering for first loadup of site
 
 ### UI/UX
 - Create projects url and picture upload
@@ -26,6 +27,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Get main dashboards to show rows of users
 - Make a report user button for each card that sends notification to admin-only center
 - Light and dark mode switch
+- Expand search bar to work with gradyear
 
 ### Verification:
 - Make email code that sends verification for creating an account
