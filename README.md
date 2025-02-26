@@ -30,6 +30,4 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Expand search bar to work with gradyear
 
 ### Verification:
-- Make email code that sends verification for creating an account
-- Only show verified and accepted users
 - Find a way to delete users who have not been verified for 3 days

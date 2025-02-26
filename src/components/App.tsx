@@ -16,6 +16,7 @@ import AlumniDashboard from "./AlumniDashboard";
 import Admin from "./Admin";
 import AdminRoute from "./AdminRoute";
 import Unauthorized from "./Unauthorized";
+import Verification from "./Verification";
 
 const App: React.FC = () => {
   return (
@@ -57,6 +58,7 @@ const App: React.FC = () => {
                 <Route path="/unauthorized" element={<PrivateRoute />}>
                   <Route index element={<Unauthorized />} />
                 </Route>
+                <Route path="/verification" element={<Verification />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />

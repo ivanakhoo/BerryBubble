@@ -35,7 +35,7 @@ export default function Alumni() {
     useEffect(() => {
         async function fetchCurrentStudents() {
             try {
-                const q = query(collection(db, "users"), where("verified", "==", true)); 
+                const q = query(collection(db, "users"), where("verified", "==", true), where("emailVerified", "==", true)); 
                 const querySnapshot = await getDocs(q);
                 const docsArray = querySnapshot.docs.map((doc) => ({
                     id: doc.id,

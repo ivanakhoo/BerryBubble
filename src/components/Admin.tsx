@@ -34,7 +34,7 @@ export default function Admin() {
     useEffect(() => {
         async function fetchUnverifiedUsers() {
             try {
-                const q = query(collection(db, "users"), where("verified", "==", false));
+                const q = query(collection(db, "users"), where("verified", "==", false), where("emailVerified", "==", true));
                 const querySnapshot = await getDocs(q);
 
                 const usersArray = querySnapshot.docs.map((doc) => ({

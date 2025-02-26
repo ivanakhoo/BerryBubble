@@ -3,7 +3,7 @@ import { auth } from "../firebase"; // Adjust if necessary
 // @ts-ignore
 import { db } from "../firebase"; // Import Firestore instance
 import { doc, setDoc, updateDoc, collection } from "firebase/firestore";
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, verifyBeforeUpdateEmail, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updatePassword, verifyBeforeUpdateEmail, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from "firebase/auth";
 
 // Create Context with initial value
 const AuthContext = createContext(null);
@@ -23,6 +23,8 @@ export function AuthProvider({ children }) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      await sendEmailVerification(user);
+
       const newUserRef = doc(db, "users", user.uid);
 
       await setDoc(newUserRef, {
@@ -30,7 +32,8 @@ export function AuthProvider({ children }) {
         userUID: user.uid,
         adminFlag: false,
         createdAt: new Date().toISOString(),
-        verified: false
+        verified: false,
+        emailVerified: false
       });
   
       return user; 
@@ -218,6 +221,25 @@ export function AuthProvider({ children }) {
       });
   }
 
+  async function upEmailVerified(user) {
+    if (!user) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", user.userUID); 
+  
+    return updateDoc(userRef, {
+      emailVerified: true
+    })
+      .then(() => {
+        console.log("Email was successfully verified!");
+      })
+      .catch((error) => {
+        console.error("Error verifiying email:", error);
+        throw error;
+      });
+  }
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -242,7 +264,8 @@ export function AuthProvider({ children }) {
     upLastName,
     upDisplayName,
     upLinkedIn,
-    upGitHub
+    upGitHub,
+    upEmailVerified
   };
 
   return <AuthContext.Provider value={value}>

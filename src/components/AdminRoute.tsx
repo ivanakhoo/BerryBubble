@@ -35,7 +35,7 @@ export default function AdminRoute() {
         fetchAdmin();
     }, []);
 
-    if (isAdmin === null) return <p>Loading...</p>;
+    if (isAdmin === null) return <h1 className="text-center mt-4">Loading...</h1>;
 
     return isAdmin ? <Outlet /> : <Navigate to="/unauthorized" />;
 }
