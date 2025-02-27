@@ -3,18 +3,16 @@ import admin from 'firebase-admin';
 import fs from 'fs';
 
 const serviceAccount = JSON.parse(fs.readFileSync('./berrybubble-74a27-firebase-adminsdk-fbsvc-16a607accf.json', 'utf8'));
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// Middleware to parse JSON requests
 app.use(express.json());
 
-// Route to delete users with emailVerified = false
 app.delete('/deleteUnverifiedUsers', async (req, res) => {
   try {
     const listUsersResult = await admin.auth().listUsers();
@@ -28,8 +26,8 @@ app.delete('/deleteUnverifiedUsers', async (req, res) => {
 
     const deleteUsersResult = await admin.auth().deleteUsers(unverifiedUids);
 
-    console.log(`Successfully deleted ${deleteUsersResult.successCount} users`);
-    console.log(`Failed to delete ${deleteUsersResult.failureCount} users`);
+    console.log(`Successfully deleted ${deleteUsersResult.successCount} users from Authentication`);
+    console.log(`Failed to delete ${deleteUsersResult.failureCount} users from Authentication`);
     
     if (deleteUsersResult.errors.length > 0) {
       deleteUsersResult.errors.forEach(err => {
@@ -37,10 +35,34 @@ app.delete('/deleteUnverifiedUsers', async (req, res) => {
       });
     }
 
-    res.status(200).send(`Successfully deleted ${deleteUsersResult.successCount} users.`);
+    res.status(200).send(`Successfully deleted ${deleteUsersResult.successCount} users from Authentication.`);
   } catch (error) {
-    console.error('Error deleting users:', error);
-    res.status(500).send('Error deleting users: ' + error.message);
+    console.error('Error deleting users from Authentication:', error);
+    res.status(500).send('Error deleting users from Authentication: ' + error.message);
+  }
+});
+
+app.delete('/deleteUnverifiedUsersFromFirestore', async (req, res) => {
+  try {
+    const firestore = admin.firestore();
+    const usersRef = firestore.collection('users'); 
+    const snapshot = await usersRef.where('emailVerified', '==', false).get();
+
+    if (snapshot.empty) {
+      return res.status(404).send('No unverified users found in Firestore.');
+    }
+
+    const batch = firestore.batch();
+    snapshot.forEach(doc => {
+      batch.delete(doc.ref); 
+    });
+
+    await batch.commit(); 
+
+    res.status(200).send(`Successfully deleted ${snapshot.size} unverified users from Firestore.`);
+  } catch (error) {
+    console.error('Error deleting users from Firestore:', error);
+    res.status(500).send('Error deleting users from Firestore: ' + error.message);
   }
 });
 
