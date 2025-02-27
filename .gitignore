@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+berrybubble-74a27-firebase-adminsdk-fbsvc-16a607accf.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
