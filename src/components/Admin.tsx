@@ -71,23 +71,8 @@ export default function Admin() {
     };
 
     const filteredUsers = unverifiedUsers.filter(user =>
-        user.data.DisplayName.toLowerCase().includes(searchQuery.toLowerCase())
+        (user.data.DisplayName?.toLowerCase() || "").includes(searchQuery.toLowerCase())
     );
-
-    const handleDeleteUnverifiedUsers = async () => {
-        try {
-            const response = await fetch("http://localhost:5173/delete-unverified-users", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" }
-            });
-            
-            const data = await response.json();
-            alert(data.message || "Users deleted successfully.");
-        } catch (error) {
-            console.error("Error deleting users:", error);
-            alert("Failed to delete users.");
-        }
-    };
     
 
     return (

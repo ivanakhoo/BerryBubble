@@ -23,9 +23,12 @@ export default function Dashboard() {
                 const docRef = doc(db, "users", user.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean };
+                    const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean, emailVerified?: boolean };
                     setProfilePic(data.profilePic || ""); 
                     setIsAdmin(data.adminFlag || false); 
+                    if (!data.emailVerified) {
+                        alert("Update your profile to complete your account verification.")
+                    }
                 }
             }
         };

@@ -20,7 +20,7 @@ export default function UpdateProfile() {
     const displayRef = useRef<HTMLInputElement>(null); 
     const gitHubRef = useRef<HTMLInputElement>(null); 
     const linkedInRef = useRef<HTMLInputElement>(null); 
-    const { currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
+    const { upEmailVerified, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -133,6 +133,10 @@ export default function UpdateProfile() {
     
         Promise.all(promises)
             .then(() => {
+                if (currentUser.emailVerified) {
+                    upEmailVerified(user);
+                    console.log("Updated Email Verification.")
+                }
                 navigate("/");
             })
             .catch(() => {

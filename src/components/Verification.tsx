@@ -8,7 +8,7 @@ export default function Verification() {
   useEffect(() => {
     const checkVerification = async () => {
       if (currentUser) {
-        await currentUser.reload(); 
+        await currentUser.reload();
         if (currentUser.emailVerified) {
           await upEmailVerified(currentUser);
           alert("Your email has been verified!");
