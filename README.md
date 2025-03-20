@@ -19,7 +19,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Take away Admin rendering for first loadup of site
 
 ### UI/UX
-- Create projects url and picture upload
+- Create projects url and picture upload (Firebase New Collection - Projects)
     - Projects have url, picture, brief summary, and technologies
 - Expand the details page to show projects
 - Make details page more clean

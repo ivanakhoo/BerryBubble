@@ -5,13 +5,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { Link, useLocation } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 
 export default function Details() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const { currentUser } = useAuth();
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [projects, setProjects] = useState<Project[]>([]);
 
 
     const location = useLocation();
@@ -31,6 +32,14 @@ export default function Details() {
         profilePic?: string;
         userUID?: string;
     }
+
+    interface Project {
+        ProjectName: string;
+        CoverPicture: string;
+        Summary: string;
+        UserUID: string
+        Technologies: string[];
+      }
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -69,6 +78,30 @@ export default function Details() {
 
         fetchAdmin();
     }, [currentUser]);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            if (!userUID) return;
+
+            try {
+                const projectsRef = collection(db, "projects");
+                const q = query(projectsRef, where("UserUID", "==", userUID));
+                const querySnapshot = await getDocs(q);
+                const projectsList: Project[] = [];
+                querySnapshot.forEach((doc) => {
+                    projectsList.push({ UserUID: doc.id, ...doc.data() } as Project);
+                });
+                console.log(projectsList)
+                console.log(userUID)
+                setProjects(projectsList);
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+            }
+        };
+
+        fetchProjects();
+    }, [userUID]);
+
 
     if (!user) {
         return <h1 className="text-center mt-4">Loading...</h1>;
@@ -160,7 +193,28 @@ export default function Details() {
                                 )}
                             </div>
                             )}
-                        </div>                
+                        </div>
+                        <div className="mt-4">
+                            <h4>Projects</h4>
+                            {projects.length > 0 ? (
+                                <div>
+                                {projects.map((project) => (
+                                    <Card key={project.UserUID} className="mb-3">
+                                        <h5>{project.ProjectName}</h5>
+                                        <p>{project.Summary}</p>
+                                        <p><strong>Technologies:</strong></p>
+                                        <ul>
+                                            {Array.isArray(project.Technologies) && project.Technologies.map((tech, index) => (
+                                                <li key={index}>{tech}</li>
+                                            ))}
+                                        </ul>
+                                    </Card>
+                                ))}
+                            </div>
+                            ) : (
+                                <p>No projects available.</p>
+                            )}
+                        </div>            
                         {isAdmin && (
                             <Link to="/update-profile" state={{ userUID: user.userUID }}>
                                 <Button variant="dark" className="mt-2">Update Profile</Button>
