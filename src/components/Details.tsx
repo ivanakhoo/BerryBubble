@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import ProjectPictureUpload from "./ProjectPictureUpload";
 
 export default function Details() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -201,6 +202,22 @@ export default function Details() {
                                 {projects.map((project) => (
                                     <Card key={project.UserUID} className="mb-3">
                                         <h5>{project.ProjectName}</h5>
+                                        <div style={{ display: "flex", justifyContent: "center" }}>
+                                        <img 
+                                            src={project.CoverPicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} 
+                                            alt="Profile" 
+                                            style={{
+                                                width: "150px", 
+                                                height: "150px", 
+                                                borderRadius: "50%", 
+                                                objectFit: "cover",
+                                                border: "3px solid #ddd" 
+                                            }} 
+                                        />
+                                        </div>
+
+                                        <ProjectPictureUpload projectName = {project.ProjectName} ></ProjectPictureUpload>
+
                                         <p>{project.Summary}</p>
                                         <p><strong>Technologies:</strong></p>
                                         <ul>
