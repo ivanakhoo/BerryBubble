@@ -216,8 +216,8 @@ export default function Details() {
                                         />
                                         </div>
 
-                                        <ProjectPictureUpload projectName = {project.ProjectName} ></ProjectPictureUpload>
-
+                                        {(isAdmin || currentUser.uid == project.UserUID) && (<ProjectPictureUpload projectName = {project.ProjectName} ></ProjectPictureUpload>
+                                        )}
                                         <p>{project.Summary}</p>
                                         <p><strong>Technologies:</strong></p>
                                         <ul>
