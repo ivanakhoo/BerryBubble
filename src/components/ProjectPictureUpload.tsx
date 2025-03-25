@@ -29,9 +29,9 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName
       const uploadedImageUrl = response.data.secure_url;
       setImageUrl(uploadedImageUrl);
       const projectsRef = collection(db, "projects");
-      const q = query(projectsRef, where("UserUID", "==", user.uid), where("ProjectName", "==", projectName));
+      const q = query(projectsRef, where("ProjectName", "==", projectName));
       const querySnapshot = await getDocs(q);
-
+      console.log(q);
       if (!querySnapshot.empty) {
         const projectDoc = querySnapshot.docs[0]; 
         await updateDoc(projectDoc.ref, { CoverPicture: uploadedImageUrl });
@@ -46,7 +46,6 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName
 
   return (
     <div>
-      <p className="text-center mt-3">Upload Picture for {projectName}</p>
       <input type="file" accept="image/*" onChange={handleImageUpload} />
     </div>
   );
