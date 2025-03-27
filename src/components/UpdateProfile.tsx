@@ -8,8 +8,10 @@ import { useLocation } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import ProfilePictureUpload from "./ProfilePictureUpload";
+import Sidebar from "./Sidebar";
 
 export default function UpdateProfile() {
+    const [selectedSection, setSelectedSection] = useState<string>('account'); // State to track selected section
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
@@ -80,28 +82,11 @@ export default function UpdateProfile() {
         fetchProfilePic();
     }, [user]);
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    function handleAccountSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-    
-        if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
-            return setError("Passwords do not match.");
-        }
-    
         const promises = [];
         setLoading(true);
         setError("");
-    
-        if (emailRef.current?.value !== user?.email) {
-            promises.push(
-                upEmail(emailRef.current?.value, user).then(() => {
-                    alert("Check your new email for a verification link.");
-                })
-            );
-        }
-    
-        if (passwordRef.current?.value) {
-            promises.push(upPassword(passwordRef.current?.value, user));
-        }
 
         if (bioRef.current?.value) {
             promises.push(upBio(bioRef.current?.value, user)); 
@@ -130,13 +115,9 @@ export default function UpdateProfile() {
         if (linkedInRef.current?.value) {
             promises.push(upLinkedIn(linkedInRef.current?.value, user)); 
         }
-    
+
         Promise.all(promises)
             .then(() => {
-                if (currentUser.emailVerified) {
-                    upEmailVerified(user);
-                    console.log("Updated Email Verification.")
-                }
                 navigate("/");
             })
             .catch(() => {
@@ -147,108 +128,156 @@ export default function UpdateProfile() {
             });
     }
 
+    function handlePasswordSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
+            return setError("Passwords do not match.");
+        }
+
+        const promises = [];
+        setLoading(true);
+        setError("");
+
+        if (emailRef.current?.value !== user?.email) {
+            promises.push(
+                upEmail(emailRef.current?.value, user).then(() => {
+                    alert("Check your new email for a verification link.");
+                })
+            );
+        }
+
+        if (passwordRef.current?.value) {
+            promises.push(upPassword(passwordRef.current?.value, user));
+        }
+
+        Promise.all(promises)
+            .then(() => {
+                if (currentUser.emailVerified) {
+                    upEmailVerified(user);
+                    console.log("Updated Email Verification.")
+                }
+                navigate("/");
+            })
+            .catch(() => {
+                setError("Failed to update password.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+
+    function handleProjectsSubmit() {
+        alert("Projects section is not yet implemented.");
+    }
+
     return (
-        <>
-            <div>
-                <h1 className="display-2 text-center mb-4">Berry Bubble</h1>
-            </div>
-            <Card>
-                <CardBody>
-                    <h2 className="text-center mb-4">My Profile</h2>
-                    {error && <Alert variant="danger">{error}</Alert>}
+        <div style={{ display: 'flex' }}>
+          <Sidebar selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
+          
+          {/* Main content container */}
+          <div style={{ flex: 1, padding: '20px' }}>
+              {error && <Alert variant="danger">{error}</Alert>}
 
-                    {/* Profile Picture Upload Section */}
-                    <div className="text-center mb-3">
-                            <img 
-                            src={profilePic || defaultProfilePic} 
-                            alt="Profile" 
-                            style={{
-                              width: "150px", 
-                              height: "150px", 
-                              borderRadius: "50%", 
-                              objectFit: "cover",
-                              border: "3px solid #ddd" // Optional border for aesthetics
-                            }} 
-                          />
-                    </div>
-                    <ProfilePictureUpload />
+              {/* Profile Picture Upload Section */}
+              <div className="text-center mb-3">
+                  <img 
+                      src={profilePic || defaultProfilePic} 
+                      alt="Profile" 
+                      style={{
+                        width: "150px", 
+                        height: "150px", 
+                        borderRadius: "50%", 
+                        objectFit: "cover",
+                        border: "3px solid #ddd" // Optional border for aesthetics
+                      }} 
+                  />
+              </div>
+              <ProfilePictureUpload />
 
-                    <Form onSubmit={handleSubmit}>
-                        <FormGroup id="email">
-                            <FormLabel>Email</FormLabel>
-                            <FormControl type="email" ref={emailRef} required defaultValue={user?.email} />
-                        </FormGroup>
+              {/* Conditionally render form based on selected section */}
+              {selectedSection === 'account' && (
+                  <Form onSubmit={handleAccountSubmit}>
+                      <FormGroup id="firstName">
+                          <FormLabel>First Name</FormLabel>
+                          <FormControl type="text" ref={firstRef} required defaultValue={user?.FirstName} placeholder="Enter your first name." />
+                      </FormGroup>
 
-                        <FormGroup id="password">
-                            <FormLabel>Password</FormLabel>
-                            <FormControl type="password" ref={passwordRef} placeholder="Leave blank to keep the same." />
-                        </FormGroup>
+                      <FormGroup id="lastName">
+                          <FormLabel>Last Name</FormLabel>
+                          <FormControl type="text" ref={lastRef} required defaultValue={user?.LastName} placeholder="Enter your last name." />
+                      </FormGroup>
 
-                        <FormGroup id="password-confirm">
-                            <FormLabel>Password Confirmation</FormLabel>
-                            <FormControl type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same." />
-                        </FormGroup>
+                      <FormGroup id="displayName">
+                          <FormLabel>Display Name</FormLabel>
+                          <FormControl type="text" ref={displayRef} required defaultValue={user?.DisplayName} placeholder="Enter your preferred display name." />
+                      </FormGroup>
 
-                        <FormGroup id="bio">
-                            <FormLabel>Bio</FormLabel>
-                            <FormControl type="text" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
-                        </FormGroup>
+                      <FormGroup id="bio">
+                          <FormLabel>Bio</FormLabel>
+                          <FormControl type="text" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
+                      </FormGroup>
 
-                        <FormGroup id="gradYear">
-                            <FormLabel>Graduation Year</FormLabel>
-                            <FormControl type="text" ref={gradYearRef} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
-                        </FormGroup>
+                      <FormGroup id="gradYear">
+                          <FormLabel>Graduation Year</FormLabel>
+                          <FormControl type="text" ref={gradYearRef} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
+                      </FormGroup>
 
-                        <FormGroup id="firstName">
-                            <FormLabel>First Name</FormLabel>
-                            <FormControl type="text" ref={firstRef} required defaultValue={user?.FirstName} placeholder="Enter your first name." />
-                        </FormGroup>
+                      <FormGroup id="LinkedIn">
+                          <FormLabel>LinkedIn URL</FormLabel>
+                          <FormControl type="text" ref={linkedInRef} required defaultValue={user?.LinkedIn} placeholder="Enter your LinkedIn URL." />
+                      </FormGroup>
 
-                        <FormGroup id="lastName">
-                            <FormLabel>Last Name</FormLabel>
-                            <FormControl type="text" ref={lastRef} required defaultValue={user?.LastName} placeholder="Enter your last name." />
-                        </FormGroup>
+                      <FormGroup id="GitHub">
+                          <FormLabel>GitHub URL</FormLabel>
+                          <FormControl type="text" ref={gitHubRef} required defaultValue={user?.GitHub} placeholder="Enter your GitHub URL." />
+                      </FormGroup>
 
-                        <FormGroup id="displayName">
-                            <FormLabel>Display Name</FormLabel>
-                            <FormControl type="text" ref={displayRef} required defaultValue={user?.DisplayName} placeholder="Enter your preferred display name." />
-                        </FormGroup>
+                      <Button
+                          disabled={loading}
+                          className="w-100 mt-2"
+                          type="submit"
+                      >
+                          Save
+                      </Button>
+                  </Form>
+              )}
 
-                        <FormGroup id="LinkedIn">
-                            <FormLabel>LinkedIn URL</FormLabel>
-                            <FormControl type="text" ref={linkedInRef} required defaultValue={user?.LinkedIn} placeholder="Enter your LinkedIn URL." />
-                        </FormGroup>
+              {selectedSection === 'password' && (
+                  <Form onSubmit={handlePasswordSubmit}>
 
-                        <FormGroup id="GitHub">
-                            <FormLabel>GitHub URL</FormLabel>
-                            <FormControl type="text" ref={gitHubRef} required defaultValue={user?.GitHub} placeholder="Enter your GitHub URL." />
-                        </FormGroup>
-                        <Button
-                        disabled={loading}
-                        className="w-100 mt-2"
-                        type="submit"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            const isConfirmed = window.confirm("Are you sure you want to save the changes?");
+                      <FormGroup id="email">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl type="email" ref={emailRef} required defaultValue={user?.email} />
+                      </FormGroup>
 
-                            if (isConfirmed) {
+                      <FormGroup id="password">
+                          <FormLabel>Password</FormLabel>
+                          <FormControl type="password" ref={passwordRef} placeholder="Leave blank to keep the same." />
+                      </FormGroup>
 
-                            handleSubmit({
-                                preventDefault: () => {},
-                                target: e.target, 
-                            } as React.FormEvent<HTMLFormElement>);
-                            }
-                        }}
-                        >
-                        Save
-                        </Button>
-                    </Form>
-                </CardBody>
-            </Card>
+                      <FormGroup id="password-confirm">
+                          <FormLabel>Password Confirmation</FormLabel>
+                          <FormControl type="password" ref={passwordConfirmRef} placeholder="Leave blank to keep the same." />
+                      </FormGroup>
 
-            <div className="w-100 text-center mt-2">
-                <Link to="/">Cancel</Link>
-            </div>
-        </>
+                      <Button
+                          disabled={loading}
+                          className="w-100 mt-2"
+                          type="submit"
+                      >
+                          Save
+                      </Button>
+                  </Form>
+              )}
+
+              {selectedSection === 'projects' && (
+                  <div>
+                      <h3>Projects Section</h3>
+                      <Button className="w-100 mt-2" onClick={handleProjectsSubmit}>Update Projects</Button>
+                  </div>
+              )}
+          </div>
+      </div>
     );
 }
+

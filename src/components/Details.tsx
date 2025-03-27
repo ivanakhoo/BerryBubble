@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
-import ProjectPictureUpload from "./ProjectPictureUpload";
+import Projects from "./Projects";
 
 export default function Details() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -112,8 +112,7 @@ export default function Details() {
         <>
             <h1 className="text-center mt-4">{user.DisplayName || "User Profile"}</h1>
             <div className="d-flex justify-content-center">
-                <Card style={{ width: '22rem' }} className="mb-4">
-                    <CardBody className="text-center">
+                    <div>
                         <img 
                             src={profilePic || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} 
                             alt="Profile" 
@@ -125,7 +124,6 @@ export default function Details() {
                                 border: "3px solid #ddd" 
                             }} 
                         />
-                        <h3>{user.DisplayName}</h3>
                         <h5>Class of {user.GradYear}</h5>
                         <p>{user.Bio}</p>
 
@@ -195,50 +193,13 @@ export default function Details() {
                             </div>
                             )}
                         </div>
-                        <div className="mt-4">
-                            <h4>Projects</h4>
-                            {projects.length > 0 ? (
-                                <div>
-                                {projects.map((project) => (
-                                    <Card key={project.UserUID} className="mb-3">
-                                        <h5>{project.ProjectName}</h5>
-                                        <div style={{ display: "flex", justifyContent: "center" }}>
-                                        <img 
-                                            src={project.CoverPicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} 
-                                            alt="Profile" 
-                                            style={{
-                                                width: "150px", 
-                                                height: "150px", 
-                                                borderRadius: "50%", 
-                                                objectFit: "cover",
-                                                border: "3px solid #ddd" 
-                                            }} 
-                                        />
-                                        </div>
-
-                                        {(isAdmin || currentUser.uid == project.UserUID) && (<ProjectPictureUpload projectName = {project.ProjectName} ></ProjectPictureUpload>
-                                        )}
-                                        <p>{project.Summary}</p>
-                                        <p><strong>Technologies:</strong></p>
-                                        <ul>
-                                            {Array.isArray(project.Technologies) && project.Technologies.map((tech, index) => (
-                                                <li key={index}>{tech}</li>
-                                            ))}
-                                        </ul>
-                                    </Card>
-                                ))}
-                            </div>
-                            ) : (
-                                <p>No projects available.</p>
-                            )}
-                        </div>            
+                        <Projects userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid} />        
                         {isAdmin && (
                             <Link to="/update-profile" state={{ userUID: user.userUID }}>
                                 <Button variant="dark" className="mt-2">Update Profile</Button>
                             </Link>
                         )}
-                    </CardBody>
-                </Card>
+                    </div>
             </div>
         </>
     );
