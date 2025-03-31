@@ -18,6 +18,7 @@ import AdminRoute from "./AdminRoute";
 import Unauthorized from "./Unauthorized";
 import Verification from "./Verification";
 import EditProject from "./EditProject";
+import AddProject from "./AddProject";
 
 const App: React.FC = () => {
   return (
@@ -43,6 +44,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/editProject" element={<PrivateRoute />}>
                   <Route index element={<EditProject />} />
+                </Route>
+                <Route path="/add-project" element={<PrivateRoute />}>
+                  <Route index element={<AddProject />} />
                 </Route>
                 <Route path="/update-profile" element={<PrivateRoute />}>
                   <Route index element={<UpdateProfile />} />
