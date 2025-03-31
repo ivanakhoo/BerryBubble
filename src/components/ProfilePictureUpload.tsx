@@ -1,17 +1,16 @@
-import { useState } from "react";
 import axios from "axios";
 // @ts-ignore
 import { db, auth } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_URL as string;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 
-const ProfilePictureUpload: React.FC = () => {
-  const [imageUrl, setImageUrl] = useState<string>("");
-  
-  // Get the current logged-in user safely
-  const user = auth.currentUser;
+interface ProfilePictureUploadProp {
+  UserUID: string;
+}
+
+const ProfilePictureUpload: React.FC<ProfilePictureUploadProp> = ({ UserUID }) => {
 
   // Handle Image Upload to Cloudinary
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,12 +24,11 @@ const ProfilePictureUpload: React.FC = () => {
     try {
       const response = await axios.post<{ secure_url: string }>(CLOUDINARY_URL, formData);
       const uploadedImageUrl = response.data.secure_url;
-      setImageUrl(uploadedImageUrl);
 
       // Save the image URL in Firestore
-      if (user) {
+      if (UserUID) {
         await setDoc(
-          doc(db, "users", user.uid),
+          doc(db, "users", UserUID),
           { profilePic: uploadedImageUrl },
           { merge: true }
         );

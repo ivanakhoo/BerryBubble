@@ -1,4 +1,3 @@
-import { useState } from "react";
 import axios from "axios";
 // @ts-ignore
 import { db, auth } from "../firebase";
@@ -12,7 +11,6 @@ interface ProjectPictureUploadProps {
 }
 
 const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName }) => {
-  const [imageUrl, setImageUrl] = useState<string>("");
 
   const user = auth.currentUser;
 
@@ -27,7 +25,6 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName
     try {
       const response = await axios.post<{ secure_url: string }>(CLOUDINARY_URL, formData);
       const uploadedImageUrl = response.data.secure_url;
-      setImageUrl(uploadedImageUrl);
       const projectsRef = collection(db, "projects");
       const q = query(projectsRef, where("ProjectName", "==", projectName));
       const querySnapshot = await getDocs(q);

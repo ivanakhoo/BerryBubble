@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Card, CardBody } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 // @ts-ignore
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useLocation } from "react-router-dom";
@@ -13,7 +13,6 @@ export default function Details() {
     const [user, setUser] = useState<User | null>(null);
     const { currentUser } = useAuth();
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
-    const [projects, setProjects] = useState<Project[]>([]);
 
 
     const location = useLocation();
@@ -92,9 +91,6 @@ export default function Details() {
                 querySnapshot.forEach((doc) => {
                     projectsList.push({ UserUID: doc.id, ...doc.data() } as Project);
                 });
-                console.log(projectsList)
-                console.log(userUID)
-                setProjects(projectsList);
             } catch (error) {
                 console.error("Error fetching projects:", error);
             }

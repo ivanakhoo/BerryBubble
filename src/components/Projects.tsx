@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { collection, query, where, getDocs } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase"; 
+import { Link } from "react-router-dom";
 import ProjectPictureUpload from "./ProjectPictureUpload";
 
 interface ProjectsProps {
@@ -64,17 +65,26 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                   }} 
                 />)}
               </div>
+              {(isAdmin || currentUserUID === project.UserUID) && (    
+                <div>
+                  <ProjectPictureUpload projectName = {project.ProjectName}/>
+                  <Link to="/editProject" state={{ projectName: project.ProjectName }}>
+                              <Button variant="dark" className="mt-2">Edit Project</Button>
+                              </Link>
+                </div>         
+                            )}
 
-              {(isAdmin || currentUserUID === project.UserUID) && (
-                <ProjectPictureUpload projectName={project.ProjectName} />
-              )}
               <p>{project.Summary}</p>
-              <p><strong>Technologies:</strong></p>
-              <ul>
-                {Array.isArray(project.Technologies) && project.Technologies.map((tech: string, index: number) => (
-                  <li key={index}>{tech}</li>
-                ))}
-              </ul>
+              {project?.Technologies && project.Technologies.length > 0 && (
+                <>
+                  <p><strong>Technologies:</strong></p>
+                  <ul>
+                    {project.Technologies.map((tech: string, index: number) => (
+                      <li key={index}>{tech}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </Card>
           ))}
         </div>

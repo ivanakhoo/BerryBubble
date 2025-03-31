@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Button, Card, CardBody, FormLabel, FormGroup, FormControl, Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Form, Button, FormLabel, FormGroup, FormControl, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
@@ -192,7 +192,7 @@ export default function UpdateProfile() {
                       }} 
                   />
               </div>
-              <ProfilePictureUpload />
+              <ProfilePictureUpload UserUID={ userUID }/>
 
               {/* Conditionally render form based on selected section */}
               {selectedSection === 'account' && (

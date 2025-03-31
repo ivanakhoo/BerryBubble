@@ -20,8 +20,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Take away Admin rendering for first loadup of site
 
 ### UI/UX
-- Make a way to edit the projects or add a new project
-- Make a Projects Component that can be embedded into the details component
+- Clean up edit project page
 - Make details page more clean
 - Make dashboard user cards show project summary
 - Get main dashboards to show rows of users

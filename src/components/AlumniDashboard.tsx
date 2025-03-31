@@ -9,7 +9,6 @@ import { collection, getDocs, doc, getDoc, query, where, updateDoc } from "fireb
 import SearchBar from "./SearchBar";
 
 export default function Alumni() {
-    const [profilePic, setProfilePic] = useState<string | null>(null);
     const [currentStudents, setCurrentStudents] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -23,7 +22,6 @@ export default function Alumni() {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean };
-                    setProfilePic(data.profilePic || ""); 
                     setIsAdmin(data.adminFlag || false); 
                 }
             }

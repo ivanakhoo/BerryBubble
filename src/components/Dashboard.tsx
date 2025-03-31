@@ -9,7 +9,6 @@ import { collection, getDocs, doc, getDoc, query, where, updateDoc } from "fireb
 import SearchBar from "./SearchBar";
 
 export default function Dashboard() {
-    const [profilePic, setProfilePic] = useState<string | null>(null);
     const [verifiedUsers, setVerifiedUsers] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [filteredUsers, setFilteredUsers] = useState<{ id: string; data: any }[]>([]);
@@ -24,7 +23,6 @@ export default function Dashboard() {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean, emailVerified?: boolean };
-                    setProfilePic(data.profilePic || ""); 
                     setIsAdmin(data.adminFlag || false); 
                     if (!data.emailVerified) {
                         alert("Update your profile to complete your account verification.")
