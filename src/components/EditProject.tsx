@@ -1,105 +1,158 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs, updateDoc } from "firebase/firestore";
 // @ts-ignore
-import { db, auth } from "../firebase";
+import { db } from "../firebase";
 import { Form, FormGroup, FormLabel, FormControl, Button } from "react-bootstrap";
 
 const ProjectEditForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  const location = useLocation();
-    const projectName = location.state?.projectName; 
+  const [techError, setTechError] = useState(false);
   
-  const summaryRef = useRef<HTMLInputElement>(null);
-  const projectNameRef = useRef<HTMLInputElement>(null);
-  const technologiesRef = useRef<HTMLInputElement>(null);
+  const [projectName, setProjectName] = useState("");
+  const [summary, setSummary] = useState("");
+  const [technologies, setTechnologies] = useState<string[]>([]);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const projectNameFromState = location.state?.projectName;
 
   interface Project {
-        CoverPicture?: string;
-        ProjectName: string;
-        Summary?: string;
-        Technologies?: Array<string>;
-        UserUID: string;
-        }
-  
-    const [project, setProject] = useState<Project | null>(null);
+    ProjectName: string;
+    Summary?: string;
+    Technologies?: string[];
+  }
 
-useEffect(() => {
-        const fetchProject = async () => {
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchProject = async () => {
+      try {
+        if (!projectNameFromState) return;
         const projectsRef = collection(db, "projects");
-        const q = query(projectsRef, where("ProjectName", "==", projectName));
+        const q = query(projectsRef, where("ProjectName", "==", projectNameFromState));
         const querySnapshot = await getDocs(q);
 
+        if (!isMounted) return;
         if (querySnapshot.empty) {
-            throw new Error("No matching project found.");
+          setError("No matching project found.");
+          return;
         }
+
         const projectDoc = querySnapshot.docs[0];
-        setProject(projectDoc.data() as Project);
-        };
+        const projectData = projectDoc.data() as Project;
+
+        setProjectName(projectData.ProjectName || "");
+        setSummary(projectData.Summary || "");
+        setTechnologies(projectData.Technologies || []);
+      } catch (err) {
+        if (isMounted) setError("Failed to fetch project data.");
+      }
+    };
 
     fetchProject();
-    }, [projectName]);
+    return () => {
+      isMounted = false;
+    };
+  }, [projectNameFromState]);
 
-  async function handleProjectUpdate(e: React.FormEvent<HTMLFormElement>) {
+  const handleProjectUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const promises = [];
     setLoading(true);
     setError("");
+    setTechError(false);
+
+    // Validation: No empty fields
+    if (!projectName.trim() || !summary.trim() || technologies.some((tech) => tech.trim() === "")) {
+      setError("All fields must be filled.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const projectsRef = collection(db, "projects");
-      const q = query(projectsRef, where("ProjectName", "==", projectName));
+      const q = query(projectsRef, where("ProjectName", "==", projectNameFromState));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
         throw new Error("No matching project found.");
       }
-      
+
       const projectDoc = querySnapshot.docs[0];
-      
-      if (summaryRef.current?.value) {
-        promises.push(updateDoc(projectDoc.ref, { Summary: summaryRef.current.value }));
-      }
+      await updateDoc(projectDoc.ref, {
+        ProjectName: projectName,
+        Summary: summary,
+        Technologies: technologies,
+      });
 
-      if (projectNameRef.current?.value) {
-        promises.push(updateDoc(projectDoc.ref, { ProjectName: projectNameRef.current.value }));
-      }
-
-      if (technologiesRef.current?.value) {
-        const techArray = technologiesRef.current.value.split(",").map(tech => tech.trim());
-        promises.push(updateDoc(projectDoc.ref, { Technologies: techArray }));
-    }
-    
-      
-      await Promise.all(promises);
       navigate("/");
     } catch (err) {
+      console.error("Update failed:", err);
       setError("Failed to update project.");
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const handleTechnologyChange = (index: number, value: string) => {
+    const newTechnologies = [...technologies];
+    newTechnologies[index] = value;
+    setTechnologies(newTechnologies);
+  };
+
+  const addTechnology = () => {
+    setTechnologies([...technologies, ""]); // Add an empty field for users to fill in
+  };
+
+  const removeTechnology = (index: number) => {
+    setTechnologies(technologies.filter((_, i) => i !== index));
+  };
 
   return (
     <Form onSubmit={handleProjectUpdate}>
+      <h1>Edit Project</h1>
       {error && <div className="alert alert-danger">{error}</div>}
 
-      <FormGroup id="projectName">
+      <FormGroup>
         <FormLabel>Project Name</FormLabel>
-        <FormControl type="text" ref={projectNameRef} required defaultValue={project?.ProjectName} placeholder="Enter new project name" />
+        <FormControl
+          type="text"
+          value={projectName}
+          onChange={(e) => setProjectName(e.target.value)}
+          placeholder="Enter new project name"
+          required
+        />
       </FormGroup>
 
-      <FormGroup id="summary">
+      <FormGroup>
         <FormLabel>Summary</FormLabel>
-        <FormControl type="text" ref={summaryRef} defaultValue={project?.Summary} placeholder="Enter new summary" />
+        <FormControl
+          as="textarea"
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          placeholder="Enter new summary"
+          required
+        />
       </FormGroup>
 
-      <FormGroup id="Technologies">
+      <FormGroup>
         <FormLabel>Technologies</FormLabel>
-        <FormControl type="text" ref={technologiesRef} defaultValue={project?.Technologies} placeholder="Enter new technologies" />
+        {technologies.map((tech, index) => (
+          <div key={index} className="d-flex align-items-center mb-2">
+            <FormControl
+              type="text"
+              value={tech}
+              onChange={(e) => handleTechnologyChange(index, e.target.value)}
+              placeholder="Enter technology"
+              className={`me-2 ${techError && tech.trim() === "" ? "border-danger" : ""}`}
+              required
+            />
+            <Button variant="danger" onClick={() => removeTechnology(index)}>Remove</Button>
+          </div>
+        ))}
+        {techError && <small className="text-danger">All technology fields must be filled.</small>}
+        <Button variant="secondary" onClick={addTechnology} className="mt-2">+ Add Technology</Button>
       </FormGroup>
 
       <Button disabled={loading} className="w-100 mt-2" type="submit">

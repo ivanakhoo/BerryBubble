@@ -47,9 +47,11 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
   return (
     <div className="mt-4">
       <h4>Projects</h4>
+      {isAdmin && (
       <Link to="/add-project" state={{ userUID: userUID }}>
                                 <Button variant="dark" className="mt-2">Add Project</Button>
                             </Link>
+                        )}
       {projects.length > 0 ? (
         <div>
           {projects.map((project) => (

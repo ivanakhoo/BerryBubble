@@ -9,6 +9,7 @@ import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 import Sidebar from "./Sidebar";
+import Projects from "./Projects";
 
 export default function UpdateProfile() {
     const [selectedSection, setSelectedSection] = useState<string>('account'); // State to track selected section
@@ -166,10 +167,6 @@ export default function UpdateProfile() {
             });
     }
 
-    function handleProjectsSubmit() {
-        alert("Projects section is not yet implemented.");
-    }
-
     return (
         <div style={{ display: 'flex' }}>
           <Sidebar selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
@@ -214,7 +211,7 @@ export default function UpdateProfile() {
 
                       <FormGroup id="bio">
                           <FormLabel>Bio</FormLabel>
-                          <FormControl type="text" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
+                          <FormControl type="textarea" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
                       </FormGroup>
 
                       <FormGroup id="gradYear">
@@ -272,8 +269,7 @@ export default function UpdateProfile() {
 
               {selectedSection === 'projects' && (
                   <div>
-                      <h3>Projects Section</h3>
-                      <Button className="w-100 mt-2" onClick={handleProjectsSubmit}>Update Projects</Button>
+                      <Projects userUID={userUID} isAdmin={true} currentUserUID={currentUser.uid} /> 
                   </div>
               )}
           </div>
