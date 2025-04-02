@@ -16,7 +16,7 @@ export default function UpdateProfile() {
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
-    const bioRef = useRef<HTMLInputElement>(null); 
+    const bioRef = useRef<HTMLTextAreaElement>(null); 
     const gradYearRef = useRef<HTMLInputElement>(null); 
     const firstRef = useRef<HTMLInputElement>(null); 
     const lastRef = useRef<HTMLInputElement>(null); 
@@ -211,7 +211,7 @@ export default function UpdateProfile() {
 
                       <FormGroup id="bio">
                           <FormLabel>Bio</FormLabel>
-                          <FormControl type="textarea" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
+                          <FormControl as="textarea" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
                       </FormGroup>
 
                       <FormGroup id="gradYear">
