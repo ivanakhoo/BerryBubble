@@ -180,24 +180,23 @@ export default function Dashboard() {
                                     </div>
                                     )}
                                 </div>
-                                {isAdmin && (
-                                    <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
-                                        <Button variant="dark" className="mt-2">Update Profile</Button>
-                                    </Link>
-                                )}
-                                <br />
                                 <Link to="/details" state={{ userUID: doc.data.userUID, Dashboard: 0 }}>
                                     <Button variant="dark" className="mt-2">See More Details</Button>
                                 </Link>
-                                <br />
                                 {isAdmin && (
-                                    <Button 
-                                        variant="success" 
-                                        className="mt-2" 
-                                        onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
-                                    >
-                                        Deactivate User
-                                    </Button>
+                                    <>
+                                        <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
+                                            <Button variant="dark" className="mt-2">Update Profile</Button>
+                                        </Link>
+                                        <br />
+                                        <Button 
+                                            variant="success" 
+                                            className="mt-2" 
+                                            onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
+                                        >
+                                            {doc.data.verified ? "Deactivate User" : "Activate User"}
+                                        </Button>
+                                    </>
                                 )}
                             </CardBody>
                         </Card>
