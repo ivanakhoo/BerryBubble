@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { Link } from "react-router-dom";
@@ -44,6 +44,28 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
     fetchProjects();
   }, [userUID]);
 
+  const handleDeleteProject = async (projectName: string, userUID: string) => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      try {
+        const projectsRef = collection(db, "projects");
+        const q = query(projectsRef, where("ProjectName", "==", projectName), where("UserUID", "==", userUID));
+        const querySnapshot = await getDocs(q);
+  
+        if (querySnapshot.empty) {
+          alert("Project not found.");
+          return;
+        }
+
+        const docToDelete = querySnapshot.docs[0]; 
+        await deleteDoc(doc(db, "projects", docToDelete.id));
+  
+        setProjects(projects.filter(project => project.ProjectName !== projectName || project.UserUID !== userUID));
+      } catch (error) {
+        console.error("Error deleting project:", error);
+        alert("Failed to delete project.");
+      }
+    }
+  };
   return (
     <div className="mt-4">
       <h4>Projects</h4>
@@ -73,9 +95,16 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
               {(isAdmin || currentUserUID === project.UserUID) && (    
                 <div>
                   <ProjectPictureUpload projectName = {project.ProjectName}/>
-                  <Link to="/editProject" state={{ projectName: project.ProjectName, userUID: userUID }}>
+                  <Link to="/add-project" state={{ projectName: project.ProjectName, userUID: userUID }}>
                               <Button variant="dark" className="mt-2">Edit Project</Button>
                               </Link>
+                              <Button 
+                    variant="danger" 
+                    className="mt-2 ms-2" 
+                    onClick={() => handleDeleteProject(project.ProjectName, project.UserUID,)}
+                  >
+                    Delete Project
+                  </Button>
                 </div>         
                             )}
 
