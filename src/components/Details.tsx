@@ -17,6 +17,7 @@ export default function Details() {
 
     const location = useLocation();
     const userUID = location.state?.userUID; 
+    const Dashboard = location.state?.Dashboard;
 
     interface User {
         Bio?: string;
@@ -40,6 +41,42 @@ export default function Details() {
         UserUID: string
         Technologies: string[];
       }
+
+    
+      const renderDashboardButton = () => {
+        switch (Dashboard) {
+          case 0:
+            return (
+              <Link to="/">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          case 1:
+            return (
+              <Link to="/currentStudents">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          case 2:
+            return (
+              <Link to="/alumni">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          case 3:
+            return (
+              <Link to="/admin">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          default:
+            return (
+                <Link to="/currentStudents">
+                  <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                </Link>
+              );
+        }
+      };
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -189,12 +226,13 @@ export default function Details() {
                             </div>
                             )}
                         </div>
-                        <Projects userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid} />        
-                        {isAdmin && (
+                        {(isAdmin || currentUser == userUID) && (
                             <Link to="/update-profile" state={{ userUID: user.userUID }}>
                                 <Button variant="dark" className="mt-2">Update Profile</Button>
                             </Link>
                         )}
+                        <Projects userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid} /> 
+                        {renderDashboardButton()}
                     </div>
             </div>
         </>

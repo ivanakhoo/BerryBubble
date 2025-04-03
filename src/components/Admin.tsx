@@ -9,7 +9,6 @@ import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "fireb
 import SearchBar from "./SearchBar";
 
 export default function Admin() {
-    const [profilePic, setProfilePic] = useState<string | null>(null);
     const [unverifiedUsers, setUnverifiedUsers] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -22,7 +21,6 @@ export default function Admin() {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean };
-                    setProfilePic(data.profilePic || ""); 
                     setIsAdmin(data.adminFlag || false); 
                 }
             }
@@ -121,7 +119,7 @@ export default function Admin() {
                                     </Link>
                                 )}
                                 <br />
-                                <Link to="/details" state={{ userUID: doc.id }}>
+                                <Link to="/details" state={{ userUID: doc.id, Dashboard: 3 }}>
                                     <Button variant="dark" className="mt-2">See More Details</Button>
                                 </Link>
                                 <br />

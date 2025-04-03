@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs, updateDoc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase";
@@ -17,6 +17,7 @@ const ProjectEditForm: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const projectNameFromState = location.state?.projectName;
+  const userUID = location.state?.userUID;
 
   interface Project {
     ProjectName: string;
@@ -158,6 +159,10 @@ const ProjectEditForm: React.FC = () => {
       <Button disabled={loading} className="w-100 mt-2" type="submit">
         Save Changes
       </Button>
+
+      <Link to="/details" state={{ userUID: userUID }}>
+                                <Button variant="dark" className="mt-2">Back to Details</Button>
+                            </Link>
     </Form>
   );
 };

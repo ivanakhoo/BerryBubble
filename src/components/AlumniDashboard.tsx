@@ -187,7 +187,7 @@ export default function Alumni() {
                                     </Link>
                                 )}
                                 <br />
-                                <Link to="/details" state={{ userUID: doc.data.userUID }}>
+                                <Link to="/details" state={{ userUID: doc.data.userUID, Dashboard: 2 }}>
                                     <Button variant="dark" className="mt-2">See More Details</Button>
                                 </Link>
                                 <br />
