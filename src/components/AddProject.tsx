@@ -101,7 +101,7 @@ const ProjectAddForm: React.FC = () => {
         await addDoc(collection(db, "projects"), newProject);
       }
   
-      navigate("/"); 
+      navigate("/details", { state: { userUID: userUID } }); 
     } catch (err) {
       console.error("Project submission failed:", err);
       setError("Failed to create or update project.");

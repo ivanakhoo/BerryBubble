@@ -131,7 +131,7 @@ export default function UpdateProfile() {
 
         Promise.all(promises)
             .then(() => {
-                navigate("/");
+                navigate("/details", { state: { userUID: userUID } }); 
             })
             .catch(() => {
                 setError("Failed to update account.");
@@ -169,7 +169,7 @@ export default function UpdateProfile() {
                     upEmailVerified(user);
                     console.log("Updated Email Verification.")
                 }
-                navigate("/");
+                navigate("/details", { state: { userUID: userUID } }); 
             })
             .catch(() => {
                 setError("Failed to update password.");

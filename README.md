@@ -19,15 +19,21 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 ### Bug Fixes
 - Take away Admin rendering for first loadup of site
 
-### UI/UX
+### Features
 - Make favorite project feature
 
 - Make a way to upload Company Logos and create new page for displaying them when approved
-- Make dashboard user cards show project summary
-- Get main dashboards to show rows of users
+
+- Make dashboard user cards show favorited project
+
 - Make a report user button for each card that sends notification to admin-only center
-- Light and dark mode switch
+
 - Expand search bar to work with gradyear/company/jobtitle
+
+### Cleanup
+- Get main dashboards to show rows of users
+- UI of Dashboards and Details
+- Choose color combinations
 
 ### Verification:
 - Connect delete endpoints in server.js to a button for admin.
