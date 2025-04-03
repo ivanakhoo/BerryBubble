@@ -113,6 +113,8 @@ export default function Dashboard() {
                                     />
                                 )}
                                 <h5 className="mt-2">Class of {doc.data.GradYear}</h5>
+                                <p>{doc.data.JobTitle}</p>
+                                <p>{doc.data.Company}</p>
                                 <p>{doc.data.Bio}</p>
                                 <div>
                                     {(doc.data.GitHub || doc.data.LinkedIn || doc.data.email) && (

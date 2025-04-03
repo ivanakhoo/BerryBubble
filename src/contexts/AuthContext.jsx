@@ -221,6 +221,44 @@ export function AuthProvider({ children }) {
       });
   }
 
+  async function upJobTitle(jobTitle, user) {
+    if (!user) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", user.userUID); 
+  
+    return updateDoc(userRef, {
+      JobTitle: jobTitle,
+    })
+      .then(() => {
+        console.log("JobTitle updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating JobTitle:", error);
+        throw error;
+      });
+  }
+
+  async function upCompany(company, user) {
+    if (!user) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", user.userUID); 
+  
+    return updateDoc(userRef, {
+      Company: company,
+    })
+      .then(() => {
+        console.log("Company updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating Company:", error);
+        throw error;
+      });
+  }
+
   async function upEmailVerified(user) {
     if (!user) {
       return Promise.reject(new Error("No authenticated user"));
@@ -265,7 +303,9 @@ export function AuthProvider({ children }) {
     upDisplayName,
     upLinkedIn,
     upGitHub,
-    upEmailVerified
+    upEmailVerified,
+    upCompany,
+    upJobTitle
   };
 
   return <AuthContext.Provider value={value}>

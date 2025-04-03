@@ -23,7 +23,9 @@ export default function UpdateProfile() {
     const displayRef = useRef<HTMLInputElement>(null); 
     const gitHubRef = useRef<HTMLInputElement>(null); 
     const linkedInRef = useRef<HTMLInputElement>(null); 
-    const { upEmailVerified, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
+    const jobTitleRef = useRef<HTMLInputElement>(null); 
+    const companyRef = useRef<HTMLInputElement>(null); 
+    const { upJobTitle, upCompany, upEmailVerified, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -49,6 +51,8 @@ export default function UpdateProfile() {
         email?: string;
         profilePic?: string;
         userUID?: string;
+        JobTitle?: string;
+        Company?: string;
       }
 
     const [user, setUser] = useState<User | null>(null);
@@ -115,6 +119,14 @@ export default function UpdateProfile() {
 
         if (linkedInRef.current?.value) {
             promises.push(upLinkedIn(linkedInRef.current?.value, user)); 
+        }
+
+        if (jobTitleRef.current?.value) {
+            promises.push(upJobTitle(jobTitleRef.current?.value, user)); 
+        }
+
+        if (companyRef.current?.value) {
+            promises.push(upCompany(companyRef.current?.value, user)); 
         }
 
         Promise.all(promises)
@@ -217,6 +229,16 @@ export default function UpdateProfile() {
                       <FormGroup id="gradYear">
                           <FormLabel>Graduation Year</FormLabel>
                           <FormControl type="text" ref={gradYearRef} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
+                      </FormGroup>
+
+                      <FormGroup id="JobTitle">
+                          <FormLabel>Job Title</FormLabel>
+                          <FormControl type="text" ref={jobTitleRef} required defaultValue={user?.JobTitle} placeholder="Enter your current job title." />
+                      </FormGroup>
+
+                      <FormGroup id="Company">
+                          <FormLabel>Current Company</FormLabel>
+                          <FormControl type="text" ref={companyRef} required defaultValue={user?.Company} placeholder="Enter your current company." />
                       </FormGroup>
 
                       <FormGroup id="LinkedIn">

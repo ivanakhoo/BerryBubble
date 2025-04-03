@@ -20,14 +20,14 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Take away Admin rendering for first loadup of site
 
 ### UI/UX
-- Link Projects with UpdateProfile Component
-- Clean up edit project page
-- Make details page more clean
+- Make favorite project feature
+
+- Make a way to upload Company Logos and create new page for displaying them when approved
 - Make dashboard user cards show project summary
 - Get main dashboards to show rows of users
 - Make a report user button for each card that sends notification to admin-only center
 - Light and dark mode switch
-- Expand search bar to work with gradyear
+- Expand search bar to work with gradyear/company/jobtitle
 
 ### Verification:
 - Connect delete endpoints in server.js to a button for admin.

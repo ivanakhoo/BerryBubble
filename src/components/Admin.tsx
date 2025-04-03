@@ -112,6 +112,8 @@ export default function Admin() {
                                     />
                                 )}
                                 <h5>Class of {doc.data.GradYear}</h5>
+                                <p>{doc.data.JobTitle}</p>
+                                <p>{doc.data.Company}</p>
                                 <p>{doc.data.Bio}</p>
                                 <Link to="/details" state={{ userUID: doc.data.userUID, Dashboard: 3 }}>
                                     <Button variant="dark" className="mt-2">See More Details</Button>
