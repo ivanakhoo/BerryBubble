@@ -13,6 +13,7 @@ export default function Dashboard() {
     const { currentUser } = useAuth();
     const [filteredUsers, setFilteredUsers] = useState<{ id: string; data: any }[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchCategory, setSearchCategory] = useState("");
     const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
     useEffect(() => {
@@ -68,15 +69,31 @@ export default function Dashboard() {
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const query = event.target.value.toLowerCase();
         setSearchQuery(query);
-        const filtered = verifiedUsers.filter(user =>
-            user.data.DisplayName.toLowerCase().includes(query)
-        );
+    
+        const filtered = verifiedUsers.filter(user => {
+            const name = user.data.DisplayName?.toLowerCase() || "";
+            const gradYear = String(user.data.GradYear || "").toLowerCase();
+            const jobTitle = user.data.JobTitle?.toLowerCase() || "";
+            
+            return (
+                name.includes(query) ||
+                gradYear.includes(query) ||
+                jobTitle.includes(query)
+            );
+        });
+    
         setFilteredUsers(filtered);
     };
 
     return (
         <>
-            <SearchBar query={searchQuery} onSearch={handleSearch} />
+            <SearchBar
+                query={searchQuery}
+                onSearch={handleSearch}
+                searchCategory={searchCategory}
+                onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                    setSearchCategory(event.target.value);
+                }}/>
     
             {/* Display Verified Users with their Profile Pictures */}
             <h1 className="text-center mt-4">Verified Users</h1>

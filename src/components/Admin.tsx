@@ -10,8 +10,10 @@ import SearchBar from "./SearchBar";
 
 export default function Admin() {
     const [unverifiedUsers, setUnverifiedUsers] = useState<{ id: string; data: any }[]>([]);
+    const [filteredUsers, setFilteredUsers] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchCategory, setSearchCategory] = useState("");
     const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
     useEffect(() => {
@@ -32,32 +34,28 @@ export default function Admin() {
     useEffect(() => {
         async function fetchUnverifiedUsers() {
             try {
-                const q = query(collection(db, "users"), where("verified", "==", false), where("emailVerified", "==", true));
+                const q = query(collection(db, "users"), where("verified", "==", false), where("emailVerified", "==", true)); 
                 const querySnapshot = await getDocs(q);
-
-                const usersArray = querySnapshot.docs.map((doc) => ({
+                const docsArray = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     data: doc.data(),
                 }));
-
-                setUnverifiedUsers(usersArray); 
+                setUnverifiedUsers(docsArray); 
             } catch (error) {
-                console.error("Error fetching unverified users:", error);
+                console.error("Error fetching alumni users:", error);
             }
         }
 
         fetchUnverifiedUsers(); 
     }, []); 
 
-
     const updateVerifiedStatus = async (userId: string, currentStatus: boolean) => {
         try {
             const userRef = doc(db, "users", userId);
             await updateDoc(userRef, { verified: !currentStatus });
 
-            // Update state immediately to reflect the change
-            setUnverifiedUsers((prevUsers) =>
-                prevUsers.filter(user => user.id !== userId) // Remove user from list after verification
+            setUnverifiedUsers((prevStudents) =>
+                prevStudents.filter(student => student.id !== userId) 
             );
         } catch (error) {
             console.error("Error updating verification status:", error);
@@ -65,22 +63,40 @@ export default function Admin() {
     };
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
+        const query = event.target.value.toLowerCase();
+        setSearchQuery(query);
+    
+        const filtered = unverifiedUsers.filter(user => {
+            const name = user.data.DisplayName?.toLowerCase() || "";
+            const gradYear = String(user.data.GradYear || "").toLowerCase();
+            const jobTitle = user.data.JobTitle?.toLowerCase() || "";
+            
+            return (
+                name.includes(query) ||
+                gradYear.includes(query) ||
+                jobTitle.includes(query)
+            );
+        });
+    
+        setFilteredUsers(filtered);
     };
-
-    const filteredUsers = unverifiedUsers.filter(user =>
-        (user.data.DisplayName?.toLowerCase() || "").includes(searchQuery.toLowerCase())
-    );
     
 
     return (
         <>
-            <SearchBar query={searchQuery} onSearch={handleSearch} />
+            <SearchBar
+                        query={searchQuery}
+                        onSearch={handleSearch}
+                        searchCategory={searchCategory}
+                        onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                            setSearchCategory(event.target.value);
+                        }}
+                        />
 
             <h1 className="text-center mt-4">Admin</h1>
             
             <div className="d-flex flex-wrap justify-content-center">
-                {filteredUsers.map((doc) => (
+                {(searchQuery ? filteredUsers : unverifiedUsers).map((doc) => (
                     <div key={doc.id} className="text-center p-3">
                         <Card style={{ width: '18rem' }} className="mb-4">
                             <CardBody>

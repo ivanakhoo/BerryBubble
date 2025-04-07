@@ -10,8 +10,10 @@ import SearchBar from "./SearchBar";
 
 export default function CurrentStudentsDashboard() {
     const [currentStudents, setCurrentStudents] = useState<{ id: string; data: any }[]>([]);
+    const [filteredUsers, setFilteredUsers] = useState<{ id: string; data: any }[]>([]);
     const { currentUser } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchCategory, setSearchCategory] = useState("");
     const [isAdmin, setIsAdmin] = useState<boolean>(false); 
 
     useEffect(() => {
@@ -31,7 +33,7 @@ export default function CurrentStudentsDashboard() {
     }, [currentUser]);
 
     useEffect(() => {
-        async function fetchCurrentStudents() {
+        async function fetchAlumniUsers() {
             try {
                 const q = query(collection(db, "users"), where("verified", "==", true), where("emailVerified", "==", true)); 
                 const querySnapshot = await getDocs(q);
@@ -39,19 +41,17 @@ export default function CurrentStudentsDashboard() {
                     id: doc.id,
                     data: doc.data(),
                 }));
-
-                const currentStudents = docsArray.filter(doc => {
+                const alumni = docsArray.filter(doc => {
                     const gradYear = parseInt(doc.data.GradYear, 10); 
-                    return gradYear > 2024; 
+                    return gradYear >= 2025; 
                 });
-
-                setCurrentStudents(currentStudents); 
+                setCurrentStudents(alumni); 
             } catch (error) {
-                console.error("Error fetching current students:", error);
+                console.error("Error fetching alumni users:", error);
             }
         }
 
-        fetchCurrentStudents(); 
+        fetchAlumniUsers(); 
     }, []); 
 
     const updateVerifiedStatus = async (userId: string, currentStatus: boolean) => {
@@ -68,21 +68,39 @@ export default function CurrentStudentsDashboard() {
     };
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
+        const query = event.target.value.toLowerCase();
+        setSearchQuery(query);
+    
+        const filtered = currentStudents.filter(user => {
+            const name = user.data.DisplayName?.toLowerCase() || "";
+            const gradYear = String(user.data.GradYear || "").toLowerCase();
+            const jobTitle = user.data.JobTitle?.toLowerCase() || "";
+            
+            return (
+                name.includes(query) ||
+                gradYear.includes(query) ||
+                jobTitle.includes(query)
+            );
+        });
+    
+        setFilteredUsers(filtered);
     };
-
-    const filteredUsers = currentStudents.filter(user =>
-        user.data.DisplayName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     return (
         <>
-            <SearchBar query={searchQuery} onSearch={handleSearch} />
+            <SearchBar
+                        query={searchQuery}
+                        onSearch={handleSearch}
+                        searchCategory={searchCategory}
+                        onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                            setSearchCategory(event.target.value);
+                        }}
+                        />
 
             {/* Display Current Students with their Profile Pictures */}
             <h1 className="text-center mt-4">Current Students</h1>
             <div className="d-flex flex-wrap justify-content-center">
-                {filteredUsers.map((doc) => (
+                {(searchQuery ? filteredUsers : currentStudents).map((doc) => (
                     <div key={doc.id} className="text-center p-3">
                         <Card style={{ width: '18rem' }} className="mb-4">
                             <CardBody>
