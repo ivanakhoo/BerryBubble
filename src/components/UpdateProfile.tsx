@@ -93,6 +93,25 @@ export default function UpdateProfile() {
         setLoading(true);
         setError("");
 
+        const gitHubURL = gitHubRef.current?.value || "";
+        const linkedInURL = linkedInRef.current?.value || "";
+
+        const githubRegex = /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/;
+        const linkedinRegex = /^https?:\/\/(www\.)?linkedin\.com\/.*$/;
+
+        if (gitHubURL && !githubRegex.test(gitHubURL)) {
+            setError("Please enter a valid GitHub URL.");
+            setLoading(false);
+            return;
+        }
+
+        if (linkedInURL && !linkedinRegex.test(linkedInURL)) {
+            setError("Please enter a valid LinkedIn URL.");
+            setLoading(false);
+            return;
+        }
+
+
         if (bioRef.current?.value) {
             promises.push(upBio(bioRef.current?.value, user)); 
         }
@@ -113,12 +132,20 @@ export default function UpdateProfile() {
             promises.push(upDisplayName(displayRef.current?.value, user)); 
         }
 
-        if (gitHubRef.current?.value) {
-            promises.push(upGitHub(gitHubRef.current?.value, user)); 
-        }
+        // if (gitHubRef.current?.value) {
+        //     promises.push(upGitHub(gitHubRef.current?.value, user)); 
+        // }
 
-        if (linkedInRef.current?.value) {
-            promises.push(upLinkedIn(linkedInRef.current?.value, user)); 
+        // if (linkedInRef.current?.value) {
+        //     promises.push(upLinkedIn(linkedInRef.current?.value, user)); 
+        // }
+
+        if (gitHubURL) {
+            promises.push(upGitHub(gitHubURL, user)); 
+        }
+        
+        if (linkedInURL) {
+            promises.push(upLinkedIn(linkedInURL, user)); 
         }
 
         if (jobTitleRef.current?.value) {
