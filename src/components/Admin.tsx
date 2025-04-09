@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { Button, Card, CardBody } from "react-bootstrap";
 // @ts-ignore
 import { useAuth } from '../contexts/AuthContext';
-import { Link } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import SearchBar from "./SearchBar";
+import UserDisplay from "./UserDisplay";
 
 export default function Admin() {
     const [unverifiedUsers, setUnverifiedUsers] = useState<{ id: string; data: any }[]>([]);
@@ -98,59 +97,11 @@ export default function Admin() {
             <div className="d-flex flex-wrap justify-content-center">
                 {(searchQuery ? filteredUsers : unverifiedUsers).map((doc) => (
                     <div key={doc.id} className="text-center p-3">
-                        <Card style={{ width: '18rem' }} className="mb-4">
-                            <CardBody>
-                                <h3>{doc.data.DisplayName}</h3>
-                                {/* Display Profile Picture for each user */}
-                                {doc.data.profilePic ? (
-                                    <img 
-                                        src={doc.data.profilePic} 
-                                        alt="Profile" 
-                                        style={{
-                                            width: "150px", 
-                                            height: "150px", 
-                                            borderRadius: "50%", 
-                                            objectFit: "cover",
-                                            border: "3px solid #ddd" 
-                                        }} 
-                                    />
-                                ) : (
-                                    <img 
-                                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" 
-                                        alt="Profile" 
-                                        style={{
-                                            width: "150px", 
-                                            height: "150px", 
-                                            borderRadius: "50%", 
-                                            objectFit: "cover",
-                                            border: "3px solid #ddd"
-                                        }} 
-                                    />
-                                )}
-                                <h5>Class of {doc.data.GradYear}</h5>
-                                <p>{doc.data.JobTitle}</p>
-                                <p>{doc.data.Company}</p>
-                                <p>{doc.data.Bio}</p>
-                                <Link to="/details" state={{ userUID: doc.data.userUID, Dashboard: 3 }}>
-                                    <Button variant="dark" className="mt-2">See More Details</Button>
-                                </Link>
-                                {isAdmin && (
-                                    <>
-                                        <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
-                                            <Button variant="dark" className="mt-2">Update Profile</Button>
-                                        </Link>
-                                        <br />
-                                        <Button 
-                                            variant="success" 
-                                            className="mt-2" 
-                                            onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
-                                        >
-                                            {doc.data.verified ? "Deactivate User" : "Activate User"}
-                                        </Button>
-                                    </>
-                                )}
-                            </CardBody>
-                        </Card>
+                        <UserDisplay 
+                        doc={doc} 
+                        isAdmin={isAdmin} 
+                        updateVerifiedStatus={() => updateVerifiedStatus(doc.id, doc.data.verified)} 
+                        />
                     </div>
                 ))}
             </div>
