@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, query, where, getDocs, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { Link } from "react-router-dom";
@@ -18,11 +18,31 @@ interface Project {
     CoverPicture?: string;
     Summary: string;
     Technologies: string[];
+    id: string;
   }
 
 const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID }) => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [favoriteProject, setFavoriteProject] = useState<string | null>(null); // Store the FavoriteProject
 
+  useEffect(() => {
+    const fetchUserFavorite = async () => {
+      if (!userUID) return;
+      
+      try {
+        const userDoc = doc(db, "users", userUID); 
+        const userSnapshot = await getDoc(userDoc);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          setFavoriteProject(userData?.FavoriteProject || null);
+        }
+      } catch (error) {
+        console.error("Error fetching user's favorite project:", error);
+      }
+    };
+
+    fetchUserFavorite();
+  }, [userUID]);
   useEffect(() => {
     const fetchProjects = async () => {
       if (!userUID) return;
@@ -66,6 +86,22 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
       }
     }
   };
+
+
+  const handleFavoriteToggle = async (projectId: string) => {
+    if (!userUID) return;
+
+    try {
+      const userDoc = doc(db, "users", userUID);
+      await updateDoc(userDoc, {
+        FavoriteProject: projectId,
+      });
+      setFavoriteProject(projectId); 
+    } catch (error) {
+      console.error("Error updating favorite project:", error);
+    }
+  };
+  
   return (
     <div className="mt-4">
       <h4>Projects</h4>
@@ -105,6 +141,13 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                   >
                     Delete Project
                   </Button>
+                  <Button 
+                variant={favoriteProject === project.id ? "warning" : "outline-warning"} 
+                className="mt-2 ms-2"
+                onClick={() => handleFavoriteToggle(project.id)}
+              >
+                {favoriteProject === project.id ? "★ Favorited" : "☆ Favorite"}
+              </Button>
                 </div>         
                             )}
 

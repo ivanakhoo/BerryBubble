@@ -1,23 +1,3 @@
-// import { FormControl, InputGroup } from "react-bootstrap";
-
-// interface SearchBarProps {
-//     query: string;
-//     onSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-// }
-
-// const SearchBar: React.FC<SearchBarProps> = ({ query, onSearch }) => {
-//     return (
-//         <InputGroup className="mt-4 mb-3">
-//             <FormControl
-//                 placeholder="Search Users..."
-//                 value={query}
-//                 onChange={onSearch}
-//             />
-//         </InputGroup>
-//     );
-// };
-
-// export default SearchBar;
 import React from 'react';
 
 type Props = {
@@ -44,7 +24,7 @@ export default function SearchBar({ query, onSearch, searchCategory, onCategoryC
 
       <input
         type="text"
-        placeholder={placeholderMap[searchCategory]}
+        placeholder={placeholderMap[searchCategory] || "Search by name..."}
         value={query}
         onChange={onSearch}
         className="p-2 w-72 rounded border border-gray-300"

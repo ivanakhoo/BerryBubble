@@ -53,6 +53,7 @@ export default function UpdateProfile() {
         userUID?: string;
         JobTitle?: string;
         Company?: string;
+        FavoriteProject?: string
       }
 
     const [user, setUser] = useState<User | null>(null);

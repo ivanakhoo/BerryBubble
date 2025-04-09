@@ -20,7 +20,6 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Take away Admin rendering for first loadup of site
 
 ### Features
-- Make favorite project feature
 
 - Fix routing to go from updateprofile - edit - add - updateprofile
 
@@ -29,8 +28,6 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - Make dashboard user cards show favorited project
 
 - Make a report user button for each card that sends notification to admin-only center
-
-- Expand search bar to work with gradyear/company/jobtitle
 
 ### Cleanup
 - Get main dashboards to show rows of users

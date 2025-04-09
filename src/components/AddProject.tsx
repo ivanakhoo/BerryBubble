@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { collection, query, where, getDocs, updateDoc, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc, setDoc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase";
 import { Form, FormGroup, FormLabel, FormControl, Button } from "react-bootstrap";
@@ -90,15 +90,18 @@ const ProjectAddForm: React.FC = () => {
           Technologies: technologies,
         });
       } else {
+        const customProjectId = crypto.randomUUID();
         const newProject = {
           ProjectName: projectName,
           Summary: summary,
           Technologies: technologies,
           UserUID: userUID,
           CoverPicture: "",
+          id: customProjectId
         };
   
-        await addDoc(collection(db, "projects"), newProject);
+        const projectRef = doc(db, "projects", customProjectId); 
+        await setDoc(projectRef, newProject);
       }
   
       navigate("/details", { state: { userUID: userUID } }); 
