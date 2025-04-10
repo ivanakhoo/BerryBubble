@@ -21,11 +21,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 ### Features
 
-- Fix routing to go from updateprofile - edit - add - updateprofile
-
 - Make a way to upload Company Logos and create new page for displaying them when approved
-
-- Make dashboard user cards show favorited project
 
 - Make a report user button for each card that sends notification to admin-only center
 

@@ -105,6 +105,7 @@ export default function CurrentStudentsDashboard() {
                         user={doc} 
                         isAdmin={isAdmin} 
                         updateVerifiedStatus={() => updateVerifiedStatus(doc.data.userUID, doc.data.verified)} 
+                        Dashboard={1}
                         />
                     </div>
                 ))}

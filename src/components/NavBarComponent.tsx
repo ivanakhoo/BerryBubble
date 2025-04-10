@@ -10,7 +10,6 @@ import { doc, getDoc } from 'firebase/firestore';
 const NavBarComponent: React.FC = () => {
   const [profilePic, setProfilePic] = useState<string>("");
   const { currentUser, logout } = useAuth();
-  const [error, setError] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null); 
   const navigate = useNavigate();
   const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
@@ -62,16 +61,15 @@ const NavBarComponent: React.FC = () => {
         fetchAdmin();
     }, []);
 
-  async function handleLogout() {
-    setError('');
-
-    try {
-      await logout();
-      navigate("/login");
-    } catch {
-      setError('Failed to log out.');
+    async function handleLogout() {
+      try {
+        await logout();
+        navigate("/login");
+      } catch {
+        console.error('Failed to log out.');
+      }
     }
-  }
+    
 
   // Don't render the navbar if no user is logged in
   if (!currentUser) {

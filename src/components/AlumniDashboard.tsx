@@ -108,6 +108,7 @@ export default function Alumni() {
                         user={doc} 
                         isAdmin={isAdmin} 
                         updateVerifiedStatus={() => updateVerifiedStatus(doc.data.userUID, doc.data.verified)} 
+                        Dashboard={2}
                         />
                     </div>
                 ))}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Form, Button, FormLabel, FormGroup, FormControl, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // @ts-ignore
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
@@ -25,6 +25,8 @@ export default function UpdateProfile() {
     const linkedInRef = useRef<HTMLInputElement>(null); 
     const jobTitleRef = useRef<HTMLInputElement>(null); 
     const companyRef = useRef<HTMLInputElement>(null); 
+    const [accountMessage, setAccountMessage] = useState("");
+    const [credentialMessage, setCredentialsMessage] = useState("");
     const { upJobTitle, upCompany, upEmailVerified, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
@@ -33,8 +35,7 @@ export default function UpdateProfile() {
 
     const location = useLocation();
     const userUID = location.state?.userUID;
-
-    const navigate = useNavigate();
+    const Dashboard = location.state?.Dashboard;
 
     const defaultProfilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
@@ -57,6 +58,48 @@ export default function UpdateProfile() {
       }
 
     const [user, setUser] = useState<User | null>(null);
+
+    const renderDashboardButton = () => {
+        switch (Dashboard) {
+          case 0:
+            return (
+              <Link to="/details" state={{ userUID: userUID }}>
+                <Button variant="dark" className="mt-2">Back to Details</Button>
+              </Link>
+            );
+          case 1:
+            return (
+              <Link to="/currentStudents">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          case 2:
+            return (
+              <Link to="/alumni">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          case 3:
+            return (
+              <Link to="/admin">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          case 4:
+            return (
+              <Link to="/">
+                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+              </Link>
+            );
+          default:
+            console.log(Dashboard);
+            return (
+                <Link to="/details" state={{ userUID: userUID }}>
+                  <Button variant="dark" className="mt-2">Back to Details</Button>
+                </Link>
+              );
+        }
+      };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -133,14 +176,6 @@ export default function UpdateProfile() {
             promises.push(upDisplayName(displayRef.current?.value, user)); 
         }
 
-        // if (gitHubRef.current?.value) {
-        //     promises.push(upGitHub(gitHubRef.current?.value, user)); 
-        // }
-
-        // if (linkedInRef.current?.value) {
-        //     promises.push(upLinkedIn(linkedInRef.current?.value, user)); 
-        // }
-
         if (gitHubURL) {
             promises.push(upGitHub(gitHubURL, user)); 
         }
@@ -159,7 +194,8 @@ export default function UpdateProfile() {
 
         Promise.all(promises)
             .then(() => {
-                navigate("/details", { state: { userUID: userUID } }); 
+                // navigate("/details", { state: { userUID: userUID } }); 
+                setAccountMessage("Successfully saved changes!")
             })
             .catch(() => {
                 setError("Failed to update account.");
@@ -197,7 +233,7 @@ export default function UpdateProfile() {
                     upEmailVerified(user);
                     console.log("Updated Email Verification.")
                 }
-                navigate("/details", { state: { userUID: userUID } }); 
+                setCredentialsMessage("Updated Email Verification!")
             })
             .catch(() => {
                 setError("Failed to update password.");
@@ -233,6 +269,7 @@ export default function UpdateProfile() {
 
               {/* Conditionally render form based on selected section */}
               {selectedSection === 'account' && (
+                <div>
                   <Form onSubmit={handleAccountSubmit}>
                       <FormGroup id="firstName">
                           <FormLabel>First Name</FormLabel>
@@ -285,11 +322,15 @@ export default function UpdateProfile() {
                           type="submit"
                       >
                           Save
-                      </Button>
+                      </Button>                     
                   </Form>
+                  {accountMessage && <Alert variant="success">{accountMessage}</Alert>}
+                  {renderDashboardButton()}
+                  </div>
               )}
 
               {selectedSection === 'password' && (
+                <div>
                   <Form onSubmit={handlePasswordSubmit}>
 
                       <FormGroup id="email">
@@ -315,11 +356,15 @@ export default function UpdateProfile() {
                           Save
                       </Button>
                   </Form>
+                  {credentialMessage && <Alert variant="success">{credentialMessage}</Alert>}
+                  {renderDashboardButton()}
+                  </div>
               )}
 
               {selectedSection === 'projects' && (
                   <div>
                       <Projects userUID={userUID} isAdmin={true} currentUserUID={currentUser.uid} /> 
+                      {renderDashboardButton()}
                   </div>
               )}
           </div>

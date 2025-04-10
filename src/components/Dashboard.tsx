@@ -103,6 +103,7 @@ export default function Dashboard() {
                         user={doc} 
                         isAdmin={isAdmin} 
                         updateVerifiedStatus={() => updateVerifiedStatus(doc.data.userUID, doc.data.verified)} 
+                        Dashboard={4}
                         />
                     </div>
                 ))}

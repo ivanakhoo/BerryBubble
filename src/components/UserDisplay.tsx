@@ -29,9 +29,10 @@ interface UserCardProps {
   user: Doc;
   isAdmin: boolean;
   updateVerifiedStatus?: (id: string, currentStatus: boolean) => void;
+  Dashboard: number;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus, Dashboard }) => {
   const profileImg = user.data.profilePic 
     || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     const [favoriteProjectTitle, setFavoriteProjectTitle] = useState<string>("");
@@ -149,13 +150,13 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
           )}
         </div>
 
-        <Link to="/details" state={{ userUID: user.data.userUID, Dashboard: 0 }}>
+        <Link to="/details" state={{ userUID: user.data.userUID, Dashboard: Dashboard}}>
           <Button variant="dark" className="mt-2">See More Details</Button>
         </Link>
 
         {isAdmin && updateVerifiedStatus && (
           <>
-            <Link to="/update-profile" state={{ userUID: user.data.userUID }}>
+            <Link to="/update-profile" state={{ userUID: user.data.userUID, Dashboard: Dashboard }}>
               <Button variant="dark" className="mt-2">Update Profile</Button>
             </Link>
             <br />

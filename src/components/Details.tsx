@@ -45,10 +45,10 @@ export default function Details() {
     
       const renderDashboardButton = () => {
         switch (Dashboard) {
-          case 0:
+          case 4:
             return (
               <Link to="/">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button variant="dark" className="mt-2">Back to Details</Button>
               </Link>
             );
           case 1:
@@ -227,7 +227,7 @@ export default function Details() {
                             )}
                         </div>
                         {(isAdmin || currentUser == userUID) && (
-                            <Link to="/update-profile" state={{ userUID: user.userUID }}>
+                            <Link to="/update-profile" state={{ userUID: user.userUID, Dashboard: Dashboard }}>
                                 <Button variant="dark" className="mt-2">Update Profile</Button>
                             </Link>
                         )}
