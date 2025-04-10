@@ -18,6 +18,7 @@ import AdminRoute from "./AdminRoute";
 import Unauthorized from "./Unauthorized";
 import Verification from "./Verification";
 import AddProject from "./AddProject";
+import Network from "./Network";
 
 const App: React.FC = () => {
   return (
@@ -55,6 +56,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/alumni" element={<PrivateRoute />}>
                   <Route index element={<AlumniDashboard />} />
+                </Route>
+                <Route path="/network" element={<PrivateRoute />}>
+                  <Route index element={<Network />} />
                 </Route>
                 <Route path="/admin" element={<AdminRoute />}>
                   <Route index element={<Admin />} />
