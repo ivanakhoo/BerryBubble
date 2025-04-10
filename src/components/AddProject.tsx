@@ -16,7 +16,7 @@ const ProjectAddForm: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const projectNameFromState = location.state?.projectName;
+  const projectID = location.state?.projectID;
   const userUID = location.state?.userUID;
 
   interface Project {
@@ -30,10 +30,10 @@ const ProjectAddForm: React.FC = () => {
 
     const fetchProject = async () => {
       try {
-        if (!projectNameFromState) return;
+        if (!projectID) return;
         const projectsRef = collection(db, "projects");
         // make the userUID check as well for the query
-        const q = query(projectsRef, where("ProjectName", "==", projectNameFromState), where("UserUID", "==", userUID));
+        const q = query(projectsRef, where("id", "==", projectID), where("UserUID", "==", userUID));
         const querySnapshot = await getDocs(q);
 
         if (!isMounted) return;
@@ -57,7 +57,7 @@ const ProjectAddForm: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [projectNameFromState]);
+  }, [projectID]);
 
   const handleProjectSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,19 +72,10 @@ const ProjectAddForm: React.FC = () => {
     }
 
     try {
-      const projectsRef = collection(db, "projects");
-      const q = query(projectsRef, where("ProjectName", "==", projectName), where("UserUID", "==", userUID));
-      const querySnapshot = await getDocs(q);
   
-      if (!projectNameFromState && !querySnapshot.empty) {
-        setError("A project with this name already exists.");
-        setLoading(false);
-        return;
-      }
-  
-      if (projectNameFromState) {
-        const projectDoc = querySnapshot.docs[0];
-        await updateDoc(projectDoc.ref, {
+      if (projectID) {
+        const projectRef = doc(db, "projects", projectID);
+        await updateDoc(projectRef, {
           ProjectName: projectName,
           Summary: summary,
           Technologies: technologies,
@@ -129,7 +120,7 @@ const ProjectAddForm: React.FC = () => {
 
   return (
     <Form onSubmit={handleProjectSubmit}>
-      <h1>{projectNameFromState ? "Edit Project" : "Add Project"}</h1>
+      <h1>{projectID ? "Edit Project" : "Add Project"}</h1>
       {error && <div className="alert alert-danger">{error}</div>}
 
       <FormGroup>
@@ -175,7 +166,7 @@ const ProjectAddForm: React.FC = () => {
       </FormGroup>
 
       <Button disabled={loading} className="w-100 mt-2" type="submit">
-        {projectNameFromState ? "Save Changes" : "Create Project"}
+        {projectID ? "Save Changes" : "Create Project"}
       </Button>
       <Link to="/details" state={{ userUID: userUID }}>
                                 <Button variant="dark" className="mt-2">Back to Details</Button>

@@ -131,7 +131,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
               {(isAdmin || currentUserUID === project.UserUID) && (    
                 <div>
                   <ProjectPictureUpload projectName = {project.ProjectName}/>
-                  <Link to="/add-project" state={{ projectName: project.ProjectName, userUID: userUID }}>
+                  <Link to="/add-project" state={{ projectID: project.id, userUID: userUID }}>
                               <Button variant="dark" className="mt-2">Edit Project</Button>
                               </Link>
                               <Button 
