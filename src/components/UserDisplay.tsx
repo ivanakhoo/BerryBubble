@@ -1,6 +1,9 @@
-import React from "react";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+// @ts-ignore
+import { db } from "../firebase"; 
 
 interface UserData {
   DisplayName: string;
@@ -14,6 +17,7 @@ interface UserData {
   email?: string;
   userUID: string;
   verified: boolean;
+  FavoriteProject?: string;
 }
 
 interface Doc {
@@ -22,19 +26,42 @@ interface Doc {
 }
 
 interface UserCardProps {
-  doc: Doc;
+  user: Doc;
   isAdmin: boolean;
   updateVerifiedStatus?: (id: string, currentStatus: boolean) => void;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ doc, isAdmin, updateVerifiedStatus }) => {
-  const profileImg = doc.data.profilePic 
+const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus }) => {
+  const profileImg = user.data.profilePic 
     || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+    const [favoriteProjectTitle, setFavoriteProjectTitle] = useState<string>("");
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (user.data.FavoriteProject) {
+        try {
+          const projectRef = doc(db, "projects", user.data.FavoriteProject);
+          const projectSnap = await getDoc(projectRef);
+          if (projectSnap.exists()) {
+            const projectData = projectSnap.data();
+            setFavoriteProjectTitle(projectData.ProjectName || "Unnamed Project");
+          } else {
+            setFavoriteProjectTitle("Project not found");
+          }
+        } catch (error) {
+          console.error("Error fetching project:", error);
+          setFavoriteProjectTitle("Error loading project");
+        }
+      }
+    };
+
+    fetchProject();
+  }, [user.data.FavoriteProject]);
 
   return (
     <Card style={{ width: '18rem' }} className="mb-4">
       <CardBody>
-        <h3>{doc.data.DisplayName}</h3>
+        <h3>{user.data.DisplayName}</h3>
         <img 
           src={profileImg}
           alt="Profile"
@@ -46,17 +73,18 @@ const UserCard: React.FC<UserCardProps> = ({ doc, isAdmin, updateVerifiedStatus 
             border: "3px solid #ddd"
           }}
         />
-        <h5 className="mt-2">Class of {doc.data.GradYear}</h5>
-        <p>{doc.data.JobTitle}</p>
-        <p>{doc.data.Company}</p>
-        <p>{doc.data.Bio}</p>
+        <h5 className="mt-2">Class of {user.data.GradYear}</h5>
+        <p>{user.data.JobTitle}</p>
+        <p>{user.data.Company}</p>
+        <p>{user.data.Bio}</p>
+        {favoriteProjectTitle && <p><strong>Favorite Project:</strong> {favoriteProjectTitle}</p>}
 
         <div>
-          {(doc.data.GitHub || doc.data.LinkedIn || doc.data.email) && (
+          {(user.data.GitHub || user.data.LinkedIn || user.data.email) && (
             <div>
-              {doc.data.GitHub && (
+              {user.data.GitHub && (
                 <a
-                  href={doc.data.GitHub}
+                  href={user.data.GitHub}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -75,9 +103,9 @@ const UserCard: React.FC<UserCardProps> = ({ doc, isAdmin, updateVerifiedStatus 
                                             </svg>
                 </a>
               )}
-              {doc.data.LinkedIn && (
+              {user.data.LinkedIn && (
                 <a
-                  href={doc.data.LinkedIn}
+                  href={user.data.LinkedIn}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -96,9 +124,9 @@ const UserCard: React.FC<UserCardProps> = ({ doc, isAdmin, updateVerifiedStatus 
                                              </svg>
                 </a>
               )}
-              {doc.data.email && (
+              {user.data.email && (
                 <a
-                  href={`mailto:${doc.data.email}`}
+                  href={`mailto:${user.data.email}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -121,22 +149,22 @@ const UserCard: React.FC<UserCardProps> = ({ doc, isAdmin, updateVerifiedStatus 
           )}
         </div>
 
-        <Link to="/details" state={{ userUID: doc.data.userUID, Dashboard: 0 }}>
+        <Link to="/details" state={{ userUID: user.data.userUID, Dashboard: 0 }}>
           <Button variant="dark" className="mt-2">See More Details</Button>
         </Link>
 
         {isAdmin && updateVerifiedStatus && (
           <>
-            <Link to="/update-profile" state={{ userUID: doc.data.userUID }}>
+            <Link to="/update-profile" state={{ userUID: user.data.userUID }}>
               <Button variant="dark" className="mt-2">Update Profile</Button>
             </Link>
             <br />
             <Button
               variant="success"
               className="mt-2"
-              onClick={() => updateVerifiedStatus(doc.id, doc.data.verified)}
+              onClick={() => updateVerifiedStatus(user.data.userUID, user.data.verified)}
             >
-              {doc.data.verified ? "Deactivate User" : "Activate User"}
+              {user.data.verified ? "Deactivate User" : "Activate User"}
             </Button>
           </>
         )}

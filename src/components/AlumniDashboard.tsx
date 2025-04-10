@@ -105,9 +105,9 @@ export default function Alumni() {
                 {(searchQuery ? filteredUsers : alumniUsers).map((doc) => (
                     <div key={doc.id} className="text-center p-3">
                         <UserDisplay 
-                        doc={doc} 
+                        user={doc} 
                         isAdmin={isAdmin} 
-                        updateVerifiedStatus={() => updateVerifiedStatus(doc.id, doc.data.verified)} 
+                        updateVerifiedStatus={() => updateVerifiedStatus(doc.data.userUID, doc.data.verified)} 
                         />
                     </div>
                 ))}
