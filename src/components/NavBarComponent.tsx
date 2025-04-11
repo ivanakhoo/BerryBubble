@@ -80,26 +80,24 @@ const NavBarComponent: React.FC = () => {
     <Navbar bg="dark" data-bs-theme="dark" expand="lg" fixed="top">
       <Container fluid>
         <Navbar.Brand href="/">Berry Bubble</Navbar.Brand>
-        <Nav className="me-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/currentStudents">Current Students</Nav.Link>
-          <Nav.Link href="/alumni">Alumni</Nav.Link>
-          <Nav.Link href="/network">Network</Nav.Link>
-          {isAdmin && <Nav.Link href="/admin">Admin</Nav.Link>}
-        </Nav>
-        <Nav className="ms-auto d-flex align-items-center">
-          {/* Profile Dropdown */}
-          <NavDropdown
-            title="My Profile"
-            id="navbarScrollingDropdown"
-          >
-            <NavDropdown.Item as={Link} to="/update-profile" state={{ userUID: currentUser.uid }}>
-              Update Profile
-            </NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}>
-              Logout
-            </NavDropdown.Item>
-          </NavDropdown>
+        <Navbar.Toggle aria-controls="navbarScroll" />
+        <Navbar.Collapse id="navbarScroll">
+          <Nav className="me-auto">
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/currentStudents">Current Students</Nav.Link>
+            <Nav.Link href="/alumni">Alumni</Nav.Link>
+            <Nav.Link href="/network">Network</Nav.Link>
+            {isAdmin && <Nav.Link href="/admin">Admin</Nav.Link>}
+          </Nav>
+          <Nav className="ms-auto d-flex align-items-center">
+            <NavDropdown title="My Profile" id="navbarScrollingDropdown">
+              <NavDropdown.Item as={Link} to="/update-profile" state={{ userUID: currentUser.uid }}>
+                Update Profile
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>
+                Logout
+              </NavDropdown.Item>
+            </NavDropdown>
             <Nav.Link>
               <img
                 src={profilePic || defaultProfilePic}
@@ -113,7 +111,9 @@ const NavBarComponent: React.FC = () => {
                 }}
               />
             </Nav.Link>
-        </Nav>
+          </Nav>
+        </Navbar.Collapse>
+
       </Container>
     </Navbar>
   );

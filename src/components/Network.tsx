@@ -39,37 +39,65 @@ export default function Network() {
 
   return (
     <>
-      <h1>Network</h1>
+      <h1 style={{ textAlign: "center" }}>Network</h1>
 
-      <h2>Graduate Schools</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      <h2 style={{ textAlign: "center" }}>Graduate Schools</h2>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+          gap: "10px",
+          justifyItems: "center",
+          padding: "0 10px",
+        }}
+      >
         {schoolImages.map((url, index) => (
           <img
             key={index}
             src={url}
             alt={`School ${index}`}
-            style={{ width: 120, height: 120, objectFit: "cover", borderRadius: 8 }}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "cover",
+              borderRadius: 8,
+            }}
           />
         ))}
       </div>
 
-      <h2>Companies</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+
+      <h2 style={{ textAlign: "center" }}>Companies</h2>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+          gap: "10px",
+          justifyItems: "center",
+          padding: "0 10px",
+        }}
+      >
         {companyImages.map((url, index) => (
           <img
             key={index}
             src={url}
             alt={`Company ${index}`}
-            style={{ width: 120, height: 120, objectFit: "cover", borderRadius: 8 }}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "cover",
+              borderRadius: 8,
+            }}
           />
         ))}
       </div>
 
-        <div>
-            <h1>Upload Your School Or Company!</h1>
-            <h4>School</h4>
+
+        <div style={{ textAlign: "center" }}>
+            <h1 style={{ textAlign: "center" }}>Upload Your School Or Company!</h1>
+            <h4 style={{ textAlign: "center" }}>School</h4>
         <SchoolPictureUpload />
-        <h4>Company</h4>
+        <h4 style={{ textAlign: "center" }}>Company</h4>
         <CompanyPictureUpload />
         </div>
     </>

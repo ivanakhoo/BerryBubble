@@ -35,7 +35,7 @@ export default function Signup() {
 
     return (
         <><div>
-            <h1 className="display-2 text-center text-primary mb-4">Berry Bubble</h1>
+            <h1 className="display-2 text-center mb-4">Berry Bubble</h1>
         </div>
             <Card>
                 <CardBody>
