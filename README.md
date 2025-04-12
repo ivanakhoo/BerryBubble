@@ -17,7 +17,6 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 ## TODO
 
 ### Bug Fixes
-- Take away Admin rendering for first loadup of site
 
 ### Features
 

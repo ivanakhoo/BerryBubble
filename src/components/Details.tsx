@@ -145,7 +145,7 @@ export default function Details() {
         <>
             <h1 className="text-center mt-4">{user.DisplayName || "User Profile"}</h1>
             <div className="d-flex justify-content-center">
-                    <div>
+                    <div style={{ textAlign: "center" }}>
                         <img 
                             src={profilePic || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} 
                             alt="Profile" 
@@ -157,10 +157,10 @@ export default function Details() {
                                 border: "3px solid #ddd" 
                             }} 
                         />
-                        <h5>Class of {user.GradYear}</h5>
-                        <p>{user.Bio}</p>
+                        <h5 style={{ textAlign: "center" }}>Class of {user.GradYear}</h5>
+                        <p style={{ textAlign: "center" }}>{user.Bio}</p>
 
-                        <div>
+                        <div style={{ textAlign: "center" }}>
                             {(user.GitHub || user.LinkedIn || user.email) && (
                                 <div>
                                 {user.GitHub && (
