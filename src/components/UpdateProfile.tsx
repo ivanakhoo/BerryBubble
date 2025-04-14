@@ -300,12 +300,12 @@ export default function UpdateProfile() {
 
                       <FormGroup id="LinkedIn">
                           <FormLabel>LinkedIn URL</FormLabel>
-                          <FormControl type="text" ref={linkedInRef} required defaultValue={user?.LinkedIn} placeholder="Enter your LinkedIn URL." />
+                          <FormControl type="text" ref={linkedInRef} defaultValue={user?.LinkedIn} placeholder="Enter your LinkedIn URL." />
                       </FormGroup>
 
                       <FormGroup id="GitHub">
                           <FormLabel>GitHub URL</FormLabel>
-                          <FormControl type="text" ref={gitHubRef} required defaultValue={user?.GitHub} placeholder="Enter your GitHub URL." />
+                          <FormControl type="text" ref={gitHubRef} defaultValue={user?.GitHub} placeholder="Enter your GitHub URL." />
                       </FormGroup>
 
                       <Button

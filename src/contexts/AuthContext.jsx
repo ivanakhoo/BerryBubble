@@ -264,7 +264,7 @@ export function AuthProvider({ children }) {
       return Promise.reject(new Error("No authenticated user"));
     }
   
-    const userRef = doc(db, "users", user.userUID); 
+    const userRef = doc(db, "users", user.uid); 
   
     return updateDoc(userRef, {
       emailVerified: true

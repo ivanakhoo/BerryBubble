@@ -141,13 +141,20 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                   >
                     Delete Project
                   </Button>
-                  <Button 
-                variant={favoriteProject === project.id ? "warning" : "outline-warning"} 
-                className="mt-2 ms-2"
-                onClick={() => handleFavoriteToggle(project.id)}
-              >
-                {favoriteProject === project.id ? "★ Favorited" : "☆ Favorite"}
-              </Button>
+                  <Button
+                    variant="link"
+                    onClick={() => handleFavoriteToggle(project.id)}
+                    style={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      fontSize: "1.5rem",
+                      color: favoriteProject === project.id ? "#ffc107" : "#ccc",
+                      textDecoration: "none"
+                    }}
+                  >
+                    {favoriteProject === project.id ? "★" : "☆"}
+                  </Button>
                 </div>         
                             )}
 
