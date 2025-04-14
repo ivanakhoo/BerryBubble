@@ -26,8 +26,7 @@ export default function UpdateProfile() {
     const jobTitleRef = useRef<HTMLInputElement>(null); 
     const companyRef = useRef<HTMLInputElement>(null); 
     const [accountMessage, setAccountMessage] = useState("");
-    const [credentialMessage, setCredentialsMessage] = useState("");
-    const { upJobTitle, upCompany, upEmailVerified, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
+    const { upJobTitle, upCompany, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -228,13 +227,6 @@ export default function UpdateProfile() {
         }
 
         Promise.all(promises)
-            .then(() => {
-                if (currentUser.emailVerified) {
-                    upEmailVerified(user);
-                    console.log("Updated Email Verification.")
-                }
-                setCredentialsMessage("Updated Email Verification!")
-            })
             .catch(() => {
                 setError("Failed to update password.");
             })
@@ -244,7 +236,7 @@ export default function UpdateProfile() {
     }
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div className="flex flex-col md:flex-row gap-4 p-4">
           <Sidebar selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
           
           {/* Main content container */}
@@ -356,7 +348,6 @@ export default function UpdateProfile() {
                           Save
                       </Button>
                   </Form>
-                  {credentialMessage && <Alert variant="success">{credentialMessage}</Alert>}
                   {renderDashboardButton()}
                   </div>
               )}

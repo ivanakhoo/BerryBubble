@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface SidebarProps {
   selectedSection: string;
@@ -6,26 +6,50 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ selectedSection, setSelectedSection }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Customize breakpoint as needed
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const sidebarStyle: React.CSSProperties = {
+    position: isMobile ? 'relative' : 'fixed',
+    top: isMobile ? '0' : '60px', 
+    left: 0,
+    bottom: isMobile ? 'auto' : 0,
+    width: isMobile ? '100%' : '250px',
+    borderRight: isMobile ? 'none' : '1px solid #0056b3',
+    backgroundColor: '#007bff', 
+    color: '#fff',
+    padding: '20px',
+    boxSizing: 'border-box',
+    zIndex: 1000,
+  };
+
+  const itemStyle = (section: string): React.CSSProperties => ({
+    cursor: 'pointer',
+    padding: '10px',
+    backgroundColor: selectedSection === section ? '#0056b3' : 'transparent',
+    borderRadius: '4px',
+  });
+
   return (
-    <div style={{ width: '250px', borderRight: '1px solid #ddd' }}>
-      <h3>Update Profile</h3>
-      <ul className="list-unstyled">
-        <li 
-          onClick={() => setSelectedSection('account')} 
-          style={{ cursor: 'pointer', padding: '10px', backgroundColor: selectedSection === 'account' ? '#f0f0f0' : '' }}
-        >
+    <div style={sidebarStyle}>
+      <h3 style={{ color: '#fff' }}>Update Profile</h3>
+      <ul className="list-unstyled" style={{ padding: 0, margin: 0 }}>
+        <li onClick={() => setSelectedSection('account')} style={itemStyle('account')}>
           Account Details
         </li>
-        <li 
-          onClick={() => setSelectedSection('password')} 
-          style={{ cursor: 'pointer', padding: '10px', backgroundColor: selectedSection === 'password' ? '#f0f0f0' : '' }}
-        >
+        <li onClick={() => setSelectedSection('password')} style={itemStyle('password')}>
           Change Password
         </li>
-        <li 
-          onClick={() => setSelectedSection('projects')} 
-          style={{ cursor: 'pointer', padding: '10px', backgroundColor: selectedSection === 'projects' ? '#f0f0f0' : '' }}
-        >
+        <li onClick={() => setSelectedSection('projects')} style={itemStyle('projects')}>
           Update Projects
         </li>
       </ul>
