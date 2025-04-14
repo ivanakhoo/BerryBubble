@@ -236,7 +236,7 @@ export default function UpdateProfile() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row gap-4 p-4">
+        <div className="flex flex-col md:flex-row">
           <Sidebar selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
           
           {/* Main content container */}
