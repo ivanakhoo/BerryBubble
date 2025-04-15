@@ -43,7 +43,27 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <input
+        type="file"
+        id="project-picture-upload"
+        accept="image/*"
+        onChange={handleImageUpload}
+        style={{ display: "none" }}
+      />
+      <label
+        htmlFor="project-picture-upload"
+        style={{
+          display: "inline-block",
+          padding: "8px 16px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "14px",
+        }}
+      >
+        Upload Project Picture
+      </label>
     </div>
   );
 };

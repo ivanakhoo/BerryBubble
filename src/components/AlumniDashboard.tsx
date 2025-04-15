@@ -24,9 +24,6 @@ export default function Alumni() {
                 if (docSnap.exists()) {
                     const data = docSnap.data() as { profilePic?: string, adminFlag?: boolean, emailVerified?: boolean };
                     setIsAdmin(data.adminFlag || false); 
-                    if (!data.emailVerified) {
-                        alert("Update your profile to complete your account verification.")
-                    }
                 }
             }
         };

@@ -141,6 +141,7 @@ export default function UpdateProfile() {
 
         const githubRegex = /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/;
         const linkedinRegex = /^https?:\/\/(www\.)?linkedin\.com\/.*$/;
+        const gradYearRegex = /^\d{4}$/;
 
         if (gitHubURL && !githubRegex.test(gitHubURL)) {
             setError("Please enter a valid GitHub URL.");
@@ -154,6 +155,13 @@ export default function UpdateProfile() {
             return;
         }
 
+        const gradYear = gradYearRef.current?.value;
+
+        if (gradYear && !gradYearRegex.test(gradYear)) {
+            setError("Please enter a valid class year.");
+            setLoading(false);
+            return;
+        }
 
         if (bioRef.current?.value) {
             promises.push(upBio(bioRef.current?.value, user)); 

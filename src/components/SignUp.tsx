@@ -24,7 +24,7 @@ export default function Signup() {
             setError('')
             setLoading(true)
             await signup(emailRef.current?.value, passwordRef.current?.value)
-            alert("Your account has been successfully signed up. Please check your email for a verification link.")
+            alert("Your account has been successfully signed up. Please check your email on this device for a verification link.")
             navigate('/')
         } catch {
             setError('Failed to create an account.')

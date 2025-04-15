@@ -113,63 +113,123 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
       {projects.length > 0 ? (
         <div>
           {projects.map((project) => (
-            <Card key={project.ProjectName + project.UserUID} className="mb-3">
-              <h5>{project.ProjectName}</h5>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                {project.CoverPicture && (<img 
-                  src={project.CoverPicture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"} 
-                  alt="Profile" 
-                  style={{
-                    width: "150px", 
-                    height: "150px", 
-                    borderRadius: "50%", 
-                    objectFit: "cover",
-                    border: "3px solid #ddd" 
-                  }} 
-                />)}
-              </div>
-              {(isAdmin || currentUserUID === project.UserUID) && (    
-                <div>
-                  <ProjectPictureUpload projectName = {project.ProjectName}/>
-                  <Link to="/add-project" state={{ projectID: project.id, userUID: userUID }}>
-                              <Button variant="dark" className="mt-2">Edit Project</Button>
-                              </Link>
-                              <Button 
-                    variant="danger" 
-                    className="mt-2 ms-2" 
-                    onClick={() => handleDeleteProject(project.ProjectName, project.UserUID,)}
-                  >
-                    Delete Project
-                  </Button>
-                  <Button
-                    variant="link"
-                    onClick={() => handleFavoriteToggle(project.id)}
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      fontSize: "1.5rem",
-                      color: favoriteProject === project.id ? "#ffc107" : "#ccc",
-                      textDecoration: "none"
-                    }}
-                  >
-                    {favoriteProject === project.id ? "★" : "☆"}
-                  </Button>
-                </div>         
-                            )}
+            <Card
+            key={project.ProjectName + project.UserUID}
+            className="mb-4 p-4 shadow rounded border border-light position-relative mx-auto"
+            style={{
+              background: "#fff",
+              borderRadius: "16px",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+              maxWidth: "500px", 
+            }}
+          >
+            {/* Favorite Star */}
+            <Button
+              variant="link"
+              onClick={isAdmin ? () => handleFavoriteToggle(project.id) : undefined}
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "16px",
+                fontSize: "1.75rem",
+                color: favoriteProject === project.id ? "#ffc107" : "#ccc",
+                textDecoration: "none",
+                zIndex: 1,
+                cursor: isAdmin ? "pointer" : "not-allowed",
+                opacity: isAdmin ? 1 : 0.5,
+              }}
+              disabled={!isAdmin || currentUserUID !== userUID}
+            >
+              {favoriteProject === project.id ? "★" : "☆"}
+            </Button>
 
-              <p>{project.Summary}</p>
-              {project?.Technologies && project.Technologies.length > 0 && (
-                <>
-                  <p><strong>Technologies:</strong></p>
-                  <ul>
-                    {project.Technologies.map((tech: string, index: number) => (
-                      <li key={index}>{tech}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </Card>
+          
+            {/* Project Name */}
+            <h4 className="text-center mb-3">{project.ProjectName}</h4>
+          
+            {/* Project Image */}
+            {project.CoverPicture && (
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
+                <img
+                  src={
+                    project.CoverPicture ||
+                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  }
+                  alt="Project"
+                  style={{
+                    width: "140px",
+                    height: "140px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "4px solid #e2e8f0",
+                  }}
+                />
+              </div>
+            )}
+          
+            {/* Summary */}
+            <p className="text-muted">{project.Summary}</p>
+          
+            {/* Technologies */}
+            {project?.Technologies && project.Technologies.length > 0 && (
+              <>
+                <p className="fw-bold mt-3 mb-2">Technologies:</p>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "8px",
+                  }}
+                >
+                  {project.Technologies.map((tech: string, index: number) => (
+                    <span
+                      key={index}
+                      style={{
+                        backgroundColor: "#f1f5f9",
+                        color: "#1e293b",
+                        padding: "6px 12px",
+                        borderRadius: "999px",
+                        fontSize: "0.8rem",
+                        fontWeight: 600,
+                        fontFamily: "monospace",
+                        border: "1px solid #cbd5e1",
+                        transition: "0.2s",
+                        cursor: "default",
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          
+            {/* Admin Tools */}
+            {(isAdmin || currentUserUID === project.UserUID) && (
+              <div className="mt-4 d-flex flex-column align-items-start gap-2">
+                <ProjectPictureUpload projectName={project.ProjectName} />
+          
+                <Link
+                  to="/add-project"
+                  state={{ projectID: project.id, userUID: userUID }}
+                  className="w-100"
+                >
+                  <Button variant="dark" className="w-100">
+                    Edit Project
+                  </Button>
+                </Link>
+          
+                <Button
+                  variant="danger"
+                  className="w-100"
+                  onClick={() => handleDeleteProject(project.ProjectName, project.UserUID)}
+                >
+                  Delete Project
+                </Button>
+              </div>
+            )}
+          </Card>
+          
           ))}
         </div>
       ) : (
