@@ -280,7 +280,7 @@ export default function UpdateProfile() {
 
                       <FormGroup id="bio">
                           <FormLabel>Bio</FormLabel>
-                          <FormControl as="textarea" ref={bioRef} required defaultValue={user?.Bio} placeholder="Enter your new bio." />
+                          <FormControl as="textarea" ref={bioRef} defaultValue={user?.Bio} placeholder="Enter your new bio." />
                       </FormGroup>
 
                       <FormGroup id="gradYear">
@@ -290,12 +290,12 @@ export default function UpdateProfile() {
 
                       <FormGroup id="JobTitle">
                           <FormLabel>Job Title</FormLabel>
-                          <FormControl type="text" ref={jobTitleRef} required defaultValue={user?.JobTitle} placeholder="Enter your current job title." />
+                          <FormControl type="text" ref={jobTitleRef} defaultValue={user?.JobTitle} placeholder="Enter your current job title." />
                       </FormGroup>
 
                       <FormGroup id="Company">
                           <FormLabel>Current Company</FormLabel>
-                          <FormControl type="text" ref={companyRef} required defaultValue={user?.Company} placeholder="Enter your current company." />
+                          <FormControl type="text" ref={companyRef} defaultValue={user?.Company} placeholder="Enter your current company." />
                       </FormGroup>
 
                       <FormGroup id="LinkedIn">

@@ -20,8 +20,6 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 ### Features
 
-- Make a way to verify submitted photos for network page
-
 - Make a report user button for each card that sends notification to admin-only center
 
 - Finalize UI for updateProfile for mobile
