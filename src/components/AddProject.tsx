@@ -13,6 +13,7 @@ const ProjectAddForm: React.FC = () => {
   const [projectName, setProjectName] = useState("");
   const [summary, setSummary] = useState("");
   const [technologies, setTechnologies] = useState<string[]>([]);
+  const [projectLink, setProjectLink] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,6 +24,7 @@ const ProjectAddForm: React.FC = () => {
     ProjectName: string;
     Summary?: string;
     Technologies?: string[];
+    ProjectLink?: string;
   }
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const ProjectAddForm: React.FC = () => {
         setProjectName(projectData.ProjectName || "");
         setSummary(projectData.Summary || "");
         setTechnologies(projectData.Technologies || []);
+        setProjectLink(projectData.ProjectLink || "");
       } catch (err) {
         if (isMounted) setError("Failed to fetch project data.");
       }
@@ -79,8 +82,10 @@ const ProjectAddForm: React.FC = () => {
           ProjectName: projectName,
           Summary: summary,
           Technologies: technologies,
+          ProjectLink: projectLink
         });
       } else {
+        // Fix this to work for all browsers
         const customProjectId = crypto.randomUUID();
         const newProject = {
           ProjectName: projectName,
@@ -88,7 +93,8 @@ const ProjectAddForm: React.FC = () => {
           Technologies: technologies,
           UserUID: userUID,
           CoverPicture: "",
-          id: customProjectId
+          id: customProjectId,
+          ProjectLink: projectLink
         };
   
         const projectRef = doc(db, "projects", customProjectId); 
@@ -98,6 +104,7 @@ const ProjectAddForm: React.FC = () => {
       navigate("/details", { state: { userUID: userUID } }); 
     } catch (err) {
       console.error("Project submission failed:", err);
+      alert(err);
       setError("Failed to create or update project.");
     } finally {
       setLoading(false);
@@ -141,6 +148,17 @@ const ProjectAddForm: React.FC = () => {
           value={summary}
           onChange={(e) => setSummary(e.target.value)}
           placeholder="Enter project summary"
+          required
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <FormLabel>Project Link</FormLabel>
+        <FormControl
+          type="text"
+          value={projectLink}
+          onChange={(e) => setProjectLink(e.target.value)}
+          placeholder="Enter project link"
           required
         />
       </FormGroup>

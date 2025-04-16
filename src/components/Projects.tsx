@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, deleteDoc, doc, getDoc, updateDoc } 
 import { db } from "../firebase"; 
 import { Link } from "react-router-dom";
 import ProjectPictureUpload from "./ProjectPictureUpload";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 interface ProjectsProps {
   userUID: string;
@@ -19,6 +20,7 @@ interface Project {
     Summary: string;
     Technologies: string[];
     id: string;
+    ProjectLink?: string;
   }
 
 const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID }) => {
@@ -106,9 +108,11 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
     <div className="mt-4">
       <h4>Projects</h4>
       {(isAdmin || currentUserUID === userUID) && (
+      <div style={{ marginBottom: '10px' }}>
       <Link to="/add-project" state={{ userUID: userUID }}>
-                                <Button variant="dark" className="mt-2">Add Project</Button>
-                            </Link>
+        <Button variant="dark" className="mt-2">Add Project</Button>
+      </Link>
+    </div>
                         )}
       {projects.length > 0 ? (
         <div>
@@ -169,6 +173,18 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
           
             {/* Summary */}
             <p className="text-muted">{project.Summary}</p>
+
+            {project.ProjectLink && (
+              <a
+                href={project.ProjectLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Open Project"
+                style={{ textDecoration: 'none', color: 'inherit', marginLeft: '8px' }}
+              >
+                <i className="bi bi-link" style={{ fontSize: '1.3rem' }}></i>
+              </a>
+            )}
           
             {/* Technologies */}
             {project?.Technologies && project.Technologies.length > 0 && (
@@ -207,7 +223,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
             {/* Admin Tools */}
             {(isAdmin || currentUserUID === project.UserUID) && (
               <div className="mt-4 d-flex flex-column align-items-start gap-2">
-                <ProjectPictureUpload projectName={project.ProjectName} />
+                <ProjectPictureUpload id={project.id} />
           
                 <Link
                   to="/add-project"

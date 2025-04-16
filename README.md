@@ -17,10 +17,15 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 ## TODO
 
 ### Bug Fixes
+- Fix crypto random uid
 
 ### Features
 
 - Make a report user button for each card that sends notification to admin-only center
+
+- Potential resume portion
+
+- Overlay for search bar and widen it
 
 ### Cleanup
 - Get main dashboards to show rows of users

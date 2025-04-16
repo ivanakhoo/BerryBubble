@@ -32,6 +32,7 @@ export default function UpdateProfile() {
     const [loading, setLoading] = useState(false);
     const [profilePic, setProfilePic] = useState<string>("");
 
+
     const location = useLocation();
     const userUID = location.state?.userUID;
     const Dashboard = location.state?.Dashboard;
@@ -249,7 +250,6 @@ export default function UpdateProfile() {
           
           {/* Main content container */}
           <div style={{ flex: 1, padding: '20px' }}>
-              {error && <Alert variant="danger">{error}</Alert>}
 
               {/* Profile Picture Upload Section */}
               <div className="text-center mb-3">
@@ -324,6 +324,8 @@ export default function UpdateProfile() {
                           Save
                       </Button>                     
                   </Form>
+                  <br />
+                  {error && <Alert variant="danger">{error}</Alert>}
                   {accountMessage && <Alert variant="success">{accountMessage}</Alert>}
                   {renderDashboardButton()}
                   </div>

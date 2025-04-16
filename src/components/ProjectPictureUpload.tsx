@@ -7,10 +7,10 @@ const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_URL as string;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 
 interface ProjectPictureUploadProps {
-  projectName: string;
+  id: string;
 }
 
-const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName }) => {
+const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id }) => {
 
   const user = auth.currentUser;
 
@@ -26,7 +26,7 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ projectName
       const response = await axios.post<{ secure_url: string }>(CLOUDINARY_URL, formData);
       const uploadedImageUrl = response.data.secure_url;
       const projectsRef = collection(db, "projects");
-      const q = query(projectsRef, where("ProjectName", "==", projectName));
+      const q = query(projectsRef, where("id", "==", id));
       const querySnapshot = await getDocs(q);
       console.log(q);
       if (!querySnapshot.empty) {
