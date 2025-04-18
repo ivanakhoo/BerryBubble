@@ -87,14 +87,16 @@ export default function CurrentStudentsDashboard() {
 
     return (
         <>
-            <SearchBar
-                        query={searchQuery}
-                        onSearch={handleSearch}
-                        searchCategory={searchCategory}
-                        onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+            <div className="text-center">
+                        <SearchBar
+                            query={searchQuery}
+                            onSearch={handleSearch}
+                            searchCategory={searchCategory}
+                            onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                             setSearchCategory(event.target.value);
-                        }}
+                            }}
                         />
+                        </div>
 
             {/* Display Current Students with their Profile Pictures */}
             <h1 className="text-center mt-4">Current Students</h1>

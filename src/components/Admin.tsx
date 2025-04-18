@@ -168,14 +168,16 @@ export default function Admin() {
 
     return (
         <>
-            <SearchBar
-                        query={searchQuery}
-                        onSearch={handleSearch}
-                        searchCategory={searchCategory}
-                        onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+            <div className="text-center">
+                        <SearchBar
+                            query={searchQuery}
+                            onSearch={handleSearch}
+                            searchCategory={searchCategory}
+                            onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                             setSearchCategory(event.target.value);
-                        }}
+                            }}
                         />
+                        </div>
 
             <h1 className="text-center mt-4">Admin</h1>
             

@@ -7,9 +7,9 @@ import PrivateRoute from "./PrivateRoute";
 import UpdateProfile from "./UpdateProfile";
 import NavBarComponent from "./NavBarComponent";
 import { Container } from "react-bootstrap";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 // @ts-ignore
-import { AuthProvider, useAuth } from "../contexts/AuthContext";
+import { AuthProvider } from "../contexts/AuthContext";
 import Details from "./Details";
 import CurrentStudentsDashboard from "./CurrentStudentsDashboard";
 import AlumniDashboard from "./AlumniDashboard";
@@ -20,60 +20,87 @@ import Verification from "./Verification";
 import AddProject from "./AddProject";
 import Network from "./Network";
 
+const AppRoutes: React.FC = () => {
+  const location = useLocation();
+
+  // Routes that should take up the full screen width
+  const fullScreenRoutes = [
+    "/",
+    "/network",
+    "/admin",
+    "/currentStudents",
+    "/alumni",
+    "/update-profile",
+    "/add-project",
+    "/details",
+  ];
+
+  const isFullScreen = fullScreenRoutes.includes(location.pathname);
+
+  return (
+    <div
+      className="w-100"
+      style={{
+        paddingTop: "70px",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #1d3c6a, #3e6b8c, #000000)",
+        color: "white",
+        backgroundSize: "400% 400%",
+        animation: "gradientFlow 10s ease infinite",
+      }}
+    >
+      {isFullScreen ? (
+        <Routes>
+          <Route path="/" element={<PrivateRoute />}>
+            <Route index element={<Dashboard />} />
+          </Route>
+          <Route path="/network" element={<PrivateRoute />}>
+            <Route index element={<Network />} />
+          </Route>
+          <Route path="/currentStudents" element={<PrivateRoute />}>
+            <Route index element={<CurrentStudentsDashboard />} />
+          </Route>
+          <Route path="/alumni" element={<PrivateRoute />}>
+            <Route index element={<AlumniDashboard />} />
+          </Route>
+          <Route path="/update-profile" element={<PrivateRoute />}>
+            <Route index element={<UpdateProfile />} />
+          </Route>
+          <Route path="/add-project" element={<PrivateRoute />}>
+            <Route index element={<AddProject />} />
+          </Route>
+          <Route path="/details" element={<PrivateRoute />}>
+            <Route index element={<Details />} />
+          </Route>
+          <Route path="/admin" element={<AdminRoute />}>
+            <Route index element={<Admin />} />
+          </Route>
+          <Route path="/unauthorized" element={<PrivateRoute />}>
+            <Route index element={<Unauthorized />} />
+          </Route>
+        </Routes>
+      ) : (
+        <Container className="d-flex align-items-center justify-content-center">
+          <div className="w-100" style={{ maxWidth: "400px" }}>
+            <Routes>
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/verification" element={<Verification />} />
+            </Routes>
+          </div>
+        </Container>
+      )}
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <Router>
       <AuthProvider>
-        <NavBarComponent /> {/* Add Navbar here */}
-        <div
-          className="w-100"
-          style={{
-            paddingTop: "70px", // Adjust this based on the height of your navbar
-            minHeight: "100vh",
-            background: "linear-gradient(135deg, #1d3c6a, #3e6b8c, #000000)", // Lighter blue to black gradient
-            color: "white", // Text contrast color
-            backgroundSize: "400% 400%", // Creates the flowy effect
-            animation: "gradientFlow 10s ease infinite", // Smooth gradient animation
-          }}
-        >
-          <Container className="d-flex align-items-center justify-content-center">
-            <div className="w-100" style={{ maxWidth: "400px" }}>
-              <Routes>
-                <Route path="/" element={<PrivateRoute />}>
-                  <Route index element={<Dashboard />} />
-                </Route>
-                <Route path="/add-project" element={<PrivateRoute />}>
-                  <Route index element={<AddProject />} />
-                </Route>
-                <Route path="/update-profile" element={<PrivateRoute />}>
-                  <Route index element={<UpdateProfile />} />
-                </Route>
-                <Route path="/details" element={<PrivateRoute />}>
-                  <Route index element={<Details />} />
-                </Route>
-                <Route path="/currentStudents" element={<PrivateRoute />}>
-                  <Route index element={<CurrentStudentsDashboard />} />
-                </Route>
-                <Route path="/alumni" element={<PrivateRoute />}>
-                  <Route index element={<AlumniDashboard />} />
-                </Route>
-                <Route path="/network" element={<PrivateRoute />}>
-                  <Route index element={<Network />} />
-                </Route>
-                <Route path="/admin" element={<AdminRoute />}>
-                  <Route index element={<Admin />} />
-                </Route>
-                <Route path="/unauthorized" element={<PrivateRoute />}>
-                  <Route index element={<Unauthorized />} />
-                </Route>
-                <Route path="/verification" element={<Verification />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-              </Routes>
-            </div>
-          </Container>
-        </div>
+        <NavBarComponent />
+        <AppRoutes />
       </AuthProvider>
     </Router>
   );

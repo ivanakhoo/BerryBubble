@@ -83,13 +83,17 @@ export default function Dashboard() {
 
     return (
         <>
+            <div className="text-center w-full">
             <SearchBar
                 query={searchQuery}
                 onSearch={handleSearch}
                 searchCategory={searchCategory}
                 onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                    setSearchCategory(event.target.value);
-                }}/>
+                setSearchCategory(event.target.value);
+                }}
+            />
+            </div>
+
     
             {/* Display Verified Users with their Profile Pictures */}
             <h1 className="text-center mt-4">Verified Users</h1>

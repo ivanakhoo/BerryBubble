@@ -88,14 +88,16 @@ export default function Alumni() {
 
     return (
         <>
-            <SearchBar
-            query={searchQuery}
-            onSearch={handleSearch}
-            searchCategory={searchCategory}
-            onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                setSearchCategory(event.target.value);
-            }}
-            />
+            <div className="text-center">
+                        <SearchBar
+                            query={searchQuery}
+                            onSearch={handleSearch}
+                            searchCategory={searchCategory}
+                            onCategoryChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                            setSearchCategory(event.target.value);
+                            }}
+                        />
+                        </div>
             {/* Display Current Students with their Profile Pictures */}
             <h1 className="text-center mt-4">Alumni</h1>
             <div className="d-flex flex-wrap justify-content-center">
