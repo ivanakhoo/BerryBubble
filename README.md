@@ -23,9 +23,11 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 - Make a report user button for each card that sends notification to admin-only center
 
-- Potential resume portion
-
 - Overlay for search bar and widen it
+
+- Add new table for network (employment and grad schools) linked with userUID
+
+- Buttons for grad years for search selection
 
 ### Cleanup
 - Get main dashboards to show rows of users

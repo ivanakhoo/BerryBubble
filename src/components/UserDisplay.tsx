@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ interface UserData {
   userUID: string;
   verified: boolean;
   FavoriteProject?: string;
+  reported: boolean;
 }
 
 interface Doc {
@@ -29,10 +30,11 @@ interface UserCardProps {
   user: Doc;
   isAdmin: boolean;
   updateVerifiedStatus?: (id: string, currentStatus: boolean) => void;
+  resetReportedStatus?: (id: string, reportedStatus: boolean) => void;
   Dashboard: number;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus, Dashboard }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus, resetReportedStatus, Dashboard }) => {
   const profileImg = user.data.profilePic 
     || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     const [favoriteProjectTitle, setFavoriteProjectTitle] = useState<string>("");
@@ -63,6 +65,39 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     <Card style={{ width: '18rem' }} className="mb-4">
       <CardBody>
         <h3>{user.data.DisplayName}</h3>
+        <Button
+          variant="danger"
+          size="sm"
+          title="Report User"
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 1,
+            borderRadius: "50%",
+            width: "36px",
+            height: "36px",
+            padding: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          onClick={async () => {
+            try {
+              const userRef = doc(db, "users", user.id); 
+              await updateDoc(userRef, { reported: true });
+              user.data.reported = true;
+              alert("User has been reported.");
+            } catch (error) {
+              console.error("Error reporting user:", error);
+            }
+          }}
+        >
+          <i className="bi bi-flag-fill" style={{ color: "white", fontSize: "1rem" }}></i>
+        </Button>
+
+
+  <CardBody></CardBody>
         <img 
           src={profileImg}
           alt="Profile"
@@ -166,6 +201,18 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
               onClick={() => updateVerifiedStatus(user.data.userUID, user.data.verified)}
             >
               {user.data.verified ? "Deactivate User" : "Activate User"}
+            </Button>
+          </>
+        )}
+
+        {isAdmin && resetReportedStatus && user.data.reported && (
+          <>
+            <Button
+              variant="success"
+              className="mt-2"
+              onClick={() => resetReportedStatus(user.data.userUID, user.data.verified)}
+            >
+              Reset Reported Status
             </Button>
           </>
         )}

@@ -12,6 +12,7 @@ export default function Admin() {
     const [filteredUsers, setFilteredUsers] = useState<{ id: string; data: any }[]>([]);
     const [unverifiedCompanies, setUnverifiedCompanies] = useState<{ id: string; data: any }[]>([]);
     const [unverifiedSchools, setUnverifiedSchools] = useState<{ id: string; data: any }[]>([]);
+    const [reportedUsers, setReportedUsers] = useState<{ id: string; data: any }[]>([]);
 
     const { currentUser } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -85,6 +86,24 @@ export default function Admin() {
         fetchUnverifiedUsers(); 
     }, []); 
 
+    useEffect(() => {
+        async function fetchReportedUsers() {
+            try {
+                const q = query(collection(db, "users"), where("reported", "==", true)); 
+                const querySnapshot = await getDocs(q);
+                const docsArray = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    data: doc.data(),
+                }));
+                setReportedUsers(docsArray); 
+            } catch (error) {
+                console.error("Error fetching reported users:", error);
+            }
+        }
+
+        fetchReportedUsers(); 
+    }, []); 
+
     const updateVerifiedStatus = async (userId: string, currentStatus: boolean) => {
         try {
             const userRef = doc(db, "users", userId);
@@ -95,6 +114,19 @@ export default function Admin() {
             );
         } catch (error) {
             console.error("Error updating verification status:", error);
+        }
+    };
+
+    const resetReportedStatus = async (userId: string, reportedStatus: boolean) => {
+        try {
+            const userRef = doc(db, "users", userId);
+            await updateDoc(userRef, { reported: !reportedStatus });
+
+            setReportedUsers((prevStudents) =>
+                prevStudents.filter(student => student.id !== userId) 
+            );
+        } catch (error) {
+            console.error("Error updating reported status:", error);
         }
     };
 
@@ -159,7 +191,8 @@ export default function Admin() {
                     </div>
                 ))}
             </div>
-
+            {unverifiedCompanies.length > 0 && (
+                <>
             <h2 className="text-center mt-4">Unverified Companies</h2>
             <div className="d-flex flex-wrap justify-content-center">
                 {unverifiedCompanies.map((doc) => (
@@ -185,33 +218,57 @@ export default function Admin() {
                     </div>
                 ))}
             </div>
+            </>
+            )}
 
-
-            <h2 className="text-center mt-4">Unverified Schools</h2>
-            <div className="d-flex flex-wrap justify-content-center">
-                {unverifiedSchools.map((doc) => (
-                    <div key={doc.id} className="text-center p-3 border rounded m-2">
-                        <img
-                        key={doc.id}
-                        src={doc.data.picture}
-                        alt={`Company ${doc.id}`}
-                        style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                            borderRadius: 8,
-                            margin: "10px"
-                        }}
-                        />
-                        <button 
-                            className="btn btn-success"
-                            onClick={() => updateEntityVerifiedStatus("companies", doc.id, doc.data.verified, setUnverifiedSchools)}
-                        >
-                            Verify
-                        </button>
-                    </div>
-                ))}
-            </div>
+            {unverifiedSchools.length > 0 && (
+                <>
+                <h2 className="text-center mt-4">Unverified Schools</h2>
+                <div className="d-flex flex-wrap justify-content-center">
+                    {unverifiedSchools.map((doc) => (
+                        <div key={doc.id} className="text-center p-3 border rounded m-2">
+                            <img
+                            key={doc.id}
+                            src={doc.data.picture}
+                            alt={`Company ${doc.id}`}
+                            style={{
+                                width: "100px",
+                                height: "100px",
+                                objectFit: "cover",
+                                borderRadius: 8,
+                                margin: "10px"
+                            }}
+                            />
+                            <button 
+                                className="btn btn-success"
+                                onClick={() => updateEntityVerifiedStatus("schools", doc.id, doc.data.verified, setUnverifiedSchools)}
+                            >
+                                Verify
+                            </button>
+                        </div>
+                    ))}
+                </div>
+                </>
+            )}
+            
+            {reportedUsers.length > 0 && (
+                <>
+                <h2 className="text-center mt-4">Reported Users</h2>
+                <div className="d-flex flex-wrap justify-content-center">
+                    {reportedUsers.map((doc) => (
+                        <div key={doc.id} className="text-center p-3">
+                            <UserDisplay 
+                            user={doc} 
+                            isAdmin={isAdmin} 
+                            updateVerifiedStatus={() => updateVerifiedStatus(doc.data.userUID, doc.data.verified)} 
+                            resetReportedStatus={() => resetReportedStatus(doc.data.userUID, doc.data.reported)}
+                            Dashboard={3}
+                            />
+                        </div>
+                    ))}
+                </div>
+                </>
+            )}
 
         </>
     );

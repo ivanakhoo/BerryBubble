@@ -33,7 +33,8 @@ export function AuthProvider({ children }) {
         adminFlag: false,
         createdAt: new Date().toISOString(),
         verified: false,
-        emailVerified: false
+        emailVerified: false,
+        reported: false
       });
   
       return user; 
