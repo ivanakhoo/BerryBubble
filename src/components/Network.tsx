@@ -45,29 +45,23 @@ export default function Network() {
 
   const containerStyle: React.CSSProperties = {
     fontFamily: "Segoe UI, sans-serif",
-    backgroundColor: "#f0f2f5",
+    backgroundColor: "#0A0F2C",
     minHeight: "100vh",
     width: "100%",
     boxSizing: "border-box", 
     padding: isMobile ? "1rem" : "0",
     overflowX: "hidden",    
   };
-  
-  
-  
-  
+
   const sectionStyle: React.CSSProperties = {
     width: "100%",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-    color: "white",
+    background: "linear-gradient(135deg, #0A0F2C, #0D122F)",
+    color: "#F4F7FB",
     borderRadius: isMobile ? "12px" : "0",
-    boxShadow: isMobile ? "0 4px 20px rgba(0,0,0,0.4)" : "none",
+    boxShadow: isMobile ? "0 4px 20px rgba(0, 240, 255, 0.2)" : "none",
     padding: isMobile ? "1.5rem" : "3rem 5rem",
     marginBottom: "2rem",
   };
-  
-  
-  
 
   const gridStyle: React.CSSProperties = {
     display: "grid",
@@ -76,7 +70,6 @@ export default function Network() {
     justifyItems: "center",
     width: "100%",
   };
-  
 
   const imageStyle: React.CSSProperties = {
     width: isMobile ? "80px" : "100px",
@@ -89,7 +82,7 @@ export default function Network() {
 
   return (
     <div style={containerStyle}>
-      <h1 style={{ textAlign: "center", fontWeight: "bold", fontSize: isMobile ? "2rem" : "2.5rem", color: "#333" }}>
+      <h1 style={{ textAlign: "center", fontWeight: "bold", fontSize: isMobile ? "2rem" : "2.5rem", color: "#00F0FF", textShadow: "0 0 8px #00F0FF" }}>
         🌐 Berry Network
       </h1>
 
@@ -128,8 +121,9 @@ export default function Network() {
       <div
         style={{
           ...sectionStyle,
-          background: "linear-gradient(135deg, #1f4037, #99f2c8)",
-          color: "#1f1f1f",
+          background: "linear-gradient(135deg, #1E2A78, #3F8EF4)",
+          color: "#F4F7FB",
+          boxShadow: "0 4px 15px rgba(63, 142, 244, 0.3)"
         }}
       >
         <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>🚀 Upload Your School or Company</h2>

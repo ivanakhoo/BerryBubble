@@ -43,11 +43,12 @@ const AppRoutes: React.FC = () => {
       style={{
         paddingTop: "70px",
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #1d3c6a, #3e6b8c, #000000)",
+        background: "linear-gradient(135deg, #0A0F2C, #0D122F)",
         color: "white",
         backgroundSize: "400% 400%",
         animation: "gradientFlow 10s ease infinite",
       }}
+      
     >
       {isFullScreen ? (
         <Routes>

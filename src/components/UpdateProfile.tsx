@@ -269,7 +269,7 @@ export default function UpdateProfile() {
 
               {/* Conditionally render form based on selected section */}
               {selectedSection === 'account' && (
-                <div>
+                <div className="w-full" style={{ maxWidth: "600px" }}>
                   <Form onSubmit={handleAccountSubmit}>
                       <FormGroup id="firstName">
                           <FormLabel>First Name</FormLabel>
@@ -332,7 +332,7 @@ export default function UpdateProfile() {
               )}
 
               {selectedSection === 'password' && (
-                <div>
+                <div className="w-full" style={{ maxWidth: "600px" }}>
                   <Form onSubmit={handlePasswordSubmit}>
 
                       <FormGroup id="email">

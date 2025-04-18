@@ -119,13 +119,19 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
           {projects.map((project) => (
             <Card
             key={project.ProjectName + project.UserUID}
-            className="mb-4 p-4 shadow rounded border border-light position-relative mx-auto"
             style={{
-              background: "#fff",
-              borderRadius: "16px",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-              maxWidth: "500px", 
+              width: '100%',
+              maxWidth: '360px', 
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              position: 'relative',
+              overflow: 'hidden',
+              margin: '0 auto', 
             }}
+            className="mb-4 text-center text-white p-3"
           >
             {/* Favorite Star */}
             <Button
