@@ -19,6 +19,7 @@ import Unauthorized from "./Unauthorized";
 import Verification from "./Verification";
 import AddProject from "./AddProject";
 import Network from "./Network";
+import AddWorkHistory from "./AddWorkHistory";
 
 const AppRoutes: React.FC = () => {
   const location = useLocation();
@@ -32,6 +33,7 @@ const AppRoutes: React.FC = () => {
     "/alumni",
     "/update-profile",
     "/add-project",
+    "/add-history",
     "/details",
   ];
 
@@ -69,6 +71,9 @@ const AppRoutes: React.FC = () => {
           </Route>
           <Route path="/add-project" element={<PrivateRoute />}>
             <Route index element={<AddProject />} />
+          </Route>
+          <Route path="/add-history" element={<PrivateRoute />}>
+            <Route index element={<AddWorkHistory />} />
           </Route>
           <Route path="/details" element={<PrivateRoute />}>
             <Route index element={<Details />} />

@@ -7,6 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import { db } from "../firebase"; 
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import Projects from "./Projects";
+import WorkHistory from "./WorkHistory";
 
 export default function Details() {
     const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -136,7 +137,6 @@ export default function Details() {
         fetchProjects();
     }, [userUID]);
 
-
     if (!user) {
         return <h1 className="text-center mt-4">Loading...</h1>;
     }
@@ -232,9 +232,15 @@ export default function Details() {
                             </Link>
                         )}
                         <Projects userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid} /> 
-                        {renderDashboardButton()}
                     </div>
+                    
             </div>
+            <WorkHistory userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid}/>
+<div className="text-center">
+{renderDashboardButton()}
+</div>
+            <div>
+  </div>
         </>
     );
 }

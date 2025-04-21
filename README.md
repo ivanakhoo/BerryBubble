@@ -17,15 +17,14 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 ## TODO
 
 ### Bug Fixes
-- Fix crypto random uid
 
 ### Features
 
 - Overlay for search bar and widen it
 
-- Add new table for network (employment and grad schools) linked with userUID
-
 - Buttons for grad years for search selection
+
+- Fix form displays for desktop
 
 ### Cleanup
 - Get main dashboards to show rows of users

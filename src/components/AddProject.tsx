@@ -85,19 +85,19 @@ const ProjectAddForm: React.FC = () => {
           ProjectLink: projectLink
         });
       } else {
-        // Fix this to work for all browsers
-        const customProjectId = crypto.randomUUID();
+        const projectRef = doc(collection(db, "projects"));
+        const customProjectId = projectRef.id;
+
         const newProject = {
           ProjectName: projectName,
           Summary: summary,
           Technologies: technologies,
           UserUID: userUID,
           CoverPicture: "",
-          id: customProjectId,
-          ProjectLink: projectLink
+          id: customProjectId, 
+          ProjectLink: projectLink,
         };
-  
-        const projectRef = doc(db, "projects", customProjectId); 
+
         await setDoc(projectRef, newProject);
       }
   
