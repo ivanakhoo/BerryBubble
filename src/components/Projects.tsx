@@ -89,6 +89,15 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
     }
   };
 
+  const handleProjectPictureUpdate = (projectId: string, newUrl: string) => {
+    setProjects(prev =>
+      prev.map(p =>
+        p.id === projectId ? { ...p, CoverPicture: newUrl } : p
+      )
+    );
+  };
+  
+
 
   const handleFavoriteToggle = async (projectId: string) => {
     if (!userUID) return;
@@ -229,7 +238,11 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
             {/* Admin Tools */}
             {(isAdmin || currentUserUID === project.UserUID) && (
               <div className="mt-4 d-flex flex-column align-items-start gap-2">
-                <ProjectPictureUpload id={project.id} />
+                <ProjectPictureUpload
+                  id={project.id}
+                  onUploadComplete={(url) => handleProjectPictureUpdate(project.id, url)}
+                />
+
           
                 <Link
                   to="/add-project"

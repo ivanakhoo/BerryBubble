@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import axios from "axios";
 // @ts-ignore
 import { db, auth } from "../firebase";
@@ -8,10 +9,11 @@ const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 
 interface ProjectPictureUploadProps {
   id: string;
+  onUploadComplete: (url: string) => void;
 }
 
-const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id }) => {
-
+const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id, onUploadComplete }) => {
+  const [uploading, setUploading] = useState(false);
   const user = auth.currentUser;
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,22 +24,23 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id }) => {
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET);
 
+    setUploading(true);
     try {
       const response = await axios.post<{ secure_url: string }>(CLOUDINARY_URL, formData);
       const uploadedImageUrl = response.data.secure_url;
-      const projectsRef = collection(db, "projects");
-      const q = query(projectsRef, where("id", "==", id));
-      const querySnapshot = await getDocs(q);
-      console.log(q);
-      if (!querySnapshot.empty) {
-        const projectDoc = querySnapshot.docs[0]; 
+
+      const q = query(collection(db, "projects"), where("id", "==", id));
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const projectDoc = snapshot.docs[0];
         await updateDoc(projectDoc.ref, { CoverPicture: uploadedImageUrl });
+        onUploadComplete(uploadedImageUrl);
         console.log("Project picture updated!");
-      } else {
-        console.log("No matching project found.");
       }
     } catch (error) {
       console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -45,13 +48,13 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id }) => {
     <div>
       <input
         type="file"
-        id="project-picture-upload"
+        id={`project-picture-upload-${id}`}
         accept="image/*"
         onChange={handleImageUpload}
         style={{ display: "none" }}
       />
       <label
-        htmlFor="project-picture-upload"
+        htmlFor={`project-picture-upload-${id}`}
         style={{
           display: "inline-block",
           padding: "8px 16px",
@@ -64,6 +67,7 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id }) => {
       >
         Upload Project Picture
       </label>
+      {uploading && <p className="text-blue-600 mt-1">Please wait... uploading</p>}
     </div>
   );
 };

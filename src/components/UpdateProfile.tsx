@@ -129,7 +129,7 @@ export default function UpdateProfile() {
             }
         };
         fetchProfilePic();
-    }, [user]);
+    }, [profilePic]);
 
     function handleAccountSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -264,7 +264,7 @@ export default function UpdateProfile() {
                         border: "3px solid #ddd" // Optional border for aesthetics
                       }} 
                   />
-                  <ProfilePictureUpload UserUID={ userUID }/>
+                  <ProfilePictureUpload UserUID={userUID} onUploadComplete={(url) => setProfilePic(url)} />
               </div>
 
               {/* Conditionally render form based on selected section */}

@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import axios from "axios";
 // @ts-ignore
 import { db, auth } from "../firebase";
@@ -8,10 +9,15 @@ const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 
 const CompanyPictureUpload: React.FC = () => {
   const user = auth.currentUser;
+  const [uploading, setUploading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
+
+    setUploading(true);
+    setSuccess(false);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -24,19 +30,24 @@ const CompanyPictureUpload: React.FC = () => {
       await addDoc(collection(db, "companies"), {
         picture: uploadedImageUrl,
         verified: false,
-        uploadedBy: user.uid, 
-        uploadedAt: new Date() 
+        uploadedBy: user.uid,
+        uploadedAt: new Date(),
       });
 
-      console.log("New school entry created!");
+      console.log("New company entry created!");
+      setSuccess(true);
     } catch (error) {
       console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div>
+    <div className="text-center">
       <input type="file" accept="image/*" onChange={handleImageUpload} />
+      {uploading && <p className="text-light mt-2">Please wait... uploading</p>}
+      {success && <p className="text-green-300 mt-2">Upload successful!</p>}
     </div>
   );
 };
