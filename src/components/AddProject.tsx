@@ -159,7 +159,6 @@ const ProjectAddForm: React.FC = () => {
           value={projectLink}
           onChange={(e) => setProjectLink(e.target.value)}
           placeholder="Enter project link"
-          required
         />
       </FormGroup>
 

@@ -4,6 +4,8 @@ import { Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
+import { Dropdown } from "react-bootstrap"
+import { forwardRef } from "react";
 
 interface UserData {
   DisplayName: string;
@@ -61,6 +63,29 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     fetchProject();
   }, [user.data.FavoriteProject]);
 
+  // Custom toggle to remove triangle
+  const CustomToggle = forwardRef(({ onClick }: any, ref: any) => (
+    <button
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+      style={{
+        all: "unset", // removes ALL default button styles (border, bg, outline)
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "36px",
+        height: "36px",
+      }}
+    >
+      <i className="bi bi-three-dots-vertical" style={{ fontSize: "1.2rem", color: "#2E3A59" }}></i>
+    </button>
+  ));
+  
+
   return (
     <Card
   style={{
@@ -79,25 +104,12 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
 >
 
   {/* Flag Button */}
-  {!user.data.reported && (
-    <Button
-      variant="danger"
-      size="sm"
-      title="Report User"
-      style={{
-        position: "absolute",
-        top: "12px",
-        right: "12px",
-        borderRadius: "50%",
-        width: "36px",
-        height: "36px",
-        padding: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 0 10px rgba(255,0,0,0.4)",
-        zIndex: 10,
-      }}
+
+<Dropdown style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10 }}>
+  <Dropdown.Toggle as={CustomToggle} />
+
+  <Dropdown.Menu>
+    <Dropdown.Item
       onClick={async () => {
         try {
           const userRef = doc(db, "users", user.id);
@@ -109,9 +121,12 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
         }
       }}
     >
-      <i className="bi bi-flag-fill" style={{ color: "white", fontSize: "1rem" }}></i>
-    </Button>
-  )}
+      <i className="bi bi-flag-fill me-2 text-danger" /> Report User
+    </Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown>
+
+
 
   {/* Profile Image */}
   <img
@@ -133,37 +148,48 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
 
 
   <h4 className="fw-bold mb-1">{user.data.DisplayName}</h4>
-  <p className="mb-1 text-sm text-secondary">Class of {user.data.GradYear}</p>
-  <p className="mb-1">{user.data.JobTitle}</p>
-  <p className="mb-1">{user.data.Company}</p>
-  <p className="mb-2 px-3" style={{ fontStyle: 'italic' }}>{user.data.Bio}</p>
+  {user.data.GradYear && (
+    <p className="mb-1 text-sm text-secondary">Class of {user.data.GradYear}</p>
+  )}
+  {user.data.JobTitle && (
+    <p className="mb-1">{user.data.JobTitle}</p>
+  )}
+  {user.data.Company && (
+    <p className="mb-1">{user.data.Company}</p>
+  )}
+  {user.data.Bio && (
+    <p className="mb-2 px-3" style={{ fontStyle: 'italic' }}>{user.data.Bio}</p>
+  )}
+  
 
   {favoriteProjectTitle && (
     <p className="mb-2"><strong>Favorite Project:</strong> {favoriteProjectTitle}</p>
   )}
 
   {/* Social Icons */}
-  <div className="d-flex justify-content-center gap-2 mb-3">
-    {user.data.GitHub && (
-      <a href={user.data.GitHub} target="_blank" rel="noopener noreferrer" className="tech-icon-link">
-        <i className="bi bi-github"></i>
-      </a>
-    )}
-    {user.data.LinkedIn && (
-      <a href={user.data.LinkedIn} target="_blank" rel="noopener noreferrer" className="tech-icon-link">
-        <i className="bi bi-linkedin"></i>
-      </a>
-    )}
-    {user.data.email && (
-      <a href={`mailto:${user.data.email}`} target="_blank" rel="noopener noreferrer" className="tech-icon-link">
-        <i className="bi bi-envelope"></i>
-      </a>
-    )}
-  </div>
+  <div className="d-flex justify-content-center gap-3 mb-3 social-icons">
+  {user.data.GitHub && (
+    <a href={user.data.GitHub} target="_blank" rel="noopener noreferrer" className="icon-link">
+      <i className="bi bi-github"></i>
+    </a>
+  )}
+  {user.data.LinkedIn && (
+    <a href={user.data.LinkedIn} target="_blank" rel="noopener noreferrer" className="icon-link">
+      <i className="bi bi-linkedin"></i>
+    </a>
+  )}
+  {user.data.email && (
+    <a href={`mailto:${user.data.email}`} target="_blank" rel="noopener noreferrer" className="icon-link">
+      <i className="bi bi-envelope"></i>
+    </a>
+  )}
+</div>
+
 
   <Link to="/details" state={{ userUID: user.data.userUID, Dashboard }}>
-    <Button variant="dark" className="w-100 mb-2">See More Details</Button>
+  <Button variant="dark" className="w-100 mb-2 custom-btn">See More Details</Button>
   </Link>
+
 
   {isAdmin && (
     <>

@@ -24,8 +24,6 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 - Buttons for grad years for search selection
 
-- Fix form displays for desktop
-
 ### Cleanup
 - Get main dashboards to show rows of users
 - UI of Dashboards and Details

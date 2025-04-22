@@ -264,12 +264,13 @@ export default function UpdateProfile() {
                         border: "3px solid #ddd" // Optional border for aesthetics
                       }} 
                   />
+                  <ProfilePictureUpload UserUID={ userUID }/>
               </div>
-              <ProfilePictureUpload UserUID={ userUID }/>
 
               {/* Conditionally render form based on selected section */}
               {selectedSection === 'account' && (
-                <div className="w-full" style={{ maxWidth: "600px" }}>
+                <div className="d-flex justify-content-center">
+  <div className="w-100" style={{ maxWidth: "600px" }}>
                   <Form onSubmit={handleAccountSubmit}>
                       <FormGroup id="firstName">
                           <FormLabel>First Name</FormLabel>
@@ -329,10 +330,12 @@ export default function UpdateProfile() {
                   {accountMessage && <Alert variant="success">{accountMessage}</Alert>}
                   {renderDashboardButton()}
                   </div>
+                  </div>
               )}
 
               {selectedSection === 'password' && (
-                <div className="w-full" style={{ maxWidth: "600px" }}>
+                <div className="d-flex justify-content-center">
+  <div className="w-100" style={{ maxWidth: "600px" }}>
                   <Form onSubmit={handlePasswordSubmit}>
 
                       <FormGroup id="email">
@@ -359,6 +362,7 @@ export default function UpdateProfile() {
                       </Button>
                   </Form>
                   {renderDashboardButton()}
+                  </div>
                   </div>
               )}
 

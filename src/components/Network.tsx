@@ -44,31 +44,29 @@ export default function Network() {
   }, []);
 
   const containerStyle: React.CSSProperties = {
-    fontFamily: "Segoe UI, sans-serif",
-    backgroundColor: "#0A0F2C",
+    backgroundColor: "var(--background-light)",
     minHeight: "100vh",
     width: "100%",
-    boxSizing: "border-box", 
-    padding: isMobile ? "1rem" : "0",
-    overflowX: "hidden",    
+    padding: isMobile ? "1rem" : "2rem 4rem",
+    fontFamily: "'Segoe UI', sans-serif",
+    boxSizing: "border-box",
   };
 
   const sectionStyle: React.CSSProperties = {
-    width: "100%",
-    background: "linear-gradient(135deg, #0A0F2C, #0D122F)",
-    color: "#F4F7FB",
-    borderRadius: isMobile ? "12px" : "0",
-    boxShadow: isMobile ? "0 4px 20px rgba(0, 240, 255, 0.2)" : "none",
-    padding: isMobile ? "1.5rem" : "3rem 5rem",
+    backgroundColor: "#fff",
+    borderRadius: "16px",
+    padding: isMobile ? "1.5rem" : "2.5rem",
     marginBottom: "2rem",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
+    border: "1px solid var(--neutral-gray)",
+    color: "var(--text-dark)",
   };
 
   const gridStyle: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: isMobile ? "repeat(auto-fill, minmax(80px, 1fr))" : "repeat(auto-fill, minmax(120px, 1fr))",
-    gap: "16px",
+    gap: "20px",
     justifyItems: "center",
-    width: "100%",
   };
 
   const imageStyle: React.CSSProperties = {
@@ -76,18 +74,24 @@ export default function Network() {
     height: isMobile ? "80px" : "100px",
     objectFit: "cover",
     borderRadius: "12px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
     transition: "transform 0.2s ease-in-out",
   };
 
   return (
     <div style={containerStyle}>
-      <h1 style={{ textAlign: "center", fontWeight: "bold", fontSize: isMobile ? "2rem" : "2.5rem", color: "#00F0FF", textShadow: "0 0 8px #00F0FF" }}>
-        🌐 Berry Network
+      <h1 style={{
+        textAlign: "center",
+        fontWeight: 700,
+        fontSize: isMobile ? "2rem" : "2.5rem",
+        color: "var(--primary-blue)",
+        marginBottom: "2rem"
+      }}>
+        Berry Network
       </h1>
 
       <div style={sectionStyle}>
-        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>🎓 Graduate Schools</h2>
+        <h2 className="text-center">Graduate Schools</h2>
         <div style={gridStyle}>
           {schoolImages.map((url, index) => (
             <img
@@ -103,7 +107,7 @@ export default function Network() {
       </div>
 
       <div style={sectionStyle}>
-        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>💼 Companies</h2>
+        <h2 className="text-center">Companies</h2>
         <div style={gridStyle}>
           {companyImages.map((url, index) => (
             <img
@@ -118,22 +122,20 @@ export default function Network() {
         </div>
       </div>
 
-      <div
-        style={{
-          ...sectionStyle,
-          background: "linear-gradient(135deg, #1E2A78, #3F8EF4)",
-          color: "#F4F7FB",
-          boxShadow: "0 4px 15px rgba(63, 142, 244, 0.3)"
-        }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>🚀 Upload Your School or Company</h2>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+      <div style={{
+        ...sectionStyle,
+        backgroundColor: "var(--primary-blue)",
+        color: "white",
+        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)"
+      }}>
+        <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Upload Your School or Company</h2>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
           <div style={{ width: "100%", maxWidth: "400px" }}>
-            <h5 style={{ textAlign: "center", marginBottom: "0.5rem" }}>School</h5>
+            <h5 style={{ textAlign: "center", marginBottom: "0.5rem", color: "white" }}>School</h5>
             <SchoolPictureUpload />
           </div>
           <div style={{ width: "100%", maxWidth: "400px" }}>
-            <h5 style={{ textAlign: "center", marginBottom: "0.5rem" }}>Company</h5>
+            <h5 style={{ textAlign: "center", marginBottom: "0.5rem", color: "white" }}>Company</h5>
             <CompanyPictureUpload />
           </div>
         </div>

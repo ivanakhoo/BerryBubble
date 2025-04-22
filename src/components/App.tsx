@@ -20,6 +20,8 @@ import Verification from "./Verification";
 import AddProject from "./AddProject";
 import Network from "./Network";
 import AddWorkHistory from "./AddWorkHistory";
+import '../global.css';
+
 
 const AppRoutes: React.FC = () => {
   const location = useLocation();
@@ -45,7 +47,7 @@ const AppRoutes: React.FC = () => {
       style={{
         paddingTop: "70px",
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0A0F2C, #0D122F)",
+        background: "#F5F9FF",
         color: "white",
         backgroundSize: "400% 400%",
         animation: "gradientFlow 10s ease infinite",

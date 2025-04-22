@@ -157,7 +157,9 @@ export default function Details() {
                                 border: "3px solid #ddd" 
                             }} 
                         />
-                        <h5 style={{ textAlign: "center" }}>Class of {user.GradYear}</h5>
+                        {user.GradYear && (
+                            <h5 className="mb-1 text-secondary">Class of {user.GradYear}</h5>
+                        )}
                         <p style={{ textAlign: "center" }}>{user.Bio}</p>
 
                         <div style={{ textAlign: "center" }}>

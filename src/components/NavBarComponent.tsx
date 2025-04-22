@@ -77,7 +77,7 @@ const NavBarComponent: React.FC = () => {
   }
 
   return (
-    <Navbar bg="dark" data-bs-theme="dark" expand="lg" fixed="top">
+    <Navbar bg="#4A90E2" data-bs-theme="dark" expand="lg" fixed="top">
       <Container fluid>
         <Navbar.Brand href="/">Berry Bubble</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />

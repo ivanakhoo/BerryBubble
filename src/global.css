@@ -1,0 +1,102 @@
+:root {
+    --primary-blue: #4A90E2;
+    --secondary-blue: #82B1FF;
+    --background-light: #F5F9FF;
+    --neutral-gray: #D6DEE6;
+    --text-dark: #2E3A59;
+    --accent-green: #A8E6CF;
+  }
+  
+  /* Apply global styles */
+  body {
+    margin: 0;
+    background-color: var(--background-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+  }
+  
+  /* Navbar */
+  .navbar {
+    background-color: var(--primary-blue) !important;
+  }
+
+  .form-label {
+    color: var(--text-dark); /* or use a specific gray */
+  }
+  
+  .navbar .nav-link,
+  .navbar .navbar-brand {
+    color: white !important;
+  }
+  
+  .navbar .nav-link:hover {
+    color: var(--neutral-gray) !important;
+  }
+  
+  /* Profile Cards */
+  .card {
+    background-color: white;
+    border: 1px solid var(--neutral-gray);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    color: var(--text-dark);
+  }
+  
+  .card .btn-primary {
+    background-color: var(--primary-blue);
+    border: none;
+  }
+  
+  .card .btn-primary:hover {
+    background-color: var(--secondary-blue);
+  }
+  
+  .card .btn-outline-light {
+    color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+  }
+  
+  .card .btn-outline-light:hover {
+    background-color: var(--secondary-blue);
+    color: white;
+  }
+  
+  /* Deactivate button (accent) */
+  .card .btn-success {
+    background-color: var(--accent-green);
+    color: #064E3B;
+    border: none;
+  }
+  
+  /* Heading */
+  h1, h2, h3, h4 {
+    color: var(--text-dark);
+  }
+
+  p {
+    color: black;
+  }
+
+  .card h4,
+.profile h4 {
+  color: var(--text-dark);
+}
+
+h1.text-center,
+h1, h2.text-center {
+  color: var(--text-dark);
+}
+
+.custom-btn {
+    background-color: var(--primary-blue) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-btn:hover {
+    background-color: var(--secondary-blue) !important;
+    color: white !important;
+  }
+  
