@@ -13,6 +13,7 @@ const WorkAddForm: React.FC = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [role, setRole] = useState("");
+  const [description, setDescription] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +28,7 @@ const WorkAddForm: React.FC = () => {
     picture?: string;
     id: string;
     UserUID: string;
+    Description?: string;
   }
 
   useEffect(() => {
@@ -49,6 +51,7 @@ const WorkAddForm: React.FC = () => {
         setStartDate(projectData.StartDate);
         setEndDate(projectData.EndDate);
         setRole(projectData.Role);
+        setDescription(projectData.Description || "");
       } catch (err) {
         if (isMounted) setError("Failed to fetch project data.");
       }
@@ -60,7 +63,7 @@ const WorkAddForm: React.FC = () => {
     };
   }, [companyID]);
 
-  const handleProjectSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleWorkSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -79,7 +82,8 @@ const WorkAddForm: React.FC = () => {
           CompanyName: companyName,
           StartDate: startDate,
           EndDate: endDate,
-          Role: role
+          Role: role,
+          Description: description
         });
       } else {
         const projectRef = doc(collection(db, "history")); 
@@ -93,6 +97,7 @@ const WorkAddForm: React.FC = () => {
         picture: "",
         id: customCompanyID,
         UserUID: userUID,
+        Description: description
         };
 
         await setDoc(projectRef, newProject);
@@ -107,63 +112,94 @@ const WorkAddForm: React.FC = () => {
     }
   };
 
-  return (
-    <Form onSubmit={handleProjectSubmit}>
-      <h1>{companyID ? "Edit Work History" : "Add Work History"}</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
+  return  (
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div style={{ width: '100%', maxWidth: '600px' }}>
+        <Form
+          onSubmit={handleWorkSubmit}
+          style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            position: 'relative',
+            overflow: 'hidden',
+            margin: '0 auto',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '24px',
+            color: 'white',
+          }}
+        >
+          <h1 className="text-center mb-4">{companyID ? "Edit Work History" : "Add Work History"}</h1>
 
-      <FormGroup className="mb-3">
-        <FormLabel>Company Name</FormLabel>
-        <FormControl
-          type="text"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-          placeholder="Enter company name"
-          required
-        />
-      </FormGroup>
+          {error && <div className="alert alert-danger">{error}</div>}
 
-      <FormGroup className="mb-3">
-        <FormLabel>Role</FormLabel>
-        <FormControl
-          type="text"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          placeholder="Enter role"
-          required
-        />
-      </FormGroup>
+          <FormGroup className="mb-3">
+            <FormLabel>Company Name</FormLabel>
+            <FormControl
+              type="text"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Enter company name"
+              required
+            />
+          </FormGroup>
 
-      <FormGroup className="mb-3">
-        <FormLabel>Start Date</FormLabel>
-        <FormControl
-          type="text"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          placeholder="Enter start date"
-          required
-        />
-      </FormGroup>
+          <FormGroup className="mb-3">
+            <FormLabel>Role</FormLabel>
+            <FormControl
+              type="text"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="Enter role"
+              required
+            />
+          </FormGroup>
 
-      <FormGroup className="mb-3">
-        <FormLabel>End Date</FormLabel>
-        <FormControl
-          type="text"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          placeholder="Enter end date (e.g. Present)"
-          required
-        />
-      </FormGroup>
+          <FormGroup className="mb-3">
+            <FormLabel>Description</FormLabel>
+            <FormControl
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="(Optional) Enter description (250 character limit)"
+            />
+          </FormGroup>
 
-      <Button disabled={loading} className="w-100 mt-2" type="submit">
-        {companyID ? "Save Changes" : "Create Work History"}
-      </Button>
+          <FormGroup className="mb-3">
+            <FormLabel>Start Date</FormLabel>
+            <FormControl
+              type="text"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              placeholder="Enter start date"
+              required
+            />
+          </FormGroup>
 
-      <Link to="/details" state={{ userUID: userUID }}>
-        <Button variant="dark" className="mt-2 w-100">Back to Details</Button>
-      </Link>
-    </Form>
+          <FormGroup className="mb-3">
+            <FormLabel>End Date</FormLabel>
+            <FormControl
+              type="text"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              placeholder="Enter end date (e.g. Present)"
+              required
+            />
+          </FormGroup>
+
+          <Button disabled={loading} className="w-100 mt-2" type="submit">
+            {companyID ? "Save Changes" : "Create Work History"}
+          </Button>
+
+          <Link to="/details" state={{ userUID: userUID }}>
+            <Button variant="dark" className="w-100 mt-2">Back to Details</Button>
+          </Link>
+        </Form>
+      </div>
+    </div>
   );
 };
 

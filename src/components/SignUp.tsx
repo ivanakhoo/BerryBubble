@@ -62,7 +62,7 @@ export default function Signup() {
                 </CardBody>
             </Card>
 
-            <div className="w-100 text-center mt-2">
+            <div className="w-100 text-center mt-2" style={{ color: 'var(--text-dark)' }}>
                 Already have an account? <Link to="/login">Log in</Link>
             </div>
         </>

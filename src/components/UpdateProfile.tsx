@@ -10,6 +10,7 @@ import { doc, getDoc } from "firebase/firestore";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 import Sidebar from "./Sidebar";
 import Projects from "./Projects";
+import WorkHistory from "./WorkHistory";
 
 export default function UpdateProfile() {
     const [selectedSection, setSelectedSection] = useState<string>('account'); // State to track selected section
@@ -250,6 +251,7 @@ export default function UpdateProfile() {
               {selectedSection === 'account' && (
                 <div className="d-flex justify-content-center">
   <div className="w-100" style={{ maxWidth: "600px" }}>
+  <h1 className="text-center mb-4">Account Details</h1>
     {/* Profile Picture Upload Section */}
     <div className="text-center mb-3">
                   <img 
@@ -335,6 +337,7 @@ export default function UpdateProfile() {
               {selectedSection === 'password' && (
                 <div className="d-flex justify-content-center">
   <div className="w-100" style={{ maxWidth: "600px" }}>
+  <h1 className="text-center mb-4">Change Credentials</h1>
     {/* Profile Picture Upload Section */}
     <div className="text-center mb-3">
                   <img 
@@ -382,7 +385,11 @@ export default function UpdateProfile() {
 
               {selectedSection === 'projects' && (
                   <div>
+                    <h1 className="text-center mb-4">Update Experience</h1>
                       <Projects userUID={userUID} isAdmin={true} currentUserUID={currentUser.uid} /> 
+
+                      <WorkHistory userUID={userUID} isAdmin={true} currentUserUID={currentUser.uid}></WorkHistory>
+
                       {renderDashboardButton()}
                   </div>
               )}

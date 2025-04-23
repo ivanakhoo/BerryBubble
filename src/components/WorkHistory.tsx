@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase";
@@ -15,6 +15,7 @@ interface History {
   Role: string;
   picture: string;
   id: string;
+  Description?: string;
 }
 
 interface HistoryProps {
@@ -29,7 +30,6 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
   useEffect(() => {
     const fetchWork = async () => {
       if (!userUID) return;
-
       try {
         const projectsRef = collection(db, "history");
         const q = query(projectsRef, where("UserUID", "==", userUID));
@@ -40,9 +40,9 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
           projectsList.push({ id: docSnap.id, ...(docSnap.data() as Omit<History, "id">) });
         });
 
-        const sortedList = projectsList.sort((a, b) => {
-          return new Date(b.EndDate).getTime() - new Date(a.EndDate).getTime();
-        });
+        const sortedList = projectsList.sort((a, b) =>
+          new Date(b.EndDate).getTime() - new Date(a.EndDate).getTime()
+        );
 
         setWorkHistory(sortedList);
       } catch (error) {
@@ -63,32 +63,42 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
   };
 
   return (
-    <>
-      {workHistory.length > 0 && (
-        <>
-          <h2 className="text-center">Work History</h2>
-          {(isAdmin || currentUserUID === userUID) && (
-      <div style={{ marginBottom: '10px' }}>
-      <Link to="/add-history" state={{ userUID: userUID }}>
-        <Button variant="dark" className="mt-2">Add Work History</Button>
-      </Link>
-    </div>
-                        )}
-          {workHistory.map((history, index) => (
-            <div
-              key={index}
+    <div className="mt-4">
+      <h1 className="text-center mt-4">Work History</h1>
+
+      {(isAdmin || currentUserUID === userUID) && (
+        <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+          <Link to="/add-history" state={{ userUID }}>
+            <Button variant="dark" className="mt-2">Add Work History</Button>
+          </Link>
+        </div>
+      )}
+
+      {workHistory.length > 0 ? (
+        <div>
+          {workHistory.map((entry) => (
+            <Card
+              key={entry.id}
               style={{
-                border: "1px solid #ccc",
-                padding: "10px",
-                marginBottom: "10px",
-                borderRadius: "8px",
+                width: '100%',
+                maxWidth: '360px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                position: 'relative',
+                overflow: 'hidden',
+                margin: '0 auto',
               }}
+              className="mb-4 text-center text-white p-3"
             >
-              {history.picture && (
+              {/* Image */}
+              {entry.picture && (
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
                   <img
-                    src={history.picture}
-                    alt="companyPicture"
+                    src={entry.picture}
+                    alt="Company"
                     style={{
                       width: "140px",
                       height: "140px",
@@ -99,18 +109,26 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
                   />
                 </div>
               )}
-              <p><strong>Company:</strong> {history.CompanyName}</p>
-              <p><strong>Role:</strong> {history.Role}</p>
-              <p><strong>Start Date:</strong> {history.StartDate}</p>
-              <p><strong>End Date:</strong> {history.EndDate}</p>
 
-              {(isAdmin || currentUserUID === history.UserUID) && (
+              {/* Company + Role */}
+              <h3 className="text-muted mb-2">{entry.CompanyName}</h3>
+              <h4 className="text-muted mb-3">{entry.Role}</h4>
+
+              <p>{entry.Description}</p>
+
+              {/* Dates */}
+              <p className="mb-1">
+                <i className="bi bi-calendar3" /> {entry.StartDate} – {entry.EndDate}
+              </p>
+
+              {/* Admin Actions */}
+              {(isAdmin || currentUserUID === entry.UserUID) && (
                 <div className="mt-4 d-flex flex-column align-items-start gap-2">
-                  <WorkHistoryPictureUpload companyID={history.id} />
+                  <WorkHistoryPictureUpload companyID={entry.id} />
 
                   <Link
                     to="/add-history"
-                    state={{ companyID: history.id, userUID: userUID }}
+                    state={{ companyID: entry.id, userUID }}
                     className="w-100"
                   >
                     <Button variant="dark" className="w-100">
@@ -121,17 +139,19 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
                   <Button
                     variant="danger"
                     className="w-100"
-                    onClick={() => handleDeleteWorkHistory(history.id)}
+                    onClick={() => handleDeleteWorkHistory(entry.id)}
                   >
-                    Delete Project
+                    Delete
                   </Button>
                 </div>
               )}
-            </div>
+            </Card>
           ))}
-        </>
+        </div>
+      ) : (
+        <p className="text-center">No work history available.</p>
       )}
-    </>
+    </div>
   );
 };
 

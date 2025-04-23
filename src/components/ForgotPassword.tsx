@@ -50,7 +50,7 @@ export default function ForgotPassword() {
                 </CardBody>
             </Card>
 
-            <div className="w-100 text-center mt-2">
+            <div className="w-100 text-center mt-2" style={{ color: 'var(--text-dark)' }}>
                 Need an account? <Link to="/signup">Sign up</Link>
             </div>
         </>

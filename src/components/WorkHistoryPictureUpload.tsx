@@ -55,7 +55,7 @@ const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ com
           fontSize: "14px",
         }}
       >
-        Upload Project Picture
+        Upload Company Logo
       </label>
     </div>
   );

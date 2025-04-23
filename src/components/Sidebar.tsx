@@ -47,10 +47,10 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedSection, setSelectedSection }
           Account Details
         </li>
         <li onClick={() => setSelectedSection('password')} style={itemStyle('password')}>
-          Change Password
+          Change Credentials
         </li>
         <li onClick={() => setSelectedSection('projects')} style={itemStyle('projects')}>
-          Update Projects
+          Update Experience
         </li>
       </ul>
     </div>

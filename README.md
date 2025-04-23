@@ -20,13 +20,13 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 ### Features
 
-- Overlay for search bar and widen it
+- Expand report user
 
 - Buttons for grad years for search selection
 
-- UI
+- Consolidate buttons into icons
 
-- Modify Projects cards and Details Page
+- Put remaining buttons into the three dots
 
 ### Cleanup
 - Get main dashboards to show rows of users

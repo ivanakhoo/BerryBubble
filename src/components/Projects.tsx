@@ -148,8 +148,8 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
               onClick={isAdmin ? () => handleFavoriteToggle(project.id) : undefined}
               style={{
                 position: "absolute",
-                top: "16px",
-                right: "16px",
+                top: "1px",
+                right: "8px",
                 fontSize: "1.75rem",
                 color: favoriteProject === project.id ? "#ffc107" : "#ccc",
                 textDecoration: "none",
@@ -237,32 +237,49 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
           
             {/* Admin Tools */}
             {(isAdmin || currentUserUID === project.UserUID) && (
+            <>
+              {/* Pencil Edit Icon */}
+              <Link
+                to="/add-project"
+                state={{ projectID: project.id, userUID: userUID }}
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  left: "20px", 
+                  zIndex: 2,
+                  color: "gray",
+                  fontSize: "1.5rem",
+                  textDecoration: "none"
+                }}
+                title="Edit Project"
+              >
+                <i className="bi bi-pencil-square"></i>
+              </Link>
+
+              {/* Admin Tools */}
               <div className="mt-4 d-flex flex-column align-items-start gap-2">
                 <ProjectPictureUpload
                   id={project.id}
                   onUploadComplete={(url) => handleProjectPictureUpdate(project.id, url)}
                 />
 
-          
-                <Link
-                  to="/add-project"
-                  state={{ projectID: project.id, userUID: userUID }}
-                  className="w-100"
-                >
-                  <Button variant="dark" className="w-100">
-                    Edit Project
-                  </Button>
-                </Link>
-          
-                <Button
-                  variant="danger"
-                  className="w-100"
+                <i
+                  className="bi bi-trash"
+                  title="Delete Project"
                   onClick={() => handleDeleteProject(project.ProjectName, project.UserUID)}
-                >
-                  Delete Project
-                </Button>
+                  style={{
+                    position: "absolute",
+                    top: "12px",
+                    left: "45px",
+                    fontSize: "1.5rem",
+                    color: "#dc3545",
+                    cursor: "pointer",
+                    zIndex: 2,
+                  }}
+                ></i>
               </div>
-            )}
+            </>
+          )}
           </Card>
           
           ))}
