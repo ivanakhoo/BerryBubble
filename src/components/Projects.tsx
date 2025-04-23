@@ -115,7 +115,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
   
   return (
     <div className="mt-4">
-      <h4 className="text-center">Projects</h4>
+      <h1 className="text-center mt-4">Projects</h1>
       {(isAdmin || currentUserUID === userUID) && (
       <div style={{ textAlign: 'center', marginBottom: '10px' }}>
       <Link to="/add-project" state={{ userUID: userUID }}>

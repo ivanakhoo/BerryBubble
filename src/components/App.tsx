@@ -37,6 +37,7 @@ const AppRoutes: React.FC = () => {
     "/add-project",
     "/add-history",
     "/details",
+    "/unauthorized"
   ];
 
   const isFullScreen = fullScreenRoutes.includes(location.pathname);

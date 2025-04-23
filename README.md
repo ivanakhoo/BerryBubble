@@ -24,6 +24,10 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 - Buttons for grad years for search selection
 
+- UI
+
+- Modify Projects cards and Details Page
+
 ### Cleanup
 - Get main dashboards to show rows of users
 - UI of Dashboards and Details

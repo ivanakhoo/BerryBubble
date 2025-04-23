@@ -17,6 +17,7 @@ export default function UpdateProfile() {
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
     const bioRef = useRef<HTMLTextAreaElement>(null); 
+    const cardDescRef = useRef<HTMLTextAreaElement>(null); 
     const gradYearRef = useRef<HTMLInputElement>(null); 
     const firstRef = useRef<HTMLInputElement>(null); 
     const lastRef = useRef<HTMLInputElement>(null); 
@@ -26,7 +27,7 @@ export default function UpdateProfile() {
     const jobTitleRef = useRef<HTMLInputElement>(null); 
     const companyRef = useRef<HTMLInputElement>(null); 
     const [accountMessage, setAccountMessage] = useState("");
-    const { upJobTitle, upCompany, currentUser, upEmail, upPassword, upBio, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
+    const { upJobTitle, upCompany, currentUser, upEmail, upPassword, upBio, upCardDesc, upGradYear, upFirstName, upLastName, upDisplayName, upGitHub, upLinkedIn } = useAuth();
     
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -54,7 +55,8 @@ export default function UpdateProfile() {
         userUID?: string;
         JobTitle?: string;
         Company?: string;
-        FavoriteProject?: string
+        FavoriteProject?: string;
+        CardDescription?: string;
       }
 
     const [user, setUser] = useState<User | null>(null);
@@ -92,7 +94,6 @@ export default function UpdateProfile() {
               </Link>
             );
           default:
-            console.log(Dashboard);
             return (
                 <Link to="/details" state={{ userUID: userUID }}>
                   <Button variant="dark" className="mt-2">Back to Details</Button>
@@ -107,7 +108,11 @@ export default function UpdateProfile() {
         const userRef = doc(db, "users", userUID); 
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-            setUser(userSnap.data()); 
+            setUser(userSnap.data());
+            const data = userSnap.data() as {profilePic?: string};
+            if (data.profilePic) {
+                setProfilePic(data.profilePic);
+            } 
         } else {
             console.log("No such user found!");
         }
@@ -116,20 +121,6 @@ export default function UpdateProfile() {
     fetchUser();
     }, [userUID]);
 
-
-    useEffect(() => {
-        const fetchProfilePic = async () => {
-            if (user) {
-                const docRef = doc(db, "users", userUID);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data() as { profilePic?: string };
-                    if (data.profilePic) setProfilePic(data.profilePic);
-                }
-            }
-        };
-        fetchProfilePic();
-    }, [profilePic]);
 
     function handleAccountSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -166,6 +157,10 @@ export default function UpdateProfile() {
 
         if (bioRef.current?.value) {
             promises.push(upBio(bioRef.current?.value, user)); 
+        }
+
+        if (cardDescRef.current?.value) {
+            promises.push(upCardDesc(cardDescRef.current?.value, user)); 
         }
 
         if (gradYearRef.current?.value) {
@@ -251,8 +246,12 @@ export default function UpdateProfile() {
           {/* Main content container */}
           <div style={{ flex: 1, padding: '20px' }}>
 
-              {/* Profile Picture Upload Section */}
-              <div className="text-center mb-3">
+              {/* Conditionally render form based on selected section */}
+              {selectedSection === 'account' && (
+                <div className="d-flex justify-content-center">
+  <div className="w-100" style={{ maxWidth: "600px" }}>
+    {/* Profile Picture Upload Section */}
+    <div className="text-center mb-3">
                   <img 
                       src={profilePic || defaultProfilePic} 
                       alt="Profile" 
@@ -266,45 +265,45 @@ export default function UpdateProfile() {
                   />
                   <ProfilePictureUpload UserUID={userUID} onUploadComplete={(url) => setProfilePic(url)} />
               </div>
-
-              {/* Conditionally render form based on selected section */}
-              {selectedSection === 'account' && (
-                <div className="d-flex justify-content-center">
-  <div className="w-100" style={{ maxWidth: "600px" }}>
                   <Form onSubmit={handleAccountSubmit}>
                       <FormGroup id="firstName">
                           <FormLabel>First Name</FormLabel>
-                          <FormControl type="text" ref={firstRef} required defaultValue={user?.FirstName} placeholder="Enter your first name." />
+                          <FormControl type="text" ref={firstRef} required maxLength={20} defaultValue={user?.FirstName} placeholder="Enter your first name." />
                       </FormGroup>
 
                       <FormGroup id="lastName">
                           <FormLabel>Last Name</FormLabel>
-                          <FormControl type="text" ref={lastRef} required defaultValue={user?.LastName} placeholder="Enter your last name." />
+                          <FormControl type="text" ref={lastRef} required maxLength={20} defaultValue={user?.LastName} placeholder="Enter your last name." />
                       </FormGroup>
 
                       <FormGroup id="displayName">
                           <FormLabel>Display Name</FormLabel>
-                          <FormControl type="text" ref={displayRef} required defaultValue={user?.DisplayName} placeholder="Enter your preferred display name." />
+                          <FormControl type="text" ref={displayRef} required maxLength={30} defaultValue={user?.DisplayName} placeholder="Enter your preferred display name." />
+                      </FormGroup>
+
+                      <FormGroup id="carddesc">
+                          <FormLabel>Card Description</FormLabel>
+                          <FormControl as="textarea" ref={cardDescRef} maxLength={150} defaultValue={user?.CardDescription} placeholder="Enter your card description (150 character limit)." />
                       </FormGroup>
 
                       <FormGroup id="bio">
                           <FormLabel>Bio</FormLabel>
-                          <FormControl as="textarea" ref={bioRef} defaultValue={user?.Bio} placeholder="Enter your new bio." />
+                          <FormControl as="textarea" ref={bioRef} maxLength={500} defaultValue={user?.Bio} placeholder="Enter your bio." />
                       </FormGroup>
 
                       <FormGroup id="gradYear">
                           <FormLabel>Graduation Year</FormLabel>
-                          <FormControl type="text" ref={gradYearRef} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
+                          <FormControl type="text" ref={gradYearRef} maxLength={4} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
                       </FormGroup>
 
                       <FormGroup id="JobTitle">
                           <FormLabel>Job Title</FormLabel>
-                          <FormControl type="text" ref={jobTitleRef} defaultValue={user?.JobTitle} placeholder="Enter your current job title." />
+                          <FormControl type="text" ref={jobTitleRef} maxLength={30} defaultValue={user?.JobTitle} placeholder="Enter your current job title." />
                       </FormGroup>
 
                       <FormGroup id="Company">
                           <FormLabel>Current Company</FormLabel>
-                          <FormControl type="text" ref={companyRef} defaultValue={user?.Company} placeholder="Enter your current company." />
+                          <FormControl type="text" ref={companyRef} maxLength={30} defaultValue={user?.Company} placeholder="Enter your current company." />
                       </FormGroup>
 
                       <FormGroup id="LinkedIn">
@@ -336,6 +335,21 @@ export default function UpdateProfile() {
               {selectedSection === 'password' && (
                 <div className="d-flex justify-content-center">
   <div className="w-100" style={{ maxWidth: "600px" }}>
+    {/* Profile Picture Upload Section */}
+    <div className="text-center mb-3">
+                  <img 
+                      src={profilePic || defaultProfilePic} 
+                      alt="Profile" 
+                      style={{
+                        width: "150px", 
+                        height: "150px", 
+                        borderRadius: "50%", 
+                        objectFit: "cover",
+                        border: "3px solid #ddd" // Optional border for aesthetics
+                      }} 
+                  />
+                  <ProfilePictureUpload UserUID={userUID} onUploadComplete={(url) => setProfilePic(url)} />
+              </div>
                   <Form onSubmit={handlePasswordSubmit}>
 
                       <FormGroup id="email">

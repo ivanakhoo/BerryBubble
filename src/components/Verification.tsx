@@ -41,9 +41,9 @@ export default function Verification() {
   return (
     <div style={{ textAlign: "center" }}>
       {emailVerified ? (
-        <h1>Your email is verified!</h1>
+        <h1 className="text-center mt-4">Your email is verified!</h1>
       ) : (
-        <h1>Your email is not verified.</h1>
+        <h1 className="text-center mt-4">Your email is not verified.</h1>
       )}
       <button onClick={handleCheckVerification}>Verify Email</button>
     </div>

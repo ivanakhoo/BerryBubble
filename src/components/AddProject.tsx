@@ -126,8 +126,27 @@ const ProjectAddForm: React.FC = () => {
   };
 
   return (
-    <Form onSubmit={handleProjectSubmit}>
-      <h1>{projectID ? "Edit Project" : "Add Project"}</h1>
+    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+  <div style={{ width: '100%', maxWidth: '600px' }}>
+  <Form
+  onSubmit={handleProjectSubmit}
+  style={{
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '20px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+    position: 'relative',
+    overflow: 'hidden',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '24px',
+    color: 'white',
+  }}
+>
+      <h1 className="text-center mb-4">{projectID ? "Edit Project" : "Add Project"}</h1>
+
       {error && <div className="alert alert-danger">{error}</div>}
 
       <FormGroup>
@@ -178,17 +197,20 @@ const ProjectAddForm: React.FC = () => {
           </div>
         ))}
         {techError && <small className="text-danger">All technology fields must be filled.</small>}
-        <br />
         <Button variant="secondary" onClick={addTechnology} className="mt-2">+ Add Technology</Button>
       </FormGroup>
 
-      <Button disabled={loading} className="w-100 mt-2" type="submit">
+      <Button disabled={loading} className="w-100 mt-3" type="submit">
         {projectID ? "Save Changes" : "Create Project"}
       </Button>
+
       <Link to="/details" state={{ userUID: userUID }}>
-                                <Button variant="dark" className="mt-2">Back to Details</Button>
-                            </Link>
+        <Button variant="dark" className="w-100 mt-2">Back to Details</Button>
+      </Link>
     </Form>
+  </div>
+</div>
+
   );
 };
 

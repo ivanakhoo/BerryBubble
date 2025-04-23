@@ -21,6 +21,7 @@ interface UserData {
   verified: boolean;
   FavoriteProject?: string;
   reported: boolean;
+  CardDescription: string;
 }
 
 interface Doc {
@@ -61,7 +62,10 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     };
 
     fetchProject();
+
   }, [user.data.FavoriteProject]);
+
+  
 
   // Custom toggle to remove triangle
   const CustomToggle = forwardRef(({ onClick }: any, ref: any) => (
@@ -89,8 +93,9 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
   return (
     <Card
   style={{
-    width: '100%',
-    maxWidth: '360px', // 👈 consistent card width
+    width: '360px',
+    height: isAdmin ? '780px' : '485px',
+    maxHeight: '620px',
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(10px)',
     borderRadius: '20px',
@@ -98,7 +103,10 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
     position: 'relative',
     overflow: 'hidden',
-    margin: '0 auto', // 👈 optional: horizontally center card itself
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    paddingBottom: '100px'
   }}
   className="mb-4 text-center text-white p-3"
 >
@@ -151,20 +159,6 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
   {user.data.GradYear && (
     <p className="mb-1 text-sm text-secondary">Class of {user.data.GradYear}</p>
   )}
-  {user.data.JobTitle && (
-    <p className="mb-1">{user.data.JobTitle}</p>
-  )}
-  {user.data.Company && (
-    <p className="mb-1">{user.data.Company}</p>
-  )}
-  {user.data.Bio && (
-    <p className="mb-2 px-3" style={{ fontStyle: 'italic' }}>{user.data.Bio}</p>
-  )}
-  
-
-  {favoriteProjectTitle && (
-    <p className="mb-2"><strong>Favorite Project:</strong> {favoriteProjectTitle}</p>
-  )}
 
   {/* Social Icons */}
   <div className="d-flex justify-content-center gap-3 mb-3 social-icons">
@@ -185,13 +179,30 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
   )}
 </div>
 
+  {user.data.JobTitle && (
+    <p className="mb-1">{user.data.JobTitle}</p>
+  )}
+  {user.data.Company && (
+    <p className="mb-1">{user.data.Company}</p>
+  )}
+  {user.data.CardDescription && (
+    <p className="mb-2 px-3" style={{ fontStyle: 'italic' }}>{user.data.CardDescription}</p>
+  )}
+  
 
-  <Link to="/details" state={{ userUID: user.data.userUID, Dashboard }}>
-  <Button variant="dark" className="w-100 mb-2 custom-btn">See More Details</Button>
-  </Link>
+  {favoriteProjectTitle && (
+    <p className="mb-2"><strong>Favorite Project:</strong> {favoriteProjectTitle}</p>
+  )}
 
 
-  {isAdmin && (
+
+<div style={{
+    position: 'absolute',
+    bottom: '15px',
+    left: '16px',
+    right: '16px',
+  }}>
+    {isAdmin && (
     <>
       <Link to="/update-profile" state={{ userUID: user.data.userUID, Dashboard }}>
         <Button variant="outline-light" className="w-100 mb-2">Update Profile</Button>
@@ -208,7 +219,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
       {user.data.reported && (
         <Button
           variant="outline-warning"
-          className="w-100"
+          className="w-100 mb-2"
           onClick={() => resetReportedStatus?.(user.data.userUID, user.data.reported)}
         >
           Reset Reported Status
@@ -216,6 +227,11 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
       )}
     </>
   )}
+    <Link to="/details" state={{ userUID: user.data.userUID, Dashboard }}>
+      <Button variant="dark" className="w-100 custom-btn">View Profile</Button>
+    </Link>
+  </div>
+  
 </Card>
   );
 };

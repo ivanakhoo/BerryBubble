@@ -106,6 +106,25 @@ export function AuthProvider({ children }) {
         throw error;
       });
   }
+
+  async function upCardDesc(cardDesc, user) {
+    if (!user) {
+      return Promise.reject(new Error("No authenticated user"));
+    }
+  
+    const userRef = doc(db, "users", user.userUID); 
+  
+    return updateDoc(userRef, {
+      CardDescription: cardDesc, 
+    })
+      .then(() => {
+        console.log("Card Description updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating bio:", error);
+        throw error;
+      });
+  }
   
   async function upGradYear(gradYear, user) {
     if (!user) {
@@ -306,7 +325,8 @@ export function AuthProvider({ children }) {
     upGitHub,
     upEmailVerified,
     upCompany,
-    upJobTitle
+    upJobTitle,
+    upCardDesc
   };
 
   return <AuthContext.Provider value={value}>
