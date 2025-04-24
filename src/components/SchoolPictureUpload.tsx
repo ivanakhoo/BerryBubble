@@ -45,11 +45,31 @@ const SchoolPictureUpload: React.FC = () => {
   };
 
   return (
-    <div className="text-center">
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {uploading && <p className="text-light mt-2">Please wait... uploading</p>}
-      {success && <p className="text-green-300 mt-2">Upload successful!</p>}
-    </div>
+    <div>
+    <input
+      type="file"
+      id={`school-picture-upload-${user.uid}`}
+      accept="image/*"
+      onChange={handleImageUpload}
+      style={{ display: "none" }}
+    />
+    <label
+      htmlFor={`school-picture-upload-${user.uid}`}
+      style={{
+        display: "inline-block",
+        padding: "8px 16px",
+        backgroundColor: "#4A90E2",
+        color: "#fff",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontSize: "14px",
+      }}
+    >
+      Upload School Picture
+    </label>
+    {uploading && <p className="text-blue-600 mt-1">Please wait... uploading</p>}
+    {success && <p className="text-green-300 mt-2">Upload successful!</p>}
+  </div>
   );
 };
 

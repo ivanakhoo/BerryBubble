@@ -70,11 +70,11 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
     fetchProjects();
   }, [userUID]);
 
-  const handleDeleteProject = async (projectName: string, userUID: string) => {
+  const handleDeleteProject = async (id: string, userUID: string) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
         const projectsRef = collection(db, "projects");
-        const q = query(projectsRef, where("ProjectName", "==", projectName), where("UserUID", "==", userUID));
+        const q = query(projectsRef, where("id", "==", id), where("UserUID", "==", userUID));
         const querySnapshot = await getDocs(q);
   
         if (querySnapshot.empty) {
@@ -84,8 +84,22 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
 
         const docToDelete = querySnapshot.docs[0]; 
         await deleteDoc(doc(db, "projects", docToDelete.id));
+
+        const userRef = collection(db, "users");
+        const u = query(userRef, where("userUID", "==", userUID));
+        const querySnapshot2 = await getDocs(u);
+
+        if (!querySnapshot2.empty) {
+          const userDoc = querySnapshot2.docs[0];
+          const userData = userDoc.data();
+
+          if (userData.FavoriteProject === id) {
+            await updateDoc(userDoc.ref, { FavoriteProject: "" });
+            console.log("FavoriteProject field cleared.");
+          }
+        }
   
-        setProjects(projects.filter(project => project.ProjectName !== projectName || project.UserUID !== userUID));
+        setProjects(projects.filter(project => project.id !== id || project.UserUID !== userUID));
       } catch (error) {
         console.error("Error deleting project:", error);
         alert("Failed to delete project.");
@@ -153,10 +167,10 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
           {projects.map((project) => (
             
             <Card
-              key={project.ProjectName + project.UserUID}
+              key={project.id + project.UserUID}
               style={{
-                width: '100%',
-                maxWidth: '360px',
+                width: '360px',
+                minHeight: '200px',
                 background: 'rgba(255, 255, 255, 0.05)',
                 backdropFilter: 'blur(10px)',
                 borderRadius: '20px',
@@ -184,7 +198,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                   cursor: isAdmin ? "pointer" : "not-allowed",
                   opacity: isAdmin ? 1 : 0.5,
                 }}
-                disabled={!isAdmin || currentUserUID !== userUID}
+                disabled={!(isAdmin || currentUserUID === userUID)}
               >
                 {favoriteProject === project.id ? "★" : "☆"}
               </Button>
@@ -213,7 +227,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                     </Dropdown.Item>
             
                     <Dropdown.Item
-                      onClick={() => handleDeleteProject(project.ProjectName, project.UserUID)}
+                      onClick={() => handleDeleteProject(project.id, project.UserUID)}
                     >
                       <i className="bi bi-trash me-2 text-danger" /> Delete Project
                     </Dropdown.Item>

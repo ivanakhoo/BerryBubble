@@ -194,64 +194,115 @@ export default function Admin() {
                 ))}
             </div>
             {unverifiedCompanies.length > 0 && (
-                <>
-            <h2 className="text-center mt-4">Unverified Companies</h2>
-            <div className="d-flex flex-wrap justify-content-center">
-                {unverifiedCompanies.map((doc) => (
-                    <div key={doc.id} className="text-center p-3 border rounded m-2">
-                        <img
-                        key={doc.id}
-                        src={doc.data.picture}
-                        alt={`Company ${doc.id}`}
-                        style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                            borderRadius: 8,
-                            margin: "10px"
-                        }}
-                        />
-                        <button 
-                            className="btn btn-success"
-                            onClick={() => updateEntityVerifiedStatus("companies", doc.id, doc.data.verified, setUnverifiedCompanies)}
-                        >
-                            Verify
-                        </button>
-                    </div>
-                ))}
-            </div>
-            </>
-            )}
+  <>
+    <h2 className="text-center mt-4 mb-4" style={{ fontWeight: 700, color: "#1e293b" }}>
+      Unverified Companies
+    </h2>
+    <div className="d-flex flex-wrap justify-content-center gap-3">
+      {unverifiedCompanies.map((doc) => (
+        <div
+          key={doc.id}
+          style={{
+            width: "160px",
+            backgroundColor: "#f8fafc",
+            borderRadius: "20px",
+            padding: "16px",
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
+            textAlign: "center",
+            transition: "transform 0.2s ease-in-out",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          <img
+            src={doc.data.picture}
+            alt={`Company ${doc.id}`}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "cover",
+              borderRadius: "12px",
+              marginBottom: "12px",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
+            }}
+          />
+          <button
+            style={{
+                backgroundColor: "#4A90E2",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                padding: "8px 12px",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                width: "100%",
+                transition: "background 0.2s ease-in-out",
+              }}
+            onClick={() => updateEntityVerifiedStatus("companies", doc.id, doc.data.verified, setUnverifiedCompanies)}
+          >
+            Verify
+          </button>
+        </div>
+      ))}
+    </div>
+  </>
+)}
 
-            {unverifiedSchools.length > 0 && (
-                <>
-                <h2 className="text-center mt-4">Unverified Schools</h2>
-                <div className="d-flex flex-wrap justify-content-center">
-                    {unverifiedSchools.map((doc) => (
-                        <div key={doc.id} className="text-center p-3 border rounded m-2">
-                            <img
-                            key={doc.id}
-                            src={doc.data.picture}
-                            alt={`Company ${doc.id}`}
-                            style={{
-                                width: "100px",
-                                height: "100px",
-                                objectFit: "cover",
-                                borderRadius: 8,
-                                margin: "10px"
-                            }}
-                            />
-                            <button 
-                                className="btn btn-success"
-                                onClick={() => updateEntityVerifiedStatus("schools", doc.id, doc.data.verified, setUnverifiedSchools)}
-                            >
-                                Verify
-                            </button>
-                        </div>
-                    ))}
-                </div>
-                </>
-            )}
+{unverifiedSchools.length > 0 && (
+  <>
+    <h2 className="text-center mt-5 mb-4" style={{ fontWeight: 700, color: "#1e293b" }}>
+      Unverified Schools
+    </h2>
+    <div className="d-flex flex-wrap justify-content-center gap-3">
+      {unverifiedSchools.map((doc) => (
+        <div
+          key={doc.id}
+          style={{
+            width: "160px",
+            backgroundColor: "#f8fafc",
+            borderRadius: "20px",
+            padding: "16px",
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.05)",
+            textAlign: "center",
+            transition: "transform 0.2s ease-in-out",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          <img
+            src={doc.data.picture}
+            alt={`School ${doc.id}`}
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "cover",
+              borderRadius: "12px",
+              marginBottom: "12px",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
+            }}
+          />
+          <button
+            style={{
+                backgroundColor: "#4A90E2",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                padding: "8px 12px",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                width: "100%",
+                transition: "background 0.2s ease-in-out",
+              }}
+            onClick={() => updateEntityVerifiedStatus("schools", doc.id, doc.data.verified, setUnverifiedSchools)}
+          >
+            Verify
+          </button>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+
             
             {reportedUsers.length > 0 && (
                 <>

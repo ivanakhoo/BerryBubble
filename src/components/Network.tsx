@@ -122,24 +122,46 @@ export default function Network() {
         </div>
       </div>
 
-      <div style={{
-        ...sectionStyle,
-        backgroundColor: "var(--primary-blue)",
-        color: "white",
-        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)"
-      }}>
-        <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Upload Your School or Company</h2>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
-          <div style={{ width: "100%", maxWidth: "400px" }}>
-            <h5 style={{ textAlign: "center", marginBottom: "0.5rem", color: "white" }}>School</h5>
-            <SchoolPictureUpload />
-          </div>
-          <div style={{ width: "100%", maxWidth: "400px" }}>
-            <h5 style={{ textAlign: "center", marginBottom: "0.5rem", color: "white" }}>Company</h5>
-            <CompanyPictureUpload />
-          </div>
-        </div>
-      </div>
+      <div
+  style={{
+    backgroundColor: "#ffffff",
+    color: "#1e293b",
+    borderRadius: "20px",
+    padding: "2rem",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
+    maxWidth: "600px",
+    margin: "2rem auto",
+    textAlign: "center",
+  }}
+>
+  <h2
+    style={{
+      fontSize: "1.8rem",
+      fontWeight: 700,
+      marginBottom: "2rem",
+      borderBottom: "2px solid #4A90E2",
+      display: "inline-block",
+      paddingBottom: "4px",
+    }}
+  >
+    Upload Your School or Company
+  </h2>
+
+  <div style={{ display: "flex", flexDirection: "column", gap: "2rem", alignItems: "center" }}>
+    {/* School Upload */}
+    <div style={{ width: "100%", maxWidth: "400px" }}>
+      <h5 style={{ marginBottom: "0.75rem", fontWeight: 600 }}>School</h5>
+        <SchoolPictureUpload />
+    </div>
+
+    {/* Company Upload */}
+    <div style={{ width: "100%", maxWidth: "400px" }}>
+      <h5 style={{ marginBottom: "0.75rem", fontWeight: 600 }}>Company</h5>
+        <CompanyPictureUpload />
+    </div>
+  </div>
+</div>
+
     </div>
   );
 }
