@@ -182,23 +182,38 @@ const ProjectAddForm: React.FC = () => {
       </FormGroup>
 
       <FormGroup>
-        <FormLabel>Technologies</FormLabel>
-        {technologies.map((tech, index) => (
-          <div key={index} className="d-flex align-items-center mb-2">
-            <FormControl
-              type="text"
-              value={tech}
-              onChange={(e) => handleTechnologyChange(index, e.target.value)}
-              placeholder="Enter technology"
-              className={`me-2 ${techError && tech.trim() === "" ? "border-danger" : ""}`}
-              required
-            />
-            <Button variant="danger" onClick={() => removeTechnology(index)}>Remove</Button>
-          </div>
-        ))}
-        {techError && <small className="text-danger">All technology fields must be filled.</small>}
-        <Button variant="secondary" onClick={addTechnology} className="mt-2">+ Add Technology</Button>
-      </FormGroup>
+      <FormLabel>Technologies</FormLabel>
+
+      {technologies.length > 0 ? (
+        <>
+          {technologies.map((tech, index) => (
+            <div key={index} className="d-flex align-items-center mb-2">
+              <FormControl
+                type="text"
+                value={tech}
+                onChange={(e) => handleTechnologyChange(index, e.target.value)}
+                placeholder="Enter technology"
+                className={`me-2 ${techError && tech.trim() === "" ? "border-danger" : ""}`}
+                required
+              />
+              <Button variant="danger" onClick={() => removeTechnology(index)}>Remove</Button>
+            </div>
+          ))}
+          {techError && <small className="text-danger">All technology fields must be filled.</small>}
+        </>
+      ) : (
+        <div className="mt-2 mb-2">
+          <Button variant="secondary" onClick={addTechnology}>+ Add Technology</Button>
+        </div>
+      )}
+
+      {technologies.length > 0 && (
+        <Button variant="secondary" onClick={addTechnology} className="mt-2">
+          + Add Technology
+        </Button>
+      )}
+    </FormGroup>
+
 
       <Button disabled={loading} className="w-100 mt-3" type="submit">
         {projectID ? "Save Changes" : "Create Project"}

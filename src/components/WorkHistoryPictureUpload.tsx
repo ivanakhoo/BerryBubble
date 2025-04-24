@@ -1,17 +1,21 @@
+import React, { useRef, useState } from "react";
 import axios from "axios";
 // @ts-ignore
 import { db, auth } from "../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc } from "firebase/firestore";
 
 const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_URL as string;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 
 interface WorkHistoryPictureUploadProps {
   companyID: string;
+  onUploadComplete: (url: string) => void;
 }
 
-const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ companyID }) => {
+const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ companyID, onUploadComplete }) => {
+  const [uploading, setUploading] = useState(false);
   const user = auth.currentUser;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -21,16 +25,23 @@ const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ com
     formData.append("file", file);
     formData.append("upload_preset", UPLOAD_PRESET);
 
+    setUploading(true);
     try {
       const response = await axios.post<{ secure_url: string }>(CLOUDINARY_URL, formData);
       const uploadedImageUrl = response.data.secure_url;
 
-      const docRef = doc(db, "history", companyID);
-      await updateDoc(docRef, { picture: uploadedImageUrl });
-
-      console.log("Project picture updated!");
+      const q = query(collection(db, "history"), where("id", "==", companyID));
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        await updateDoc(docRef, { picture: uploadedImageUrl });
+        onUploadComplete(uploadedImageUrl);
+        console.log("Company logo updated!");
+      }
     } catch (error) {
       console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -38,13 +49,13 @@ const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ com
     <div>
       <input
         type="file"
-        id={`project-picture-upload-${companyID}`}
+        ref={fileInputRef}
         accept="image/*"
         onChange={handleImageUpload}
         style={{ display: "none" }}
       />
-      <label
-        htmlFor={`project-picture-upload-${companyID}`}
+      <div
+        onClick={() => fileInputRef.current?.click()}
         style={{
           display: "inline-block",
           padding: "8px 16px",
@@ -53,10 +64,12 @@ const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ com
           borderRadius: "4px",
           cursor: "pointer",
           fontSize: "14px",
+          textAlign: "center",
         }}
       >
         Upload Company Logo
-      </label>
+      </div>
+      {uploading && <p className="text-blue-300 mt-1">Please wait... uploading</p>}
     </div>
   );
 };

@@ -6,6 +6,9 @@ import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import ProjectPictureUpload from "./ProjectPictureUpload";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Dropdown } from "react-bootstrap";
+import { forwardRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectsProps {
   userUID: string;
@@ -26,6 +29,7 @@ interface Project {
 const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [favoriteProject, setFavoriteProject] = useState<string | null>(null); // Store the FavoriteProject
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserFavorite = async () => {
@@ -96,6 +100,27 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
       )
     );
   };
+
+  const CustomToggle = forwardRef(({ onClick }: any, ref: any) => (
+    <button
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+      style={{
+        all: "unset", 
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "36px",
+        height: "36px",
+      }}
+    >
+      <i className="bi bi-three-dots-vertical" style={{ fontSize: "1.2rem", color: "#2E3A59" }}></i>
+    </button>
+  ));
   
 
 
@@ -126,161 +151,146 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
       {projects.length > 0 ? (
         <div>
           {projects.map((project) => (
+            
             <Card
-            key={project.ProjectName + project.UserUID}
-            style={{
-              width: '100%',
-              maxWidth: '360px', 
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-              position: 'relative',
-              overflow: 'hidden',
-              margin: '0 auto', 
-            }}
-            className="mb-4 text-center text-white p-3"
-          >
-            {/* Favorite Star */}
-            <Button
-              variant="link"
-              onClick={isAdmin ? () => handleFavoriteToggle(project.id) : undefined}
+              key={project.ProjectName + project.UserUID}
               style={{
-                position: "absolute",
-                top: "1px",
-                right: "8px",
-                fontSize: "1.75rem",
-                color: favoriteProject === project.id ? "#ffc107" : "#ccc",
-                textDecoration: "none",
-                zIndex: 1,
-                cursor: isAdmin ? "pointer" : "not-allowed",
-                opacity: isAdmin ? 1 : 0.5,
+                width: '100%',
+                maxWidth: '360px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(10px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                position: 'relative',
+                overflow: 'hidden',
+                margin: '0 auto',
               }}
-              disabled={!isAdmin || currentUserUID !== userUID}
+              className="mb-4 text-center text-white p-3"
             >
-              {favoriteProject === project.id ? "★" : "☆"}
-            </Button>
-
-          
-            {/* Project Name */}
-            <h4 className="text-center mb-3">{project.ProjectName}</h4>
-          
-            {/* Project Image */}
-            {project.CoverPicture && (
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
-                <img
-                  src={
-                    project.CoverPicture ||
-                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                  }
-                  alt="Project"
-                  style={{
-                    width: "140px",
-                    height: "140px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: "4px solid #e2e8f0",
-                  }}
-                />
-              </div>
-            )}
-          
-            {/* Summary */}
-            <p className="text-muted">{project.Summary}</p>
-
-            {project.ProjectLink && (
-              <a
-                href={project.ProjectLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Open Project"
-                style={{ textDecoration: 'none', color: 'inherit', marginLeft: '8px' }}
-              >
-                <i className="bi bi-link" style={{ fontSize: '1.3rem' }}></i>
-              </a>
-            )}
-          
-            {/* Technologies */}
-            {project?.Technologies && project.Technologies.length > 0 && (
-              <>
-                <p className="fw-bold mt-3 mb-2">Technologies:</p>
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "8px",
-                  }}
-                >
-                  {project.Technologies.map((tech: string, index: number) => (
-                    <span
-                      key={index}
-                      style={{
-                        backgroundColor: "#f1f5f9",
-                        color: "#1e293b",
-                        padding: "6px 12px",
-                        borderRadius: "999px",
-                        fontSize: "0.8rem",
-                        fontWeight: 600,
-                        fontFamily: "monospace",
-                        border: "1px solid #cbd5e1",
-                        transition: "0.2s",
-                        cursor: "default",
-                      }}
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
-          
-            {/* Admin Tools */}
-            {(isAdmin || currentUserUID === project.UserUID) && (
-            <>
-              {/* Pencil Edit Icon */}
-              <Link
-                to="/add-project"
-                state={{ projectID: project.id, userUID: userUID }}
+            
+              {/* Favorite Star - Top Left */}
+              <Button
+                variant="link"
+                onClick={isAdmin ? () => handleFavoriteToggle(project.id) : undefined}
                 style={{
                   position: "absolute",
-                  top: "12px",
-                  left: "20px", 
+                  top: "6px",
+                  left: "12px",
+                  fontSize: "1.75rem",
+                  color: favoriteProject === project.id ? "#ffc107" : "#ccc",
+                  textDecoration: "none",
                   zIndex: 2,
-                  color: "gray",
-                  fontSize: "1.5rem",
-                  textDecoration: "none"
+                  cursor: isAdmin ? "pointer" : "not-allowed",
+                  opacity: isAdmin ? 1 : 0.5,
                 }}
-                title="Edit Project"
+                disabled={!isAdmin || currentUserUID !== userUID}
               >
-                <i className="bi bi-pencil-square"></i>
-              </Link>
-
-              {/* Admin Tools */}
-              <div className="mt-4 d-flex flex-column align-items-start gap-2">
-                <ProjectPictureUpload
-                  id={project.id}
-                  onUploadComplete={(url) => handleProjectPictureUpdate(project.id, url)}
-                />
-
-                <i
-                  className="bi bi-trash"
-                  title="Delete Project"
-                  onClick={() => handleDeleteProject(project.ProjectName, project.UserUID)}
-                  style={{
-                    position: "absolute",
-                    top: "12px",
-                    left: "45px",
-                    fontSize: "1.5rem",
-                    color: "#dc3545",
-                    cursor: "pointer",
-                    zIndex: 2,
-                  }}
-                ></i>
-              </div>
-            </>
-          )}
-          </Card>
+                {favoriteProject === project.id ? "★" : "☆"}
+              </Button>
+            
+              {/* Dropdown - Top Right */}
+              {(isAdmin || currentUserUID === project.UserUID) && (
+                <Dropdown style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10 }}>
+                  <Dropdown.Toggle as={CustomToggle} />
+            
+                  <Dropdown.Menu>
+                    <Dropdown.Item as="div">
+                      <ProjectPictureUpload
+                        id={project.id}
+                        onUploadComplete={(url) => handleProjectPictureUpdate(project.id, url)}
+                      />
+                    </Dropdown.Item>
+            
+                    <Dropdown.Item
+                      onClick={() =>
+                        navigate("/add-project", {
+                          state: { projectID: project.id, userUID: userUID },
+                        })
+                      }
+                    >
+                      <i className="bi bi-pencil-square me-2 text-primary" /> Edit Project
+                    </Dropdown.Item>
+            
+                    <Dropdown.Item
+                      onClick={() => handleDeleteProject(project.ProjectName, project.UserUID)}
+                    >
+                      <i className="bi bi-trash me-2 text-danger" /> Delete Project
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
+            
+              {/* Project Name */}
+              <h4 className="text-center mb-3">{project.ProjectName}</h4>
+            
+              {/* Project Image */}
+              {project.CoverPicture && (
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
+                  <img
+                    src={project.CoverPicture}
+                    alt="Project"
+                    style={{
+                      width: "140px",
+                      height: "140px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      border: "4px solid #e2e8f0",
+                    }}
+                  />
+                </div>
+              )}
+            
+              {/* Summary */}
+              <p className="text-muted">{project.Summary}</p>
+            
+              {project.ProjectLink && (
+                <a
+                  href={project.ProjectLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open Project"
+                  style={{ textDecoration: 'none', color: 'inherit', marginLeft: '8px' }}
+                >
+                  <i className="bi bi-link" style={{ fontSize: '1.3rem' }}></i>
+                </a>
+              )}
+            
+              {/* Technologies */}
+              {project?.Technologies && project.Technologies.length > 0 && (
+                <>
+                  <p className="fw-bold mt-3 mb-2">Technologies:</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "8px",
+                    }}
+                  >
+                    {project.Technologies.map((tech: string, index: number) => (
+                      <span
+                        key={index}
+                        style={{
+                          backgroundColor: "#f1f5f9",
+                          color: "#1e293b",
+                          padding: "6px 12px",
+                          borderRadius: "999px",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          fontFamily: "monospace",
+                          border: "1px solid #cbd5e1",
+                          transition: "0.2s",
+                          cursor: "default",
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+            </Card>
+            
           
           ))}
         </div>

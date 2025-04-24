@@ -20,7 +20,7 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 ### Features
 
-- Expand report user
+- Input validation for class year
 
 - Buttons for grad years for search selection
 

@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
+import { forwardRef, useEffect, useState } from "react";
+import { Button, Card, Dropdown } from "react-bootstrap";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
 import WorkHistoryPictureUpload from "./WorkHistoryPictureUpload";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { useNavigate } from "react-router-dom";
 
 interface History {
   UserUID: string;
@@ -26,6 +27,7 @@ interface HistoryProps {
 
 const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID }) => {
   const [workHistory, setWorkHistory] = useState<History[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWork = async () => {
@@ -53,6 +55,14 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
     fetchWork();
   }, [userUID]);
 
+  const handleWorkPictureUpdate = (companyId: string, newUrl: string) => {
+    setWorkHistory(prev =>
+      prev.map(p =>
+        p.id === companyId ? { ...p, picture: newUrl } : p
+      )
+    );
+  };
+
   const handleDeleteWorkHistory = async (id: string) => {
     try {
       await deleteDoc(doc(db, "history", id));
@@ -62,14 +72,35 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
     }
   };
 
+  const CustomToggle = forwardRef(({ onClick }: any, ref: any) => (
+    <button
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+      style={{
+        all: "unset", 
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "36px",
+        height: "36px",
+      }}
+    >
+      <i className="bi bi-three-dots-vertical" style={{ fontSize: "1.2rem", color: "#2E3A59" }}></i>
+    </button>
+  ));
+
   return (
     <div className="mt-4">
-      <h1 className="text-center mt-4">Work History</h1>
+      <h1 className="text-center mt-4">Experience</h1>
 
       {(isAdmin || currentUserUID === userUID) && (
         <div style={{ textAlign: 'center', marginBottom: '10px' }}>
           <Link to="/add-history" state={{ userUID }}>
-            <Button variant="dark" className="mt-2">Add Work History</Button>
+            <Button variant="dark" className="mt-2">Add Experience</Button>
           </Link>
         </div>
       )}
@@ -78,74 +109,80 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
         <div>
           {workHistory.map((entry) => (
             <Card
-              key={entry.id}
-              style={{
-                width: '100%',
-                maxWidth: '360px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                position: 'relative',
-                overflow: 'hidden',
-                margin: '0 auto',
-              }}
-              className="mb-4 text-center text-white p-3"
-            >
-              {/* Image */}
-              {entry.picture && (
-                <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
-                  <img
-                    src={entry.picture}
-                    alt="Company"
-                    style={{
-                      width: "140px",
-                      height: "140px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      border: "4px solid #e2e8f0",
-                    }}
-                  />
-                </div>
-              )}
+            key={entry.id}
+            style={{
+              width: '100%',
+              maxWidth: '360px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              position: 'relative',
+              overflow: 'hidden',
+              margin: '0 auto',
+            }}
+            className="mb-4 text-center text-white p-3"
+          >
+            {/* Dropdown for Admin Actions */}
+            {(isAdmin || currentUserUID === entry.UserUID) && (
+              <Dropdown style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10 }}>
+                <Dropdown.Toggle as={CustomToggle} />
+          
+                <Dropdown.Menu>
+                <Dropdown.Item as="div">
+                  <WorkHistoryPictureUpload companyID={entry.id} 
+                  onUploadComplete={(url) => handleWorkPictureUpdate(entry.id, url)}/>
+                </Dropdown.Item>
 
-              {/* Company + Role */}
-              <h3 className="text-muted mb-2">{entry.CompanyName}</h3>
-              <h4 className="text-muted mb-3">{entry.Role}</h4>
-
-              <p>{entry.Description}</p>
-
-              {/* Dates */}
-              <p className="mb-1">
-                <i className="bi bi-calendar3" /> {entry.StartDate} – {entry.EndDate}
-              </p>
-
-              {/* Admin Actions */}
-              {(isAdmin || currentUserUID === entry.UserUID) && (
-                <div className="mt-4 d-flex flex-column align-items-start gap-2">
-                  <WorkHistoryPictureUpload companyID={entry.id} />
-
-                  <Link
-                    to="/add-history"
-                    state={{ companyID: entry.id, userUID }}
-                    className="w-100"
+          
+                  <Dropdown.Item
+                    onClick={() =>
+                      navigate("/add-history", {
+                        state: { companyID: entry.id, userUID },
+                      })
+                    }
                   >
-                    <Button variant="dark" className="w-100">
-                      Edit Work History
-                    </Button>
-                  </Link>
-
-                  <Button
-                    variant="danger"
-                    className="w-100"
+                    <i className="bi bi-pencil-square me-2 text-primary" /> Edit Experience
+                  </Dropdown.Item>
+          
+                  <Dropdown.Item
                     onClick={() => handleDeleteWorkHistory(entry.id)}
                   >
-                    Delete
-                  </Button>
-                </div>
-              )}
-            </Card>
+                    <i className="bi bi-trash me-2 text-danger" /> Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+          
+            {/* Image */}
+            {entry.picture && (
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
+                <img
+                  src={entry.picture}
+                  alt="Company"
+                  style={{
+                    width: "140px",
+                    height: "140px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "4px solid #e2e8f0",
+                  }}
+                />
+              </div>
+            )}
+          
+            {/* Company + Role */}
+            <h3 className="text-muted mb-2">{entry.CompanyName}</h3>
+            <h4 className="text-muted mb-3">{entry.Role}</h4>
+          
+            <p>{entry.Description}</p>
+          
+            {/* Dates */}
+            <p className="mb-1">
+              <i className="bi bi-calendar3" /> {entry.StartDate} – {entry.EndDate}
+            </p>
+          </Card>
           ))}
         </div>
       ) : (

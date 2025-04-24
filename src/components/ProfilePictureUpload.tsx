@@ -41,10 +41,30 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProp> = ({ UserUID, onU
   };
 
   return (
-    <div className="text-center">
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {uploading && <p className="text-blue-600 mt-2">Please wait... uploading</p>}
-    </div>
+    <div>
+    <input
+      type="file"
+      id={`profile-picture-upload-${UserUID}`}
+      accept="image/*"
+      onChange={handleImageUpload}
+      style={{ display: "none" }}
+    />
+    <label
+      htmlFor={`profile-picture-upload-${UserUID}`}
+      style={{
+        display: "inline-block",
+        padding: "8px 16px",
+        backgroundColor: "#4A90E2",
+        color: "#fff",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontSize: "14px",
+      }}
+    >
+      Upload Profile Picture
+    </label>
+    {uploading && <p className="text-blue-600 mt-1">Please wait... uploading</p>}
+  </div>
   );
 };
 

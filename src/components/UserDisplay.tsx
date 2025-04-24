@@ -1,7 +1,7 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { Dropdown } from "react-bootstrap"
@@ -41,6 +41,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
   const profileImg = user.data.profilePic 
     || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     const [favoriteProjectTitle, setFavoriteProjectTitle] = useState<string>("");
+    const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -65,9 +66,6 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
 
   }, [user.data.FavoriteProject]);
 
-  
-
-  // Custom toggle to remove triangle
   const CustomToggle = forwardRef(({ onClick }: any, ref: any) => (
     <button
       ref={ref}
@@ -76,7 +74,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
         onClick(e);
       }}
       style={{
-        all: "unset", // removes ALL default button styles (border, bg, outline)
+        all: "unset", 
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
@@ -94,7 +92,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     <Card
   style={{
     width: '360px',
-    height: isAdmin ? '780px' : '485px',
+    height:'485px',
     maxHeight: '620px',
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(10px)',
@@ -117,21 +115,51 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
   <Dropdown.Toggle as={CustomToggle} />
 
   <Dropdown.Menu>
+  {isAdmin && (<Dropdown.Item
+    onClick={() => {
+      navigate("/update-profile", {
+        state: { userUID: user.data.userUID, Dashboard },
+      });
+    }}
+  >
+    <i className="bi bi-pencil me-2 text-primary" /> Update Profile
+  </Dropdown.Item>)}
+
+  {isAdmin && (
     <Dropdown.Item
-      onClick={async () => {
-        try {
-          const userRef = doc(db, "users", user.id);
-          await updateDoc(userRef, { reported: true });
-          user.data.reported = true;
-          alert("User has been reported.");
-        } catch (error) {
-          console.error("Error reporting user:", error);
-        }
-      }}
+    onClick={() => updateVerifiedStatus?.(user.data.userUID, user.data.verified)}
+  >
+    <i className={`bi ${user.data.verified ? "bi-person-dash" : "bi-person-check"} me-2 text-success`} />
+    {user.data.verified ? "Deactivate User" : "Activate User"}
+  </Dropdown.Item>)}
+
+  {(user.data.reported && isAdmin) && (
+    <Dropdown.Item
+      onClick={() => resetReportedStatus?.(user.data.userUID, user.data.reported)}
     >
-      <i className="bi bi-flag-fill me-2 text-danger" /> Report User
+      <i className="bi bi-arrow-counterclockwise me-2 text-warning" /> Reset Reported Status
     </Dropdown.Item>
-  </Dropdown.Menu>
+  )}
+
+  {isAdmin && (
+    <Dropdown.Divider />)}
+
+  <Dropdown.Item
+    onClick={async () => {
+      try {
+        const userRef = doc(db, "users", user.id);
+        await updateDoc(userRef, { reported: true });
+        user.data.reported = true;
+        alert("User has been reported.");
+      } catch (error) {
+        console.error("Error reporting user:", error);
+      }
+    }}
+  >
+    <i className="bi bi-flag-fill me-2 text-danger" /> Report User
+  </Dropdown.Item>
+</Dropdown.Menu>
+
 </Dropdown>
 
 
@@ -202,31 +230,6 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     left: '16px',
     right: '16px',
   }}>
-    {isAdmin && (
-    <>
-      <Link to="/update-profile" state={{ userUID: user.data.userUID, Dashboard }}>
-        <Button variant="outline-light" className="w-100 mb-2">Update Profile</Button>
-      </Link>
-
-      <Button
-        variant="outline-success"
-        className="w-100 mb-2"
-        onClick={() => updateVerifiedStatus?.(user.data.userUID, user.data.verified)}
-      >
-        {user.data.verified ? "Deactivate User" : "Activate User"}
-      </Button>
-
-      {user.data.reported && (
-        <Button
-          variant="outline-warning"
-          className="w-100 mb-2"
-          onClick={() => resetReportedStatus?.(user.data.userUID, user.data.reported)}
-        >
-          Reset Reported Status
-        </Button>
-      )}
-    </>
-  )}
     <Link to="/details" state={{ userUID: user.data.userUID, Dashboard }}>
       <Button variant="dark" className="w-100 custom-btn">View Profile</Button>
     </Link>
