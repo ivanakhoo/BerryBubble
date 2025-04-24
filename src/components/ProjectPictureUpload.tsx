@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 // @ts-ignore
 import { db, auth } from "../firebase";
@@ -14,6 +14,7 @@ interface ProjectPictureUploadProps {
 
 const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id, onUploadComplete }) => {
   const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const user = auth.currentUser;
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,26 +49,24 @@ const ProjectPictureUpload: React.FC<ProjectPictureUploadProps> = ({ id, onUploa
     <div>
       <input
         type="file"
-        id={`project-picture-upload-${id}`}
+        ref={fileInputRef}
         accept="image/*"
         onChange={handleImageUpload}
         style={{ display: "none" }}
       />
-      <label
-        htmlFor={`project-picture-upload-${id}`}
-        style={{
-          display: "inline-block",
-          padding: "8px 16px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontSize: "14px",
-        }}
+      <div
+        className="d-flex d-flex align-items-center dropdown-item"
+        onClick={() => fileInputRef.current?.click()}
+        style={{ cursor: "pointer", padding: 0 }}
       >
-        Upload Project Picture
-      </label>
-      {uploading && <p className="text-blue-600 mt-1">Please wait... uploading</p>}
+        <i className="bi bi-upload me-2" style={{ fontSize: "1rem" }} />
+        <span>Upload Project Picture</span>
+      </div>
+      {uploading && (
+        <p className="text-muted mb-0 ps-5" style={{ fontSize: "0.85rem" }}>
+          Please wait... uploading
+        </p>
+      )}
     </div>
   );
 };

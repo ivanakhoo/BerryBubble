@@ -22,13 +22,9 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 - GRadYear does not load in updateProfile
 
-- Fix spacing for the project name and star
-
 ### Features
 
 - Buttons for grad years for search selection
-
-- Finish out the details page formatting
 
 - change color of dropdown to the var gray as well as other buttons
 

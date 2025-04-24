@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useState } from "react";
-import { Button, Card, Dropdown } from "react-bootstrap";
+import { Card, Dropdown } from "react-bootstrap";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase";
@@ -95,24 +95,40 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
 
   return (
     <div className="mt-4">
-      <h1 className="text-center mt-4">Experience</h1>
 
-      {(isAdmin || currentUserUID === userUID) && (
-        <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-          <Link to="/add-history" state={{ userUID }}>
-            <Button variant="dark" className="mt-2">Add Experience</Button>
-          </Link>
-        </div>
-      )}
+<div className="d-flex justify-content-center align-items-baseline mb-3" style={{ gap: "8px" }}>
+  <h1 className="text-center mb-4">Experience</h1>
+  {(isAdmin || currentUserUID === userUID) && (
+    <Link
+      to="/add-history"
+      state={{ userUID }}
+      style={{ textDecoration: "none" }}
+    >
+      <span
+        style={{
+          fontSize: "1.75rem",
+          color: "#2E3A59",
+          cursor: "pointer",
+          position: "relative",
+          top: "-2px",
+        }}
+        title="Add Experience"
+      >
+        +
+      </span>
+    </Link>
+  )}
+</div>
 
       {workHistory.length > 0 ? (
-        <div>
+        <div className="d-flex flex-wrap justify-content-center" style={{maxWidth:'900px', margin: "0 auto"}}>
           {workHistory.map((entry) => (
+            <div key={entry.CompanyName + entry.id} className="p-2">
             <Card
             key={entry.id}
             style={{
-              width: '100%',
-              maxWidth: '360px',
+              width: '360px',
+              minHeight: '200px',
               background: 'rgba(255, 255, 255, 0.05)',
               backdropFilter: 'blur(10px)',
               borderRadius: '20px',
@@ -131,11 +147,12 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
           
                 <Dropdown.Menu>
                 <Dropdown.Item as="div">
-                  <WorkHistoryPictureUpload companyID={entry.id} 
-                  onUploadComplete={(url) => handleWorkPictureUpdate(entry.id, url)}/>
+                  <WorkHistoryPictureUpload
+                    companyID={entry.id}
+                    onUploadComplete={(url) => handleWorkPictureUpdate(entry.id, url)}
+                  />
                 </Dropdown.Item>
 
-          
                   <Dropdown.Item
                     onClick={() =>
                       navigate("/add-history", {
@@ -183,6 +200,7 @@ const WorkHistory: React.FC<HistoryProps> = ({ userUID, isAdmin, currentUserUID 
               <i className="bi bi-calendar3" /> {entry.StartDate} – {entry.EndDate}
             </p>
           </Card>
+          </div>
           ))}
         </div>
       ) : (

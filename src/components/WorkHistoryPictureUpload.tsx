@@ -47,30 +47,31 @@ const WorkHistoryPictureUpload: React.FC<WorkHistoryPictureUploadProps> = ({ com
 
   return (
     <div>
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept="image/*"
-        onChange={handleImageUpload}
-        style={{ display: "none" }}
-      />
-      <div
-        onClick={() => fileInputRef.current?.click()}
-        style={{
-          display: "inline-block",
-          padding: "8px 16px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontSize: "14px",
-          textAlign: "center",
-        }}
-      >
-        Upload Company Logo
-      </div>
-      {uploading && <p className="text-blue-300 mt-1">Please wait... uploading</p>}
-    </div>
+  <input
+    type="file"
+    ref={fileInputRef}
+    accept="image/*"
+    onChange={handleImageUpload}
+    style={{ display: "none" }}
+  />
+  <div
+  className="d-flex align-items-center dropdown-item"
+  onClick={() => fileInputRef.current?.click()}
+  style={{ cursor: "pointer", padding: 0 }} 
+>
+  <i className="bi bi-upload me-2" style={{ fontSize: "1rem" }} />
+  <span>Upload Company Logo</span>
+</div>
+
+
+  {uploading && (
+    <p className="text-muted mb-0 ps-5" style={{ fontSize: "0.85rem" }}>
+      Please wait... uploading
+    </p>
+  )}
+</div>
+
+
   );
 };
 

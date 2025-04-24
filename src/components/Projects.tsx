@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { collection, query, where, getDocs, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 // @ts-ignore
 import { db } from "../firebase"; 
@@ -153,55 +153,49 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
   };
   
   return (
-    <div className="mt-4">
-      <h1 className="text-center mt-4">Projects</h1>
-      {(isAdmin || currentUserUID === userUID) && (
-      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-      <Link to="/add-project" state={{ userUID: userUID }}>
-        <Button variant="dark" className="mt-2">Add Project</Button>
-      </Link>
-    </div>
-                        )}
+    <div className="mt-2">
+      <div className="d-flex justify-content-center align-items-baseline mb-3" style={{ gap: "8px" }}>
+  <h1 className="text-center mb-4">Projects</h1>
+  {(isAdmin || currentUserUID === userUID) && (
+    <Link
+      to="/add-project"
+      state={{ userUID }}
+      style={{ textDecoration: "none" }}
+    >
+      <span
+        style={{
+          fontSize: "1.75rem",
+          color: "#2E3A59",
+          cursor: "pointer",
+          position: "relative",
+          top: "-2px",
+        }}
+        title="Add Project"
+      >
+        +
+      </span>
+    </Link>
+  )}
+</div>
+
       {projects.length > 0 ? (
-        <div>
+          <div className="d-flex flex-wrap justify-content-center" style={{maxWidth:'900px', margin: "0 auto"}}>
           {projects.map((project) => (
-            
-            <Card
-              key={project.id + project.UserUID}
-              style={{
-                width: '360px',
-                minHeight: '200px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '20px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-                position: 'relative',
-                overflow: 'hidden',
-                margin: '0 auto',
-              }}
-              className="mb-4 text-center text-white p-3"
-            >
-            
-              {/* Favorite Star - Top Left */}
-              <Button
-                variant="link"
-                onClick={isAdmin ? () => handleFavoriteToggle(project.id) : undefined}
+            <div key={project.id + project.UserUID} className="p-2">
+              <Card
                 style={{
-                  position: "absolute",
-                  top: "6px",
-                  left: "12px",
-                  fontSize: "1.75rem",
-                  color: favoriteProject === project.id ? "#ffc107" : "#ccc",
-                  textDecoration: "none",
-                  zIndex: 2,
-                  cursor: isAdmin ? "pointer" : "not-allowed",
-                  opacity: isAdmin ? 1 : 0.5,
+                  width: '360px',
+                  minHeight: '200px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                  position: 'relative',
+                  overflow: 'hidden',
                 }}
-                disabled={!(isAdmin || currentUserUID === userUID)}
+                className="text-center text-white p-3"
               >
-                {favoriteProject === project.id ? "★" : "☆"}
-              </Button>
             
               {/* Dropdown - Top Right */}
               {(isAdmin || currentUserUID === project.UserUID) && (
@@ -209,13 +203,30 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                   <Dropdown.Toggle as={CustomToggle} />
             
                   <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={() => handleFavoriteToggle(project.id)}
+                    disabled={!(isAdmin || currentUserUID === userUID)}
+                  >
+                    {favoriteProject === project.id ? (
+                      <>
+                        <i className="bi bi-star-fill me-2 text-warning" />
+                        Favorite Project
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-star me-2 text-secondary" />
+                        Mark as Favorite
+                      </>
+                    )}
+                  </Dropdown.Item>
+
                     <Dropdown.Item as="div">
                       <ProjectPictureUpload
                         id={project.id}
                         onUploadComplete={(url) => handleProjectPictureUpdate(project.id, url)}
                       />
                     </Dropdown.Item>
-            
+                    
                     <Dropdown.Item
                       onClick={() =>
                         navigate("/add-project", {
@@ -304,7 +315,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                 </>
               )}
             </Card>
-            
+            </div>
           
           ))}
         </div>
