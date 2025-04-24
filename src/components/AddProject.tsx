@@ -157,6 +157,7 @@ const ProjectAddForm: React.FC = () => {
           onChange={(e) => setProjectName(e.target.value)}
           placeholder="Enter project name"
           required
+          maxLength={30}
         />
       </FormGroup>
 
@@ -168,6 +169,7 @@ const ProjectAddForm: React.FC = () => {
           onChange={(e) => setSummary(e.target.value)}
           placeholder="Enter project summary"
           required
+          maxLength={150}
         />
       </FormGroup>
 
@@ -195,6 +197,7 @@ const ProjectAddForm: React.FC = () => {
                 placeholder="Enter technology"
                 className={`me-2 ${techError && tech.trim() === "" ? "border-danger" : ""}`}
                 required
+                maxLength={15}
               />
               <Button variant="danger" onClick={() => removeTechnology(index)}>Remove</Button>
             </div>

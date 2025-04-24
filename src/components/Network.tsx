@@ -82,7 +82,7 @@ export default function Network() {
     <div style={containerStyle}>
       <h1 style={{
         textAlign: "center",
-        fontWeight: 700,
+        fontWeight: 550,
         fontSize: isMobile ? "2rem" : "2.5rem",
         color: "var(--primary-blue)",
         marginBottom: "2rem"
@@ -150,13 +150,13 @@ export default function Network() {
   <div style={{ display: "flex", flexDirection: "column", gap: "2rem", alignItems: "center" }}>
     {/* School Upload */}
     <div style={{ width: "100%", maxWidth: "400px" }}>
-      <h5 style={{ marginBottom: "0.75rem", fontWeight: 600 }}>School</h5>
+      <h3 style={{ marginBottom: "0.75rem", fontWeight: 600 }}>School</h3>
         <SchoolPictureUpload />
     </div>
 
     {/* Company Upload */}
     <div style={{ width: "100%", maxWidth: "400px" }}>
-      <h5 style={{ marginBottom: "0.75rem", fontWeight: 600 }}>Company</h5>
+      <h3 style={{ marginBottom: "0.75rem", fontWeight: 600 }}>Company</h3>
         <CompanyPictureUpload />
     </div>
   </div>

@@ -18,6 +18,8 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 ### Bug Fixes
 
+- Get Reset Reported to not appear elsewhere or to work everywhere
+
 ### Features
 
 - Input validation for class year

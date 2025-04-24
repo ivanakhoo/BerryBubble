@@ -19,7 +19,7 @@ export default function UpdateProfile() {
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
     const bioRef = useRef<HTMLTextAreaElement>(null); 
     const cardDescRef = useRef<HTMLTextAreaElement>(null); 
-    const gradYearRef = useRef<HTMLInputElement>(null); 
+    const gradYearRef = useRef<HTMLSelectElement>(null);
     const firstRef = useRef<HTMLInputElement>(null); 
     const lastRef = useRef<HTMLInputElement>(null); 
     const displayRef = useRef<HTMLInputElement>(null); 
@@ -293,10 +293,20 @@ export default function UpdateProfile() {
                           <FormControl as="textarea" ref={bioRef} maxLength={500} defaultValue={user?.Bio} placeholder="Enter your bio." />
                       </FormGroup>
 
-                      <FormGroup id="gradYear">
-                          <FormLabel>Graduation Year</FormLabel>
-                          <FormControl type="text" ref={gradYearRef} maxLength={4} required defaultValue={user?.GradYear} placeholder="Enter your graduation year." />
-                      </FormGroup>
+                     <FormGroup id="gradYear">
+                        <FormLabel>Graduation Year</FormLabel>
+                        <Form.Select ref={gradYearRef} required defaultValue={user?.GradYear || ""}>
+                            <option value="">Select your graduation year</option>
+                            {Array.from(
+                            { length: new Date().getFullYear() + 4 - 1950 + 1 },
+                            (_, i) => (new Date().getFullYear() + 4 - i).toString()
+                            ).map((year) => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                            ))}
+                        </Form.Select>
+                        </FormGroup>
 
                       <FormGroup id="JobTitle">
                           <FormLabel>Job Title</FormLabel>

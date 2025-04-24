@@ -112,6 +112,9 @@ const WorkAddForm: React.FC = () => {
     }
   };
 
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: currentYear - 1950 + 1 }, (_, i) => (1950 + i).toString()).reverse();
+
   return  (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <div style={{ width: '100%', maxWidth: '600px' }}>
@@ -144,6 +147,7 @@ const WorkAddForm: React.FC = () => {
               onChange={(e) => setCompanyName(e.target.value)}
               placeholder="Enter company name"
               required
+              maxLength={20}
             />
           </FormGroup>
 
@@ -155,40 +159,43 @@ const WorkAddForm: React.FC = () => {
               onChange={(e) => setRole(e.target.value)}
               placeholder="Enter role"
               required
+              maxLength={20}
             />
           </FormGroup>
 
           <FormGroup className="mb-3">
             <FormLabel>Description</FormLabel>
             <FormControl
-              type="text"
+              as="textarea"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="(Optional) Enter description (250 character limit)"
+              maxLength={250}
             />
           </FormGroup>
 
           <FormGroup className="mb-3">
-            <FormLabel>Start Date</FormLabel>
-            <FormControl
-              type="text"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              placeholder="Enter start date"
-              required
-            />
+            <FormLabel>Start Year</FormLabel>
+            <Form.Select value={startDate} onChange={(e) => setStartDate(e.target.value)} required>
+              <option value="">Select start year</option>
+              {years.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </Form.Select>
           </FormGroup>
 
+
           <FormGroup className="mb-3">
-            <FormLabel>End Date</FormLabel>
-            <FormControl
-              type="text"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              placeholder="Enter end date (e.g. Present)"
-              required
-            />
+            <FormLabel>End Year</FormLabel>
+            <Form.Select value={endDate} onChange={(e) => setEndDate(e.target.value)} required>
+              <option value="">Select end year or 'Present'</option>
+              <option value="Present">Present</option>
+              {years.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </Form.Select>
           </FormGroup>
+
 
           <Button disabled={loading} className="w-100 mt-2" type="submit">
             {companyID ? "Save Changes" : "Create Work History"}
