@@ -133,7 +133,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     {user.data.verified ? "Deactivate User" : "Activate User"}
   </Dropdown.Item>)}
 
-  {(user.data.reported && isAdmin) && (
+  {(user.data.reported && isAdmin && (Dashboard === 3)) && (
     <Dropdown.Item
       onClick={() => resetReportedStatus?.(user.data.userUID, user.data.reported)}
     >

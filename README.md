@@ -14,24 +14,11 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 - `Firebase`
 - `Cloudinary`
 
-## TODO
-
-### Bug Fixes
-
-- Get Reset Reported to not appear elsewhere or to work everywhere
-
-- GRadYear does not load in updateProfile
-
-### Features
+### Features to consider
 
 - Buttons for grad years for search selection
 
 - change color of dropdown to the var gray as well as other buttons
-
-### Cleanup
-- Get main dashboards to show rows of users
-- UI of Dashboards and Details
-- Choose color combinations
 
 ### Verification:
 - Connect delete endpoints in server.js to a button for admin.

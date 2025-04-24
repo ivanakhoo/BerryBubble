@@ -180,6 +180,7 @@ export default function Admin() {
                         </div>
 
             <h1 className="text-center mt-4">Admin</h1>
+            <h2 className="text-center mt-4">Unverified Users</h2>
             
             <div className="d-flex flex-wrap justify-content-center">
                 {(searchQuery ? filteredUsers : unverifiedUsers).map((doc) => (
@@ -195,9 +196,7 @@ export default function Admin() {
             </div>
             {unverifiedCompanies.length > 0 && (
   <>
-    <h2 className="text-center mt-4 mb-4" style={{ fontWeight: 700, color: "#1e293b" }}>
-      Unverified Companies
-    </h2>
+    <h2 className="text-center mt-4">Unverified Companies</h2>
     <div className="d-flex flex-wrap justify-content-center gap-3">
       {unverifiedCompanies.map((doc) => (
         <div
@@ -250,9 +249,7 @@ export default function Admin() {
 
 {unverifiedSchools.length > 0 && (
   <>
-    <h2 className="text-center mt-5 mb-4" style={{ fontWeight: 700, color: "#1e293b" }}>
-      Unverified Schools
-    </h2>
+    <h2 className="text-center mt-4">Unverified Schools</h2>
     <div className="d-flex flex-wrap justify-content-center gap-3">
       {unverifiedSchools.map((doc) => (
         <div

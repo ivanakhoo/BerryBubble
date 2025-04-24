@@ -67,37 +67,37 @@ export default function UpdateProfile() {
           case 0:
             return (
               <Link to="/details" state={{ userUID: userUID }}>
-                <Button variant="dark" className="mt-2">Back to Details</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Details</Button>
               </Link>
             );
           case 1:
             return (
               <Link to="/currentStudents">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           case 2:
             return (
               <Link to="/alumni">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           case 3:
             return (
               <Link to="/admin">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           case 4:
             return (
               <Link to="/">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           default:
             return (
                 <Link to="/details" state={{ userUID: userUID }}>
-                  <Button variant="dark" className="mt-2">Back to Details</Button>
+                  <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Details</Button>
                 </Link>
               );
         }
@@ -110,10 +110,13 @@ export default function UpdateProfile() {
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
             setUser(userSnap.data());
-            const data = userSnap.data() as {profilePic?: string};
+            const data = userSnap.data() as {profilePic?: string, GradYear: string};
             if (data.profilePic) {
                 setProfilePic(data.profilePic);
             } 
+            if (gradYearRef.current && data.GradYear) {
+                gradYearRef.current.value = data.GradYear;
+              }
         } else {
             console.log("No such user found!");
         }
@@ -262,7 +265,8 @@ export default function UpdateProfile() {
                         height: "150px", 
                         borderRadius: "50%", 
                         objectFit: "cover",
-                        border: "3px solid #ddd" // Optional border for aesthetics
+                        border: "3px solid #ddd",
+                        margin: "15px"
                       }} 
                   />
                   <ProfilePictureUpload UserUID={userUID} onUploadComplete={(url) => setProfilePic(url)} />
@@ -329,17 +333,21 @@ export default function UpdateProfile() {
                       </FormGroup>
 
                       <Button
-                          disabled={loading}
-                          className="w-100 mt-2"
-                          type="submit"
-                      >
-                          Save
-                      </Button>                     
+                    disabled={loading}
+                    className="w-100 mt-2"
+                    type="submit"
+                    style={{ backgroundColor: "#4A90E2", color: "white", border: "1px solid #ccc" }}
+                    >
+                    Save
+                    </Button>
+                  
                   </Form>
                   <br />
                   {error && <Alert variant="danger">{error}</Alert>}
                   {accountMessage && <Alert variant="success">{accountMessage}</Alert>}
-                  {renderDashboardButton()}
+                  <div className="text-center">
+                    {renderDashboardButton()}
+                  </div>
                   </div>
                   </div>
               )}
@@ -358,7 +366,8 @@ export default function UpdateProfile() {
                         height: "150px", 
                         borderRadius: "50%", 
                         objectFit: "cover",
-                        border: "3px solid #ddd" // Optional border for aesthetics
+                        border: "3px solid #ddd",
+                        margin: "15px"
                       }} 
                   />
                   <ProfilePictureUpload UserUID={userUID} onUploadComplete={(url) => setProfilePic(url)} />
@@ -388,7 +397,9 @@ export default function UpdateProfile() {
                           Save
                       </Button>
                   </Form>
-                  {renderDashboardButton()}
+                  <div className="text-center">
+                    {renderDashboardButton()}
+                  </div>
                   </div>
                   </div>
               )}
@@ -400,7 +411,9 @@ export default function UpdateProfile() {
 
                       <WorkHistory userUID={userUID} isAdmin={true} currentUserUID={currentUser.uid}></WorkHistory>
 
-                      {renderDashboardButton()}
+                      <div className="text-center">
+                    {renderDashboardButton()}
+                  </div>
                   </div>
               )}
           </div>

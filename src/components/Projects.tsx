@@ -226,7 +226,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                         onUploadComplete={(url) => handleProjectPictureUpdate(project.id, url)}
                       />
                     </Dropdown.Item>
-                    
+
                     <Dropdown.Item
                       onClick={() =>
                         navigate("/add-project", {
@@ -320,7 +320,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
           ))}
         </div>
       ) : (
-        <p>No projects available.</p>
+        <p className="text-center">No projects available.</p>
       )}
     </div>
   );

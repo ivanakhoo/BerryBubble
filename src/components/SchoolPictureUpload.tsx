@@ -64,11 +64,11 @@ const SchoolPictureUpload: React.FC = () => {
         cursor: "pointer",
         fontSize: "14px",
       }}
-    >
+    ><i className="bi bi-upload me-2" style={{ fontSize: "1rem" }} />
       Upload School Picture
     </label>
     {uploading && <p className="text-blue-600 mt-1">Please wait... uploading</p>}
-    {success && <p className="text-green-300 mt-2">Upload successful!</p>}
+    {success && <p className="text-green-300 mt-2">Upload successful! Please wait for admin verification.</p>}
   </div>
   );
 };

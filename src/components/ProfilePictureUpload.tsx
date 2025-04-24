@@ -61,6 +61,7 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProp> = ({ UserUID, onU
         fontSize: "14px",
       }}
     >
+      <i className="bi bi-upload me-2" style={{ fontSize: "1rem" }} />
       Upload Profile Picture
     </label>
     {uploading && <p className="text-blue-600 mt-1">Please wait... uploading</p>}

@@ -49,31 +49,31 @@ export default function Details() {
           case 4:
             return (
               <Link to="/">
-                <Button variant="dark" className="mt-2">Back to Details</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Details</Button>
               </Link>
             );
           case 1:
             return (
               <Link to="/currentStudents">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           case 2:
             return (
               <Link to="/alumni">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           case 3:
             return (
               <Link to="/admin">
-                <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
               </Link>
             );
           default:
             return (
                 <Link to="/currentStudents">
-                  <Button variant="dark" className="mt-2">Back to Dashboard</Button>
+                  <Button style={{ backgroundColor: "var(--text-dark)", color: "white", border: "1px solid #ccc" }} className="mt-2">Back to Dashboard</Button>
                 </Link>
               );
         }
