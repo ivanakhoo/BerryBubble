@@ -187,7 +187,25 @@ export default function Details() {
     
           {(isAdmin || currentUser?.uid === user.userUID) && (
             <Link to="/update-profile" state={{ userUID: user.userUID, Dashboard }}>
-              <Button variant="outline-primary" className="w-100 mt-2">Update Profile</Button>
+              <Button
+                className="mt-2"
+                style={{
+                  color: "#4A90E2",
+                  border: "1px solid #4A90E2",
+                  backgroundColor: "transparent",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#4A90E2";
+                  e.currentTarget.style.color = "white";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "#4A90E2";
+                }}
+              >
+                Update Profile
+              </Button>
+
             </Link>
           )}
         </div>
