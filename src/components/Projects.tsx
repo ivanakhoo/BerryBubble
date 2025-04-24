@@ -264,7 +264,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
                   target="_blank"
                   rel="noopener noreferrer"
                   title="Open Project"
-                  style={{ textDecoration: 'none', color: 'inherit', marginLeft: '8px' }}
+                  style={{ textDecoration: 'none', color: 'var(--text-dark)', marginLeft: '8px' }}
                 >
                   <i className="bi bi-link" style={{ fontSize: '1.3rem' }}></i>
                 </a>

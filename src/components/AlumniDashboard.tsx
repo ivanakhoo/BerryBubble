@@ -42,7 +42,7 @@ export default function Alumni() {
                 }));
                 const alumni = docsArray.filter(doc => {
                     const gradYear = parseInt(doc.data.GradYear, 10); 
-                    return gradYear <= 2024; 
+                    return gradYear <= new Date().getFullYear() - 1; 
                 });
                 setAlumniUsers(alumni); 
             } catch (error) {
