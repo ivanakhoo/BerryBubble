@@ -1,20 +1,28 @@
 import { useEffect, useState } from 'react';
 // @ts-ignore
 import { useAuth } from '../contexts/AuthContext';
+import { reload } from "firebase/auth";
 // @ts-ignore
 import { db } from "../firebase"; 
 import CompanyPictureUpload from './CompanyPictureUpload';
 import SchoolPictureUpload from './SchoolPictureUpload';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 export default function Network() {
   const [schoolImages, setSchoolImages] = useState<string[]>([]);
   const [companyImages, setCompanyImages] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
+        await reload(currentUser); 
+                        if (currentUser.emailVerified) {
+                            await updateDoc(doc(db, "users", currentUser.uid), {
+                            emailVerified: true,
+                            });
+                        }
         const schoolQuery = query(collection(db, "schools"), where("verified", "==", true));
         const schoolSnapshot = await getDocs(schoolQuery);
         const schoolPics = schoolSnapshot.docs

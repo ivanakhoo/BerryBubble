@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import { collection, getDocs, doc, getDoc, query, where, updateDoc } from "firebase/firestore";
 import SearchBar from "./SearchBar";
 import UserDisplay from "./UserDisplay";
+import { reload } from "firebase/auth";
 
 export default function Dashboard() {
     const [verifiedUsers, setVerifiedUsers] = useState<{ id: string; data: any }[]>([]);
@@ -34,6 +35,12 @@ export default function Dashboard() {
     useEffect(() => {
         async function fetchVerifiedUsers() {
             try {
+                await reload(currentUser); 
+                if (currentUser.emailVerified) {
+                    await updateDoc(doc(db, "users", currentUser.uid), {
+                    emailVerified: true,
+                    });
+                }
                 const q = query(collection(db, "users"), where("verified", "==", true), where("emailVerified", "==", true)); 
                 const querySnapshot = await getDocs(q);
                 const docsArray = querySnapshot.docs.map((doc) => ({

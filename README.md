@@ -18,7 +18,10 @@ Ultimately, the platform aims to bridge the gap between students and alumni, fac
 
 - Buttons for grad years for search selection
 
-- change color of dropdown to the var gray as well as other buttons
+- Create a landing page for users without an account
 
+- Make all routes visible, just don't show dropdowns and network upload if no CurrentUser
+
+- Look into hosting.
 ### Verification:
 - Connect delete endpoints in server.js to a button for admin.

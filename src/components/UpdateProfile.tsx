@@ -6,11 +6,12 @@ import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { useLocation } from "react-router-dom";
 // @ts-ignore
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import ProfilePictureUpload from "./ProfilePictureUpload";
 import Sidebar from "./Sidebar";
 import Projects from "./Projects";
 import WorkHistory from "./WorkHistory";
+import { reload } from "firebase/auth";
 
 export default function UpdateProfile() {
     const [selectedSection, setSelectedSection] = useState<string>('account'); // State to track selected section
@@ -106,6 +107,12 @@ export default function UpdateProfile() {
     useEffect(() => {
         const fetchUser = async () => {
         if (!userUID) return;
+        await reload(currentUser); 
+                        if (currentUser.emailVerified) {
+                            await updateDoc(doc(db, "users", currentUser.uid), {
+                            emailVerified: true,
+                            });
+                        }
         const userRef = doc(db, "users", userUID); 
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
