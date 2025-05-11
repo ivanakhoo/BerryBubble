@@ -90,18 +90,11 @@ export default function Network() {
 
   return (
     <div style={containerStyle}>
-      <h1 style={{
-        textAlign: "center",
-        fontWeight: 550,
-        fontSize: isMobile ? "2rem" : "2.5rem",
-        color: "var(--primary-blue)",
-        marginBottom: "2rem"
-      }}>
-        Berry Network
-      </h1>
+
+      <h1 className="text-center mt-4" style={{marginBottom: "2rem", fontWeight: 550}}>Berry Network</h1>
 
       <div style={sectionStyle}>
-        <h2 className="text-center">Graduate Schools</h2>
+        <h2 className="text-center" style={{marginBottom: "2rem", fontWeight: 500}}>Graduate Schools</h2>
         <div style={gridStyle}>
           {schoolImages.map((url, index) => (
             <img
@@ -117,7 +110,7 @@ export default function Network() {
       </div>
 
       <div style={sectionStyle}>
-        <h2 className="text-center">Companies</h2>
+        <h2 className="text-center" style={{marginBottom: "2rem", fontWeight: 500}}>Companies</h2>
         <div style={gridStyle}>
           {companyImages.map((url, index) => (
             <img

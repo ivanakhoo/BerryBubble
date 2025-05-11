@@ -105,7 +105,7 @@ export default function Dashboard() {
 
     
             {/* Display Verified Users with their Profile Pictures */}
-            <h1 className="text-center mt-4">All Verified Users</h1>
+            <h1 className="text-center mt-4">Berry Bubble</h1>
             <div className="d-flex flex-wrap justify-content-center">
                 {(searchQuery ? filteredUsers : verifiedUsers).map((doc) => (
                     <div key={doc.id} className="text-center p-3">
