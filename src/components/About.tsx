@@ -5,6 +5,7 @@ import { reload } from "firebase/auth";
 // @ts-ignore
 import { db } from "../firebase"; 
 import { doc, updateDoc } from 'firebase/firestore';
+import profilePic from '../assets/images/ivanpic.png';
 
 export default function About() {
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
@@ -60,7 +61,7 @@ export default function About() {
   <div style={sectionStyle}>
     <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
       <img 
-        src="/src/assets/images/ivanpic.png"
+        src={profilePic}
         alt="Ivan Khoo"
         style={{
           width: "240px",
