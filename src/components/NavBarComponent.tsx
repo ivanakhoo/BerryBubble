@@ -72,9 +72,9 @@ const NavBarComponent: React.FC = () => {
     
 
   // Don't render the navbar if no user is logged in
-  if (!currentUser) {
-    return null;  // You can return any fallback content here, like a login button or a message.
-  }
+  // if (!currentUser) {
+  //   return null;  // You can return any fallback content here, like a login button or a message.
+  // }
 
   return (
     <Navbar bg="#4A90E2" data-bs-theme="dark" expand="lg" fixed="top">
@@ -90,14 +90,21 @@ const NavBarComponent: React.FC = () => {
             {isAdmin && <Nav.Link href="/admin">Admin</Nav.Link>}
           </Nav>
           <Nav className="ms-auto d-flex align-items-center">
-            <NavDropdown title="My Profile" id="navbarScrollingDropdown">
-              <NavDropdown.Item as={Link} to="/update-profile" state={{ userUID: currentUser.uid }}>
-                Update Profile
-              </NavDropdown.Item>
-              <NavDropdown.Item onClick={handleLogout}>
-                Logout
-              </NavDropdown.Item>
-            </NavDropdown>
+          {currentUser ? (
+              <NavDropdown title="My Profile" id="navbarScrollingDropdown">
+                <NavDropdown.Item as={Link} to="/update-profile" state={{ userUID: currentUser.uid }}>
+                  Update Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={handleLogout}>
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <Nav.Link as={Link} to="/login">
+                Sign In
+              </Nav.Link>
+            )}
+
             <Nav.Link>
               <img
                 src={profilePic || defaultProfilePic}

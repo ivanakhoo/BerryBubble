@@ -57,18 +57,10 @@ const AppRoutes: React.FC = () => {
     >
       {isFullScreen ? (
         <Routes>
-          <Route path="/" element={<PrivateRoute />}>
-            <Route index element={<Dashboard />} />
-          </Route>
-          <Route path="/network" element={<PrivateRoute />}>
-            <Route index element={<Network />} />
-          </Route>
-          <Route path="/currentStudents" element={<PrivateRoute />}>
-            <Route index element={<CurrentStudentsDashboard />} />
-          </Route>
-          <Route path="/alumni" element={<PrivateRoute />}>
-            <Route index element={<AlumniDashboard />} />
-          </Route>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/network" element={<Network />} />
+          <Route path="/currentStudents" element={<CurrentStudentsDashboard />} />
+          <Route path="/alumni" element={<AlumniDashboard />} />
           <Route path="/update-profile" element={<PrivateRoute />}>
             <Route index element={<UpdateProfile />} />
           </Route>
@@ -78,9 +70,7 @@ const AppRoutes: React.FC = () => {
           <Route path="/add-history" element={<PrivateRoute />}>
             <Route index element={<AddWorkHistory />} />
           </Route>
-          <Route path="/details" element={<PrivateRoute />}>
-            <Route index element={<Details />} />
-          </Route>
+          <Route path="/details" element={<Details />} />
           <Route path="/admin" element={<AdminRoute />}>
             <Route index element={<Admin />} />
           </Route>

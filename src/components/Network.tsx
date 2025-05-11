@@ -17,12 +17,14 @@ export default function Network() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        await reload(currentUser); 
-                        if (currentUser.emailVerified) {
-                            await updateDoc(doc(db, "users", currentUser.uid), {
-                            emailVerified: true,
-                            });
-                        }
+        if (currentUser) {
+          await reload(currentUser);
+          if (currentUser.emailVerified) {
+              await updateDoc(doc(db, "users", currentUser.uid), {
+                  emailVerified: true,
+              });
+          }
+      }
         const schoolQuery = query(collection(db, "schools"), where("verified", "==", true));
         const schoolSnapshot = await getDocs(schoolQuery);
         const schoolPics = schoolSnapshot.docs
@@ -130,7 +132,7 @@ export default function Network() {
         </div>
       </div>
 
-      <div
+      {currentUser && (<div
   style={{
     backgroundColor: "#ffffff",
     color: "#1e293b",
@@ -169,6 +171,7 @@ export default function Network() {
     </div>
   </div>
 </div>
+      )}
 
     </div>
   );

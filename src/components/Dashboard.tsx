@@ -35,11 +35,13 @@ export default function Dashboard() {
     useEffect(() => {
         async function fetchVerifiedUsers() {
             try {
-                await reload(currentUser); 
+                if (currentUser) {
+                    await reload(currentUser); 
                 if (currentUser.emailVerified) {
                     await updateDoc(doc(db, "users", currentUser.uid), {
                     emailVerified: true,
                     });
+                }
                 }
                 const q = query(collection(db, "users"), where("verified", "==", true), where("emailVerified", "==", true)); 
                 const querySnapshot = await getDocs(q);

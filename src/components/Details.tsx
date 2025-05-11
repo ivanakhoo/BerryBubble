@@ -185,7 +185,7 @@ export default function Details() {
             )}
           </div>
     
-          {(isAdmin || currentUser?.uid === user.userUID) && (
+          {(isAdmin || (currentUser?.uid && user.userUID && currentUser.uid === user.userUID)) && (
             <Link to="/update-profile" state={{ userUID: user.userUID, Dashboard }}>
               <Button
                 className="mt-2"
@@ -213,13 +213,13 @@ export default function Details() {
         {/* PROJECTS SECTION */}
         <div className="mb-5">
           <div className="row g-4">
-            <Projects userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid} />
+            <Projects userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser?.uid || ""} />
           </div>
         </div>
     
         {/* EXPERIENCE SECTION */}
         <div className="mb-5">
-          <WorkHistory userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser.uid} />
+          <WorkHistory userUID={userUID} isAdmin={isAdmin} currentUserUID={currentUser?.uid || ""} />
         </div>
     
         {/* BACK BUTTON */}

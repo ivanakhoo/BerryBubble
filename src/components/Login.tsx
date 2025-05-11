@@ -29,7 +29,10 @@ export default function Login() {
 
     return (
         <><div>
-            <h1 className="display-2 text-center mb-4">Berry Bubble</h1>
+            <h1 className="display-2 text-center mb-4" style={{ color: "#4A90E2" }}>
+  Berry Bubble
+</h1>
+
         </div>
             <Card>
                 <CardBody>

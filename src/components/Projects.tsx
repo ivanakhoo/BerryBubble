@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 interface ProjectsProps {
   userUID: string;
   isAdmin: boolean;
-  currentUserUID: string;
+  currentUserUID?: string;
 }
 
 interface Project {
@@ -156,7 +156,7 @@ const Projects: React.FC<ProjectsProps> = ({ userUID, isAdmin, currentUserUID })
     <div className="mt-2">
       <div className="d-flex justify-content-center align-items-baseline mb-3" style={{ gap: "8px" }}>
   <h1 className="text-center mb-4">Projects</h1>
-  {(isAdmin || currentUserUID === userUID) && (
+  {(isAdmin || (currentUserUID && currentUserUID === userUID)) && (
     <Link
       to="/add-project"
       state={{ userUID }}
