@@ -21,6 +21,7 @@ import AddProject from "./AddProject";
 import Network from "./Network";
 import AddWorkHistory from "./AddWorkHistory";
 import '../global.css';
+import About from "./About";
 
 
 const AppRoutes: React.FC = () => {
@@ -37,7 +38,8 @@ const AppRoutes: React.FC = () => {
     "/add-project",
     "/add-history",
     "/details",
-    "/unauthorized"
+    "/unauthorized",
+    "/about"
   ];
 
   const isFullScreen = fullScreenRoutes.includes(location.pathname);
@@ -71,6 +73,7 @@ const AppRoutes: React.FC = () => {
             <Route index element={<AddWorkHistory />} />
           </Route>
           <Route path="/details" element={<Details />} />
+          <Route path="/about" element={<About />} />
           <Route path="/admin" element={<AdminRoute />}>
             <Route index element={<Admin />} />
           </Route>

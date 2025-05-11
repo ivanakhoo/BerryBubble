@@ -91,7 +91,7 @@ export default function Network() {
   return (
     <div style={containerStyle}>
 
-      <h1 className="text-center mt-4" style={{marginBottom: "2rem", fontWeight: 550}}>Berry Network</h1>
+      <h1 className="text-center" style={{marginBottom: "2rem", fontWeight: 550}}>Berry Network</h1>
 
       <div style={sectionStyle}>
         <h2 className="text-center" style={{marginBottom: "2rem", fontWeight: 500}}>Graduate Schools</h2>
