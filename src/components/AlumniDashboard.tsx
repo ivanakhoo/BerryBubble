@@ -50,9 +50,16 @@ export default function Alumni() {
                     data: doc.data(),
                 }));
                 const alumni = docsArray.filter(doc => {
-                    const gradYear = parseInt(doc.data.GradYear, 10); 
-                    return gradYear <= new Date().getFullYear() - 1; 
+                    const gradYear = parseInt(doc.data.GradYear, 10);
+                    const currentDate = new Date();
+                    const currentYear = currentDate.getFullYear();
+                    const currentMonth = currentDate.getMonth();
+                    return (
+                        gradYear < currentYear ||
+                        (gradYear === currentYear && currentMonth >= 4)
+                    );
                 });
+                
                 setAlumniUsers(alumni); 
             } catch (error) {
                 console.error("Error fetching alumni users:", error);

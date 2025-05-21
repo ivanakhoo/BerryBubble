@@ -159,7 +159,7 @@ const WorkAddForm: React.FC = () => {
               onChange={(e) => setRole(e.target.value)}
               placeholder="Enter role"
               required
-              maxLength={20}
+              maxLength={24}
             />
           </FormGroup>
 

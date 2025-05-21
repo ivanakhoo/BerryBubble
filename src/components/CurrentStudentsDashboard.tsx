@@ -49,11 +49,18 @@ export default function CurrentStudentsDashboard() {
                     id: doc.id,
                     data: doc.data(),
                 }));
-                const alumni = docsArray.filter(doc => {
-                    const gradYear = parseInt(doc.data.GradYear, 10); 
-                    return gradYear >= new Date().getFullYear(); 
+                const current = docsArray.filter(doc => {
+                    const gradYear = parseInt(doc.data.GradYear, 10);
+                    const currentDate = new Date();
+                    const currentYear = currentDate.getFullYear();
+                    const currentMonth = currentDate.getMonth(); 
+                    return (
+                        gradYear > currentYear ||
+                        (gradYear === currentYear && currentMonth < 4)
+                    );
                 });
-                setCurrentStudents(alumni); 
+                
+                setCurrentStudents(current); 
             } catch (error) {
                 console.error("Error fetching alumni users:", error);
             }

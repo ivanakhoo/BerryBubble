@@ -92,7 +92,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, isAdmin, updateVerifiedStatus
     <Card
   style={{
     width: '360px',
-    height:'485px',
+    height:'520px',
     maxHeight: '620px',
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(10px)',
